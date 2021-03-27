@@ -113,15 +113,16 @@
 
 #define max_yaw_relative_angle      4*PI
 #define min_yaw_relative_angle     	-4*PI
-#define max_pitch_relative_angle    0.5*PI+PI/6-PI/9+PI/3
-#define min_pitch_relative_angle    0.5*PI+PI/6-PI/9
+#define max_pitch_relative_angle    PI/6-PI/9+PI/3-PI/3
+#define min_pitch_relative_angle    PI/6-PI/9-PI/3
 
-#define auto_pitch_up             0.5*PI+PI/6-PI/9+PI/3
+#define auto_pitch_up              0.5*PI+PI/6-PI/9+PI/3
 #define auto_pitch_down            0.5*PI+PI/6-PI/9
 #define auto_yaw_ccw                1.5*PI
 #define auto_yaw_cw                 -PI
-#define mid_yaw_angle               0.5*PI-PI/6
-#define mid_pitch_angle             0.5*PI+PI/6
+#define mid_yaw_angle               -0.11*PI-PI/6
+#define mid_pitch_angle             PI/3-PI/3
+
 
 
 #endif
@@ -134,8 +135,8 @@
 
 
 //yaw，pitch角度与遥控器输入比例
-#define Yaw_RC_SEN -0.000005f
-#define Pitch_RC_SEN 0.000006f //0.005
+#define Yaw_RC_SEN 0.000005f
+#define Pitch_RC_SEN -0.000006f //0.005
 
 
 

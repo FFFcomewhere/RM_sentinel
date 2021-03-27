@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<JScopeProject>
+    <FileVersion major="1" minor="1" />
+    <Project>
+        <Configuration>
+            <JLink>
+                <Options IsRTTSession="0" IsRTTWithTimeStamp="1" SamplingPeriod="20000" Connection="1" SerialNo="0" IP="" TargetDevice="unspecified" TargetInterface="SWD" InterfaceSpeed="4000" />
+            </JLink>
+            <ElfFile Name="E:\file\competition\RM\code\±øÖÖ´úÂë2021\RM_sentinel\ÉÚ±ø(×óÔÆÌ¨)\YAM-Sentry£¨ÎÞ¼ÌµçÆ÷£©\Project\Objects\infantry.axf" />
+            <DataFile Name="" />
+            <RawFile Name="" />
+            <Scope>
+                <Options TimeResolutionUs="1000000" />
+            </Scope>
+            <Trigger>
+                <Options Level="0.000000" Symbol="pitch_mech_target" On="0" Auto="0" Rise="0" Fall="1" />
+            </Trigger>
+        </Configuration>
+        <Windows>
+            <Graph Show="1" />
+            <Watch Show="1" />
+        </Windows>
+        <SelectedSymbols>
+            <Symbol>
+                <Options Name="pitch_gyro_measure" Address="0x2000023C" Type="int" TypeID="12" Size="4" GraphColorRed="255" GraphColorGreen="215" GraphColorBlue="0" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="4" ShowInGraph="1" YOffset="300" IsAutoConfig="0" YResolution="2" MaxValue="2" File="..\user\APP\gimbal_task\gimbal_task.c" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="pitch_gyro_target" Address="0x2000024C" Type="int" TypeID="12" Size="4" GraphColorRed="0" GraphColorGreen="255" GraphColorBlue="0" YMinSampled="1508" YMaxSampled="2447" YAvgSampled="2367" Offset="8" ShowInGraph="1" YOffset="180" IsAutoConfig="1" YResolution="1000000000" MaxValue="2000000000" File="..\user\APP\gimbal_task\gimbal_task.c" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="pitch_mech_measure" Address="0x20000238" Type="int" TypeID="12" Size="4" GraphColorRed="0" GraphColorGreen="0" GraphColorBlue="255" YMinSampled="1509" YMaxSampled="2446" YAvgSampled="2368" Offset="12" ShowInGraph="1" YOffset="250" IsAutoConfig="1" YResolution="1000000000" MaxValue="-2147483648" File="..\user\APP\gimbal_task\gimbal_task.c" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="pitch_mech_target" Address="0x20000248" Type="int" TypeID="12" Size="4" GraphColorRed="160" GraphColorGreen="32" GraphColorBlue="240" YMinSampled="1468" YMaxSampled="2443" YAvgSampled="2367" Offset="16" ShowInGraph="1" YOffset="260" IsAutoConfig="1" YResolution="1000000000" MaxValue="-2147483648" File="..\user\APP\gimbal_task\gimbal_task.c" Scope="0" DrawStyle="0" />
+            </Symbol>
+        </SelectedSymbols>
+    </Project>
+</JScopeProject>

@@ -123,6 +123,35 @@ float given_current[2][2];
 float fMotorOutput[4] = {0};
 
 float Error[2][2]; //误差值读取
+
+
+//用于j-scpoe调试，j-scpoe不支持读数组
+#define jscpoe_filter  1000
+
+int32_t yaw_mech_measure;
+int32_t yaw_gyro_measure;
+int32_t pitch_mech_measure;
+int32_t pitch_gyro_measure;	
+int32_t yaw_mech_target;
+int32_t yaw_gyro_target;
+int32_t pitch_mech_target;
+int32_t pitch_gyro_target;	
+
+
+static void J_scope_gimbal_test(void)
+{
+	yaw_mech_measure = (int32_t)(Cloud_Angle_Measure[YAW][MECH] * jscpoe_filter);
+	yaw_gyro_measure = (int32_t)(Cloud_Angle_Measure[YAW][GYRO] * jscpoe_filter);
+	pitch_mech_measure = (int32_t)(Cloud_Angle_Measure[PITCH][MECH] * jscpoe_filter);
+	pitch_gyro_measure = (int32_t)(Cloud_Angle_Measure[PITCH][GYRO] * jscpoe_filter);
+
+	yaw_mech_target = (int32_t)(Cloud_Angle_Target[YAW][MECH] * jscpoe_filter);
+	yaw_gyro_target = (int32_t)(Cloud_Angle_Target[YAW][GYRO] * jscpoe_filter);
+	pitch_mech_target = (int32_t)(Cloud_Angle_Target[PITCH][MECH] * jscpoe_filter);
+	pitch_gyro_target = (int32_t)(Cloud_Angle_Target[PITCH][GYRO] * jscpoe_filter);
+
+}
+
 /*---------------------------------------------------*自瞄*----------------------------------------------------------------------------*/
 Auto_Mode auto_mode;
 bool Auto_Mode_falg = 0;

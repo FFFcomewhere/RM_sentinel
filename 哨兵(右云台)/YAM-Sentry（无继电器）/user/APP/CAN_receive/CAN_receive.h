@@ -48,7 +48,7 @@ typedef enum
 
 //rm电机统一数据结构体
 typedef struct
-{
+{	
     uint16_t ecd;   //编码值
     int16_t speed_rpm;    //转速
     int16_t given_current;  //电流值
