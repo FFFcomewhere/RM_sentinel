@@ -40,6 +40,7 @@
 #include "inv_mpu.h"
 #include "vision.h"
 #include "chassis_task.h"
+#include "stdio.h"
 
 
 #define gimbal_total_pid_clear(void)               \
@@ -123,6 +124,36 @@ float given_current[2][2];
 float fMotorOutput[4] = {0};
 
 float Error[2][2]; //误差值读取
+
+//用于j-scpoe调试，j-scpoe不支持读数组
+#define jscpoe_filter  1000
+
+int32_t yaw_mech_measure;
+int32_t yaw_gyro_measure;
+int32_t pitch_mech_measure;
+int32_t pitch_gyro_measure;	
+int32_t yaw_mech_target;
+int32_t yaw_gyro_target;
+int32_t pitch_mech_target;
+int32_t pitch_gyro_target;	
+
+
+static void J_scope_gimbal_test(void)
+{
+	yaw_mech_measure = (int32_t)(Cloud_Angle_Measure[YAW][MECH] * jscpoe_filter);
+	yaw_gyro_measure = (int32_t)(Cloud_Angle_Measure[YAW][GYRO] * jscpoe_filter);
+	pitch_mech_measure = (int32_t)(Cloud_Angle_Measure[PITCH][MECH] * jscpoe_filter);
+	pitch_gyro_measure = (int32_t)(Cloud_Angle_Measure[PITCH][GYRO] * jscpoe_filter);
+
+	yaw_mech_target = (int32_t)(Cloud_Angle_Target[YAW][MECH] * jscpoe_filter);
+	yaw_gyro_target = (int32_t)(Cloud_Angle_Target[YAW][GYRO] * jscpoe_filter);
+	pitch_mech_target = (int32_t)(Cloud_Angle_Target[PITCH][MECH] * jscpoe_filter);
+	pitch_gyro_target = (int32_t)(Cloud_Angle_Target[PITCH][GYRO] * jscpoe_filter);
+
+}
+
+
+
 /*---------------------------------------------------*自瞄*----------------------------------------------------------------------------*/
 Auto_Mode auto_mode;
 bool Auto_Mode_falg = 0;
@@ -211,6 +242,13 @@ void GIMBAL_task(void *pvParameters)
 		
 		else
 		{
+			//便于j-scope调试
+			J_scope_gimbal_test();
+
+
+
+			
+			
 			if(SYSTEM_GetRemoteMode() == RC)
 				
 			{
@@ -237,8 +275,8 @@ void GIMBAL_task(void *pvParameters)
 					else
 						Auto_Mode_Count=0;
 						
-//					modeGimbal=CLOUD_MECH_MODE;
-//					GIMBAL_AUTO_Ctrl();
+					modeGimbal=CLOUD_MECH_MODE;
+					GIMBAL_AUTO_Ctrl();
 				}
 			}
 
@@ -400,7 +438,7 @@ void GIMBAL_AUTO_Ctrl(void)
 	{			
 		Cloud_Angle_Target[YAW][MECH] = RAMP_float( auto_yaw_cw, Cloud_Angle_Target[YAW][MECH], 0.02 );
 		erro_yaw = Cloud_Angle_Measure[YAW][MECH]-auto_yaw_cw ;
-		if(erro_yaw < 0.15f )
+		if(erro_yaw < 0.15f || erro_yaw > -0.15f)
 		{
 			auto_mode.yaw_cw = FALSE;
 			auto_mode.yaw_ccw = TRUE;
@@ -411,7 +449,7 @@ void GIMBAL_AUTO_Ctrl(void)
 	{			
 		Cloud_Angle_Target[YAW][MECH] = RAMP_float( auto_yaw_ccw, Cloud_Angle_Target[YAW][MECH], 0.02 );
 		erro_yaw = auto_yaw_ccw-Cloud_Angle_Measure[YAW][MECH];
-		if(erro_yaw < 0.15f)
+		if(erro_yaw < 0.15f || erro_yaw > -0.15f)
 		{
 			auto_mode.yaw_cw = TRUE;
 			auto_mode.yaw_ccw = FALSE; 
@@ -424,7 +462,7 @@ void GIMBAL_AUTO_Ctrl(void)
 	{			
 		Cloud_Angle_Target[PITCH][MECH] = RAMP_float( auto_pitch_up, Cloud_Angle_Target[PITCH][MECH], 0.03 );
 		erro_pitch = auto_pitch_up - Cloud_Angle_Measure[PITCH][MECH];
-		if( erro_pitch < 0.15f )
+		if( erro_pitch < 0.01f || erro_pitch > -0.01f)
 		{
 			auto_mode.pitch_up = FALSE;
 			auto_mode.pitch_down = TRUE;
@@ -435,7 +473,7 @@ void GIMBAL_AUTO_Ctrl(void)
 	{		
     Cloud_Angle_Target[PITCH][MECH] = RAMP_float( auto_pitch_down, Cloud_Angle_Target[PITCH][MECH], 0.01);		
 		erro_pitch =Cloud_Angle_Measure[PITCH][MECH] - auto_pitch_down;
-		if(erro_pitch  < 0.01f)
+		if(erro_pitch  < 0.01f || erro_pitch  > -0.01f)
 		{
 			auto_mode.pitch_up = TRUE;
 			auto_mode.pitch_down = FALSE;
@@ -466,6 +504,9 @@ void GIMBAL_AUTO_Mode_Ctrl(void)
 //		Gimbal_Pitch_Gyro_PID.kp = PITCH_GYRO_ABSOLUTE_PID_KP_;
 //		}
 	
+		Cloud_Angle_Target[YAW][GYRO] = Cloud_Angle_Target[YAW][MECH];
+		Cloud_Angle_Target[PITCH][GYRO] = Cloud_Angle_Target[PITCH][MECH];
+
 	
 		if(Vision_If_Update()==TRUE)
 		{  
@@ -474,7 +515,7 @@ void GIMBAL_AUTO_Mode_Ctrl(void)
 		Vision_Error_Angle_Pitch(&Auto_Error_Pitch[NOW]);
 		Vision_Error_Angle_Yaw(&Auto_Error_Yaw[NOW]);
 		Vision_Get_Distance(&Auto_Distance);
-		pitch_angle_ref = (Cloud_Angle_Measure[PITCH][MECH]+Auto_Error_Pitch[NOW]);
+		pitch_angle_ref = (Cloud_Angle_Measure[PITCH][MECH]-Auto_Error_Pitch[NOW]);
 		yaw_angle_ref = (Cloud_Angle_Measure[YAW][MECH]+Auto_Error_Yaw[NOW]);
 		Vision_Clean_Update_Flag();//清零,否则会一直执行
 		Auto_Error_Pitch[NOW] = 0;
@@ -708,17 +749,19 @@ extern float Yaw_right;
 void GIMBAL_CanSend(void)
 {
 
+	
+	//由于云台电机反装，所以这里的发送电流需添加负号
 		
 	if(modeGimbal == CLOUD_MECH_MODE)
 	{
-		fMotorOutput[YAW]   = given_current[YAW][MECH];
-		fMotorOutput[PITCH] = given_current[PITCH][MECH];
+		fMotorOutput[YAW]   = -given_current[YAW][MECH];
+		fMotorOutput[PITCH] = -given_current[PITCH][MECH];
 	}
 	//陀螺仪模式云台电流变化
 	else
 	{
-		fMotorOutput[YAW]   = given_current[YAW][GYRO];
-		fMotorOutput[PITCH] = given_current[PITCH][GYRO];
+		fMotorOutput[YAW]   = -given_current[YAW][GYRO];
+		fMotorOutput[PITCH] = -given_current[PITCH][GYRO];
 	}
 	
 	
@@ -878,13 +921,13 @@ void GIMBAL_UpdateAngle( char ID, int16_t angle )
 	if (ID == PITCH)
 	{
 		angleMotorPit = angle;
-		Cloud_Angle_Measure[PITCH][MECH]  = motor_ecd_to_angle_change(angleMotorPit);
+		Cloud_Angle_Measure[PITCH][MECH]  = -motor_ecd_to_angle_change(angleMotorPit);
 		PitchAngle = angleMotorPit;
 	}
 	else if (ID == YAW)
 	{
 		angleMotorYaw = angle;
-		Cloud_Angle_Measure[YAW][MECH]  = motor_ecd_to_angle_change(angleMotorYaw);
+		Cloud_Angle_Measure[YAW][MECH]  = -motor_ecd_to_angle_change(angleMotorYaw);
 		YawAngle = angleMotorYaw;
 	}
 }
