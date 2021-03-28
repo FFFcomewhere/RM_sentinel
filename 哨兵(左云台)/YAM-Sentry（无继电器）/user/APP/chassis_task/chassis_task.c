@@ -356,14 +356,14 @@ void Chassis_Rc_Control(void)
 void sensor_update(void)
 {	
 
-
+	
 	//左云台处理
-	//1为未检测到 2为检测到
+	//1为未检测到 0为检测到
 	if(Sensor_data[LEFT] == 1)
 	{
 		CJ_L = 1;
 	}
-	else if(Sensor_data[LEFT] == 2)
+	else if(Sensor_data[LEFT] == 0)
 	{
 		CJ_L = 0;
 	}
@@ -372,7 +372,7 @@ void sensor_update(void)
 	{
 		CJ_R = 1;
 	}
-	else if(Sensor_data[RIGHT] == 2)
+	else if(Sensor_data[RIGHT] == 0)
 	{
 		CJ_R = 0;
 	}
@@ -380,14 +380,22 @@ void sensor_update(void)
 
 
 	static uint16_t change_time = 0;
+	static uint16_t hp_change_time = 0;
 	
+	if(hp_change_time > 1000)
+	{
+		hp_change_time = 0;
+		last_remain_HP = now_remain_Hp;
+	}
+	else
+		hp_change_time++;
 	
-//	last_remain_HP = now_remain_Hp;
-//	now_remain_Hp = JUDGE_remain_HP();
-//	
+	now_remain_Hp = JUDGE_remain_HP();
+	
 //	//哨兵被击打，反向运动逃跑
-//	if(now_remain_Hp  <=  590)
-//		if_beat = TRUE;
+	if(now_remain_Hp !=   last_remain_HP)
+		if_beat = TRUE;
+
 	
 	if(remote_change == TRUE) //从机械模式切过来
 	{
@@ -417,7 +425,7 @@ void sensor_update(void)
 			flag = TRUE;
 		}
 	}
-	else if(((CJ_R==0 && CJ_L==0 )|| if_beat)&& Chassis_Mode==CHASSIS_R_MODE && flag == TRUE)  //如果受到击打，或者左右都识别到障碍物1s以上，就按反方向动 
+	else if(((CJ_R==0 && CJ_L==0 )|| if_beat)&& Chassis_Mode==CHASSIS_R_MODE && flag == TRUE)  //左右都识别到障碍物1s以上，就按反方向动 
 	{
 		if(if_beat)
 			if_beat = 0;
@@ -445,6 +453,39 @@ void sensor_update(void)
 			flag = FALSE;
 		}
 	}
+	else if(if_beat && Chassis_Mode==CHASSIS_R_MODE )  //如果受到击打 就按反方向动 
+	{
+		if(if_beat)
+			if_beat = 0;
+		
+		change_time++;		
+		if(change_time > 500)
+		{
+		  change_time = 0;
+		  change.TO_left = TRUE;
+			change.TO_right = FALSE;
+			flag = FALSE;
+		}
+	}
+	else if( if_beat && Chassis_Mode==CHASSIS_L_MODE)
+	{
+		if(if_beat)
+			if_beat = 0;
+		
+		change_time++;		
+		if(change_time > 500)
+		{
+		  change_time = 0;
+		  change.TO_right = TRUE;
+			change.TO_left = FALSE;
+			flag = FALSE;
+		}
+	}
+	
+	
+	
+	
+	
 }
 
 /**
@@ -669,5 +710,8 @@ extern float Revolver_Final_Output_right;
   */
 void CHASSIS_CANSend(void)
 {	 	
+//	Chassis_Final_Output[0] = 0;
+//	Chassis_Final_Output[1] = 0;
+	
 	CAN_CMD_CHASSIS(Chassis_Final_Output[0],Chassis_Final_Output[1], Revolver_Final_Output, Revolver_Final_Output_right);
 }
