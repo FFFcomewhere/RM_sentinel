@@ -120,10 +120,12 @@
 #define max_pitch_relative_angle     -2*PI/3+PI/6
 #define min_pitch_relative_angle     -2*PI/3-PI/6
 
-#define auto_pitch_up               0.5*PI+PI/6+PI/9
-#define auto_pitch_down             0.5*PI+PI/6
 #define auto_yaw_ccw                1.5*PI
 #define auto_yaw_cw                 -PI
+#define auto_pitch_up                -2*PI/3+PI/6
+#define auto_pitch_down              -2*PI/3-PI/6
+
+
 #define mid_yaw_angle               PI/3
 #define mid_pitch_angle             -2*PI/3
 

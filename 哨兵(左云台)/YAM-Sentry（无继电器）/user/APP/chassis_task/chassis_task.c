@@ -710,8 +710,8 @@ extern float Revolver_Final_Output_right;
   */
 void CHASSIS_CANSend(void)
 {	 	
-//	Chassis_Final_Output[0] = 0;
-//	Chassis_Final_Output[1] = 0;
+	Chassis_Final_Output[0] = 0;
+	Chassis_Final_Output[1] = 0;
 	
 	CAN_CMD_CHASSIS(Chassis_Final_Output[0],Chassis_Final_Output[1], Revolver_Final_Output, Revolver_Final_Output_right);
 }
