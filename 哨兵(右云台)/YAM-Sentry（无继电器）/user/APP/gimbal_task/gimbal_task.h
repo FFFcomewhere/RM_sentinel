@@ -113,15 +113,15 @@
 
 #define max_yaw_relative_angle      4*PI
 #define min_yaw_relative_angle     	-4*PI
-#define max_pitch_relative_angle    PI/6-PI/9+PI/3-PI/3
-#define min_pitch_relative_angle    PI/6-PI/9-PI/3
+#define max_pitch_relative_angle    PI/3
+#define min_pitch_relative_angle    -PI/2
 
-#define auto_pitch_up              0.5*PI+PI/6-PI/9+PI/3
-#define auto_pitch_down            0.5*PI+PI/6-PI/9
-#define auto_yaw_ccw                1.5*PI
-#define auto_yaw_cw                 -PI
-#define mid_yaw_angle               -0.11*PI-PI/6
-#define mid_pitch_angle             PI/3-PI/3
+#define auto_pitch_up              0.15f
+#define auto_pitch_down            -PI/3
+#define auto_yaw_ccw               -PI/12
+#define auto_yaw_cw                -3*PI/4
+#define mid_yaw_angle              -5*PI/12
+#define mid_pitch_angle            0
 
 
 
