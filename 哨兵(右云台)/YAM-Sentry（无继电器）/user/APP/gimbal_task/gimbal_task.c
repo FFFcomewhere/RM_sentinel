@@ -265,8 +265,8 @@ void GIMBAL_task(void *pvParameters)
 					else
 						Auto_Mode_Count=0;
 						
-//					modeGimbal=CLOUD_MECH_MODE;
-//					GIMBAL_AUTO_Ctrl();
+					modeGimbal=CLOUD_MECH_MODE;
+					GIMBAL_AUTO_Ctrl();
 				}
 			}
 
