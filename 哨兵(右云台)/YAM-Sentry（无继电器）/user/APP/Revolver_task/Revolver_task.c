@@ -207,7 +207,7 @@ void Revolver_task(void *pvParameters)
 					Fric_mode(FRI_OFF);
 				}
 				
-				Revolver_CANSend();
+			
 	
 
 				
@@ -779,6 +779,6 @@ void Revolver_UpdateMotorCurrent( int16_t current )
   */
 void Revolver_CANSend(void)
 {	 	
-	CAN_CMD_Revolver(Revolver_Final_Output, 0);
+	;
 }
 

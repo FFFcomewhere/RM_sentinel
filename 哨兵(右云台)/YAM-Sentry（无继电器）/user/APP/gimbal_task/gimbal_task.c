@@ -235,7 +235,7 @@ void GIMBAL_task(void *pvParameters)
 		currentTime = xTaskGetTickCount();//当前系统时间
 		
 		/* 代码段 */
-		if (SYSTEM_GetSystemState() == SYSTEM_STARTING && Cloud_Angle_Measure[PITCH][MECH]!=0)//初始化模式 这里pitch上电狂甩，所以加了判断
+		if (SYSTEM_GetSystemState() == SYSTEM_STARTING )//初始化模式 
        GIMBAL_InitCtrl();
 		
 		else
@@ -735,8 +735,7 @@ void GIMBAL_CanSend(void)
 		fMotorOutput[PITCH] = given_current[PITCH][GYRO];
 	}
 	
-	//fMotorOutput[YAW] = 0;
-	//fMotorOutput[PITCH] = 5000;
+
 	
 		
 	

@@ -659,5 +659,5 @@ void CHASSIS_REST(void)
   */
 void CHASSIS_CANSend(void)
 {	 	
-	CAN_CMD_CHASSIS(0, 0, Chassis_Final_Output[0],Chassis_Final_Output[1]);
+	;
 }
