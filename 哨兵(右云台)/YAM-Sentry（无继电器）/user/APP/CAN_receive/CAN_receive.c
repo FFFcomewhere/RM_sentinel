@@ -272,6 +272,7 @@ void CAN_CMD_Transfer(int16_t sensor_left,int16_t senser_right, int16_t Pitch_ri
     TxMessage.Data[1] = senser_right;
     TxMessage.Data[2] = Pitch_right >> 8;
 	TxMessage.Data[3] = Pitch_right;
+    
     TxMessage.Data[4] = Yaw_right >> 8;
     TxMessage.Data[5] = Yaw_right;
     TxMessage.Data[6] = Revolver_Final_Output_right >> 8;

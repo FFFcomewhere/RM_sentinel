@@ -735,8 +735,7 @@ void GIMBAL_CanSend(void)
 		fMotorOutput[PITCH] = given_current[PITCH][GYRO];
 	}
 	
-	//fMotorOutput[YAW] = 0;
-	//fMotorOutput[PITCH] = 5000;
+	
 	
 		
 	
