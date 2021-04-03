@@ -212,10 +212,6 @@ float Chassis_Final_Output[4];
 
 
 
-
-//底盘电机输出量
-float Chassis_Final_Output[4];
-
 /**
   * @brief  底盘初始化  主要是PID 限幅初始化
   * @param  void

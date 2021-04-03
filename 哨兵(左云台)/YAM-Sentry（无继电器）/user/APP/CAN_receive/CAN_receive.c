@@ -161,15 +161,25 @@ void CAN1_RX0_IRQHandler(void)
 
 	
 	
-    if(RxMessage.StdId == CAN_SIGNAL_TRANSFER_ALL_ID)//×ó ÓÒ
-	{
-		Sensor_data[LEFT] = RxMessage.Data[0];		
-		Sensor_data[RIGHT] = RxMessage.Data[1];
-        Pitch_right = ((int16_t)RxMessage.Data[2]<<8|RxMessage.Data[3]);
-        Yaw_right =((int16_t)RxMessage.Data[4]<<8|RxMessage.Data[5]);
-        Revolver_Final_Output_right = ((int16_t)RxMessage.Data[6]<<8|RxMessage.Data[7]);
+//    if(RxMessage.StdId == CAN_SIGNAL_TRANSFER_ALL_ID)//×ó ÓÒ
+//	{
+//		//Sensor_data[LEFT] = RxMessage.Data[0];		
+//		//Sensor_data[RIGHT] = RxMessage.Data[1];
+//    //Pitch_right = ((int16_t)RxMessage.Data[2]<<8|RxMessage.Data[3]);
+//		
+//		
+//    //Yaw_right =((int16_t)RxMessage.Data[4]<<8|RxMessage.Data[5]);
+//		
+//		//Revolver_Final_Output_right = ((int16_t)RxMessage.Data[6]<<8|RxMessage.Data[7]);
+//		
+//		
+//		Sensor_data[LEFT] = 0;
+//		Sensor_data[RIGHT] = 0;
+//    Pitch_right = 0;
+//		Yaw_right = 0;
+//		Revolver_Final_Output_right = 0;
 
-	}
+//	}
 
    
 	
@@ -300,7 +310,7 @@ void CAN_CMD_Revolver(int16_t motor1, int16_t motor2 )
     TxMessage.Data[0] = motor1 >> 8;
     TxMessage.Data[1] = motor1;
     TxMessage.Data[2] = 0;
-	TxMessage.Data[3] = 0;
+	  TxMessage.Data[3] = 0;
     TxMessage.Data[4] = 0;
     TxMessage.Data[5] = 0;
     TxMessage.Data[6] = 0;

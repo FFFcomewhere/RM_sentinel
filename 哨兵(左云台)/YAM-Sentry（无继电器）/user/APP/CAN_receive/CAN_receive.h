@@ -40,7 +40,7 @@ typedef enum
 		CAN_YAW_MOTOR_IDR= 0x206,   //IDΪ2 
 		
 		 
-    CAN_SIGNAL_TRANSFER_ALL_ID = 0X220,
+    CAN_SIGNAL_TRANSFER_ALL_ID = 0X300,
  
 		
 	  CAN_CAP_ID=0x211,
