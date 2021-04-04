@@ -31,15 +31,13 @@ typedef enum
     CAN_CHASSIS_ALL_ID = 0x200,
 
     CAN_REVOLVER_ALL_ID = 0x200,
-		CAN_2006_M2_ID = 0x204, 
+		CAN_2006_M1_ID = 0x204, 
 
 		CAN_GIMBAL_ALL_ID = 0x1FF,
 		CAN_PIT_MOTOR_IDR= 0x207,   //ID为3
 		CAN_YAW_MOTOR_IDR= 0x208,   //ID为4
 		
-		CAN_CAP_ID=0x211,
-    
-    CAN_SIGNAL_TRANSFER_ALL_ID = 0X300,  //右云台传输数据值左云台
+    CAN_SIGNAL_TRANSFER_ALL_ID = 0X220,  //右云台传输数据值左云台
     
 		
 	  
@@ -60,12 +58,8 @@ typedef struct
 
 extern void CAN_CMD_CHASSIS_RESET_ID(void);
 
-//发送云台控制命令，其中rev为保留字节
-extern void CAN_CMD_GIMBAL(int16_t pitchr, int16_t pitchl, int16_t yawr, int16_t yawl);
-//发送底盘电机控制命令
-extern void CAN_CMD_CHASSIS(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4);
-//发送拨盘电机控制命令
-void CAN_CMD_Revolver(int16_t motor1,int16_t motor2);
+
+
 //发送传感器和云台电机信号
 void CAN_CMD_Transfer(int16_t sensor_left,int16_t senser_right, int16_t Pitch_right, int16_t Yaw_right, int16_t Revolver_Final_Output_right);
 //返回yaw电机变量地址，通过指针方式获取原始数据

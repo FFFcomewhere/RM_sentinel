@@ -110,7 +110,6 @@ void chassis_task(void *pvParameters)
 				Chassis_Motor_Speed_PID(); //PID计算				
 				
 				//右云台处理
-				
 				CAN_CMD_Transfer(Sensor_data[LEFT], Sensor_data[RIGHT],fMotorOutput[PITCH] , fMotorOutput[YAW] ,Revolver_Final_Output);
 				
 				vTaskDelay(TIME_STAMP_2MS);
@@ -650,14 +649,4 @@ void Sensor_UpdateMotorCur(SensorDirection direction, int16_t data)
 void CHASSIS_REST(void)
 {
 	Chassis_Move_X = 0;
-}
-/**
-  * @brief  发送电机最终电流值
-  * @param  void
-  * @retval void
-  * @attention  CAN1发送
-  */
-void CHASSIS_CANSend(void)
-{	 	
-	;
 }
