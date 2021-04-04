@@ -101,7 +101,7 @@ void CAN1_RX0_IRQHandler(void)
 	}
 	
 	
-	if(RxMessage.StdId  == CAN_2006_M1_ID)//拨盘电机
+	if(RxMessage.StdId  == CAN_2006_M2_ID)//拨盘电机
 	{
 		rota_measure_L = ((int16_t)RxMessage.Data[0]<<8|RxMessage.Data[1]);
 		Revolver_UpdateMotorAngle(rota_measure_L);
@@ -145,10 +145,18 @@ void CAN_CMD_Transfer(int16_t sensor_left,int16_t senser_right, int16_t Pitch_ri
     TxMessage.DLC = 0x08;
     TxMessage.Data[0] = sensor_left;
     TxMessage.Data[1] = senser_right;
-    TxMessage.Data[2] = Pitch_right >> 8;
-	TxMessage.Data[3] = Pitch_right;
+   //TxMessage.Data[2] = 0;
+	  //TxMessage.Data[3] =0;
+
+	  TxMessage.Data[2] = Pitch_right >> 8;
+	  TxMessage.Data[3] = Pitch_right;
+//	
+	
+	
     TxMessage.Data[4] = Yaw_right >> 8;
     TxMessage.Data[5] = Yaw_right;
+	
+	
     TxMessage.Data[6] = Revolver_Final_Output_right >> 8;
     TxMessage.Data[7] = Revolver_Final_Output_right;
 
