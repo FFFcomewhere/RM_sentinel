@@ -43,7 +43,7 @@ typedef enum
     CAN_SIGNAL_TRANSFER_ALL_ID = 0X220,
  
 		
-	  CAN_CAP_ID=0x211,
+	 
 
 } can_msg_id_e;
 

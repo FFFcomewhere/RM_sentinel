@@ -644,13 +644,3 @@ void CHASSIS_REST(void)
 {
 	Chassis_Move_X = 0;
 }
-/**
-  * @brief  发送电机最终电流值
-  * @param  void
-  * @retval void
-  * @attention  CAN1发送
-  */
-void CHASSIS_CANSend(void)
-{	 	
-	CAN_CMD_CHASSIS(0, 0, Chassis_Final_Output[0],Chassis_Final_Output[1]);
-}

@@ -309,25 +309,6 @@ void CAN_CMD_Revolver(int16_t motor1, int16_t motor2 )
     CAN_Transmit(Revolver_CAN, &TxMessage);
 }
 
-void CAN_CMD_Sensor(int16_t left,int16_t right)
-{
-    CanTxMsg TxMessage;
-    TxMessage.StdId = CAN_SIGNAL_TRANSFER_ALL_ID;
-    TxMessage.IDE = CAN_ID_STD;
-    TxMessage.RTR = CAN_RTR_DATA;
-    TxMessage.DLC = 0x08;
-    TxMessage.Data[0] = left >> 8;
-    TxMessage.Data[1] = left;
-    TxMessage.Data[2] = right >> 8;
-	TxMessage.Data[3] = right;
-    TxMessage.Data[4] = 0;
-    TxMessage.Data[5] = 0;
-    TxMessage.Data[6] = 0;
-    TxMessage.Data[7] = 0;
-
-    CAN_Transmit(SENSOR_CAN, &TxMessage);
-}
-
 
 
 //返回yaw电机变量地址，通过指针方式获取原始数据
