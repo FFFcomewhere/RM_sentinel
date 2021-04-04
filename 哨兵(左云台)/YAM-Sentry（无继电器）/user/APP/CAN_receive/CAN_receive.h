@@ -67,8 +67,7 @@ extern void CAN_CMD_GIMBAL(int16_t pitchr, int16_t pitchl, int16_t yawr, int16_t
 extern void CAN_CMD_CHASSIS(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4);
 //发送拨盘电机控制命令
 void CAN_CMD_Revolver(int16_t motor1,int16_t motor2);
-//发送传感器信号
-void CAN_CMD_Sensor(int16_t left,int16_t right);
+
 
 //返回yaw电机变量地址，通过指针方式获取原始数据
 extern const motor_measure_t *get_Yaw_Gimbal_Motor_Measure_Point(void);

@@ -170,7 +170,7 @@ void Revolver_task(void *pvParameters)
 				if(SYSTEM_GetSystemState() == SYSTEM_STARTING)
 				{
 				   REVOLVER_Rest();
-           Revolver_Init();	
+          			 Revolver_Init();	
 					 friction_Init();
 					 
 				}
@@ -207,7 +207,7 @@ void Revolver_task(void *pvParameters)
 					Fric_mode(FRI_OFF);
 				}
 				
-				Revolver_CANSend();
+				
 	
 
 				
@@ -771,14 +771,5 @@ void Revolver_UpdateMotorCurrent( int16_t current )
 }
 
 
-/**
-  * @brief  发送拨盘电流值
-  * @param  void
-  * @retval void
-  * @attention 
-  */
-void Revolver_CANSend(void)
-{	 	
-	CAN_CMD_Revolver(Revolver_Final_Output, 0);
-}
+
 

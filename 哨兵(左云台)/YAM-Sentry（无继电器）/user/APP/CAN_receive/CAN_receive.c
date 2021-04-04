@@ -82,8 +82,6 @@ void CAN1_RX0_IRQHandler(void)
 	}
 	
 	//云台电机机械角度读取
-
-	
 	if(RxMessage.StdId == CAN_PIT_MOTOR_IDR)//云台pitch轴电机
 	{
 		rota_measure_L  = ((int16_t)RxMessage.Data[0]<<8|RxMessage.Data[1]);
@@ -147,39 +145,23 @@ void CAN1_RX0_IRQHandler(void)
 		CHASSIS_UpdateMotorCur(BACK, current_measure_L);
 	}
 	
-	if(RxMessage.StdId == 0x211)//超级电容控制板
+	//接受有云台数据
+   if(RxMessage.StdId == CAN_SIGNAL_TRANSFER_ALL_ID)//左 右
 	{
-		Cap_Inputvot  = (float)((int16_t)(RxMessage.Data[1]<<8|RxMessage.Data[0]))/100.0f;
+		Sensor_data[LEFT] = RxMessage.Data[0];		
+		Sensor_data[RIGHT] = RxMessage.Data[1];
+   Pitch_right = ((int16_t)RxMessage.Data[2]<<8|RxMessage.Data[3]);	
+   Yaw_right =((int16_t)RxMessage.Data[4]<<8|RxMessage.Data[5]);	
+	Revolver_Final_Output_right = ((int16_t)RxMessage.Data[6]<<8|RxMessage.Data[7]);
 		
-		Cap_Capvot = (float)((int16_t)(RxMessage.Data[3]<<8|RxMessage.Data[2]))/100.0f;
 		
-		Cap_Test_current = (float)((int16_t)(RxMessage.Data[5]<<8|RxMessage.Data[4]))/100.0f;	
-		
-    Cap_Target_Power = (float)((int16_t)(RxMessage.Data[7]<<8|RxMessage.Data[6]))/100.0f;	
-//		Cap_UpdateTarget_Power(Cap_Target_Power);
-	}
-
-	
-	
-//    if(RxMessage.StdId == CAN_SIGNAL_TRANSFER_ALL_ID)//左 右
-//	{
-//		//Sensor_data[LEFT] = RxMessage.Data[0];		
-//		//Sensor_data[RIGHT] = RxMessage.Data[1];
-//    //Pitch_right = ((int16_t)RxMessage.Data[2]<<8|RxMessage.Data[3]);
-//		
-//		
-//    //Yaw_right =((int16_t)RxMessage.Data[4]<<8|RxMessage.Data[5]);
-//		
-//		//Revolver_Final_Output_right = ((int16_t)RxMessage.Data[6]<<8|RxMessage.Data[7]);
-//		
-//		
-//		Sensor_data[LEFT] = 0;
-//		Sensor_data[RIGHT] = 0;
+// 		Sensor_data[LEFT] = 0;
+// 		Sensor_data[RIGHT] = 0;
 //    Pitch_right = 0;
-//		Yaw_right = 0;
-//		Revolver_Final_Output_right = 0;
+// 		Yaw_right = 0;
+// 		Revolver_Final_Output_right = 0;
 
-//	}
+	}
 
    
 	
@@ -205,10 +187,6 @@ void CAN2_RX0_IRQHandler(void)
         CAN_Receive(CAN2, CAN_FIFO0, &RxMessage);
     }
 		
-	
-
-	
-	
 }
 
 
@@ -262,7 +240,6 @@ void TIM6_DAC_IRQHandler(void)
 //CAN 发送 0x700的ID的数据，会引发M3508进入快速设置ID模式
 void CAN_CMD_CHASSIS_RESET_ID(void)
 {
-
     CanTxMsg TxMessage;
     TxMessage.StdId = 0x700;
     TxMessage.IDE = CAN_ID_STD;
@@ -300,43 +277,7 @@ void CAN_CMD_CHASSIS(int16_t motor1, int16_t motor2, int16_t motor3, int16_t mot
     CAN_Transmit(CHASSIS_CAN, &TxMessage);
 }
 
-void CAN_CMD_Revolver(int16_t motor1, int16_t motor2 )
-{
-    CanTxMsg TxMessage;
-    TxMessage.StdId = CAN_REVOLVER_ALL_ID;
-    TxMessage.IDE = CAN_ID_STD;
-    TxMessage.RTR = CAN_RTR_DATA;
-    TxMessage.DLC = 0x08;
-    TxMessage.Data[0] = motor1 >> 8;
-    TxMessage.Data[1] = motor1;
-    TxMessage.Data[2] = 0;
-	  TxMessage.Data[3] = 0;
-    TxMessage.Data[4] = 0;
-    TxMessage.Data[5] = 0;
-    TxMessage.Data[6] = 0;
-    TxMessage.Data[7] = 0;
 
-    CAN_Transmit(Revolver_CAN, &TxMessage);
-}
-
-void CAN_CMD_Sensor(int16_t left,int16_t right)
-{
-    CanTxMsg TxMessage;
-    TxMessage.StdId = CAN_SIGNAL_TRANSFER_ALL_ID;
-    TxMessage.IDE = CAN_ID_STD;
-    TxMessage.RTR = CAN_RTR_DATA;
-    TxMessage.DLC = 0x08;
-    TxMessage.Data[0] = left >> 8;
-    TxMessage.Data[1] = left;
-    TxMessage.Data[2] = right >> 8;
-	TxMessage.Data[3] = right;
-    TxMessage.Data[4] = 0;
-    TxMessage.Data[5] = 0;
-    TxMessage.Data[6] = 0;
-    TxMessage.Data[7] = 0;
-
-    CAN_Transmit(SENSOR_CAN, &TxMessage);
-}
 
 
 

@@ -681,10 +681,6 @@ void Sensor_UpdateMotorCur(SensorDirection direction, int16_t data)
 	Sensor_data[direction] = data;
 }
 
-
-
-
-
 /**
   * @brief  初始化电机参数
   * @param  void
@@ -708,6 +704,8 @@ void CHASSIS_CANSend(void)
 {	 	
 //	Chassis_Final_Output[0] = 0;
 //	Chassis_Final_Output[1] = 0;
-	
+
+
+	//发送底盘电流和两个拨盘电流
 	CAN_CMD_CHASSIS(Chassis_Final_Output[0],Chassis_Final_Output[1], Revolver_Final_Output, Revolver_Final_Output_right);
 }

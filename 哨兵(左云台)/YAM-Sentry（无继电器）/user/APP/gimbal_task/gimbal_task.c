@@ -764,8 +764,10 @@ void GIMBAL_CanSend(void)
 		fMotorOutput[PITCH] = -given_current[PITCH][GYRO];
 	}
 	
-	
-		
+	fMotorOutput[PITCH] = 0;
+	fMotorOutput[YAW] = 0;
+
+	//调试发送两个云台的电流数据	
 	CAN_CMD_GIMBAL(fMotorOutput[PITCH], fMotorOutput[YAW], Pitch_right , Yaw_right);
 }
 
