@@ -459,6 +459,7 @@ void GIMBAL_AUTO_Ctrl(void)
 		}
 	}
 	
+			
 	else if(auto_mode.pitch_down == TRUE)
 	{		
     Cloud_Angle_Target[PITCH][MECH] = RAMP_float( auto_pitch_down, Cloud_Angle_Target[PITCH][MECH], 0.02);		

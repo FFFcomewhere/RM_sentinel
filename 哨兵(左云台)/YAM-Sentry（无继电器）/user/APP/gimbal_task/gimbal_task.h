@@ -47,9 +47,9 @@
 #if MODE ==	TEST
 /*----------------------------------------速度环--------------------------------------------*/
 //pitch 速度环 PID参数以及 PID最大输出，积分输出
-#define PITCH_SPEED_PID_KP 5000.0f
-#define PITCH_SPEED_PID_KI 1.0f
-#define PITCH_SPEED_PID_KD 0.0f
+#define PITCH_SPEED_PID_KP 7000.0f
+#define PITCH_SPEED_PID_KI 0.0f
+#define PITCH_SPEED_PID_KD 1.5f
 #define PITCH_SPEED_PID_MAX_OUT 30000.0f
 #define PITCH_SPEED_PID_MAX_IOUT 5000.0f
 
@@ -98,7 +98,7 @@
 
 //**机械模式**//
 //pitch 角度环 角度由编码器 PID参数以及 PID最大输出，积分输出
-#define PITCH_ENCODE_RELATIVE_PID_KP 10.0f    //15
+#define PITCH_ENCODE_RELATIVE_PID_KP 15.0f    //15
 #define PITCH_ENCODE_RELATIVE_PID_KI 0.1f
 #define PITCH_ENCODE_RELATIVE_PID_KD 1.5f
 
@@ -118,12 +118,12 @@
 #define max_yaw_relative_angle      4*PI
 #define min_yaw_relative_angle     	-4*PI
 #define max_pitch_relative_angle     -2*PI/3+PI/6
-#define min_pitch_relative_angle     -2*PI/3-PI/6
+#define min_pitch_relative_angle     -PI
 
-#define auto_yaw_ccw                1.5*PI
-#define auto_yaw_cw                 -PI
-#define auto_pitch_up                -2*PI/3+PI/6
-#define auto_pitch_down              -2*PI/3-PI/6
+#define auto_yaw_ccw                2*PI/3
+#define auto_yaw_cw                 0
+#define auto_pitch_up                -2.0
+#define auto_pitch_down              -2.7
 
 
 #define mid_yaw_angle               PI/3
