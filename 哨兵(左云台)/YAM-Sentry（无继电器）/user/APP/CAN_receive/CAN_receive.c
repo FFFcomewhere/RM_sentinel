@@ -120,6 +120,8 @@ void CAN1_RX0_IRQHandler(void)
 		current_measure_L = ((int16_t)RxMessage.Data[4]<<8|RxMessage.Data[5]);
 		Revolver_UpdateMotorCurrent(current_measure_L);
 	}
+
+   
 	
 	
 	//底盘电机转速读取,机械角度暂时没用
@@ -136,8 +138,8 @@ void CAN1_RX0_IRQHandler(void)
 	}
 	
 	if(RxMessage.StdId == CAN_3508_M2_ID)//后
-		rota_measure_L   = ((int16_t)RxMessage.Data[0]<<8|RxMessage.Data[1]);
 	{
+        rota_measure_L   = ((int16_t)RxMessage.Data[0]<<8|RxMessage.Data[1]);
 		CHASSIS_UpdateMotorAngle(BACK, rota_measure_L);
 		
 		speed_measure_L  = ((int16_t)RxMessage.Data[2]<<8|RxMessage.Data[3]);
