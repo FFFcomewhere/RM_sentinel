@@ -467,7 +467,7 @@ void GIMBAL_AUTO_Ctrl(void)
 /*---------------------pitch÷·--------------------*/	
 	if(auto_mode.pitch_up == TRUE)
 	{			
-		Cloud_Angle_Target[PITCH][MECH] = RAMP_float( auto_pitch_up, Cloud_Angle_Target[PITCH][MECH], 0.04 );
+		Cloud_Angle_Target[PITCH][MECH] = RAMP_float( auto_pitch_up, Cloud_Angle_Target[PITCH][MECH], 0.08 );
 		erro_pitch =  Cloud_Angle_Measure[PITCH][MECH] - auto_pitch_up;
 		if(erro_pitch  < 0.1f && erro_pitch > -0.1f)
 		{

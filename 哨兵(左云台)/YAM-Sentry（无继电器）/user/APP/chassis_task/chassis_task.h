@@ -47,13 +47,13 @@ extern void chassis_task(void *pvParameters);
 #define CHASSIS_CONTROL_TIME 0.002
 
 //底盘电机最大速度
-#define MAX_WHEEL_SPEED 1.5f*0.7
+#define MAX_WHEEL_SPEED 1.5f*1.3
 
 //底盘运动过程最大前进速度
-#define NORMAL_MAX_CHASSIS_SPEED_X 1.5f*1 //1.5
+#define NORMAL_MAX_CHASSIS_SPEED_X 1.5f*1.3 //1.5
 
 //自主模式运动过程的前进速度
-#define AUTO_MOVE_SPEED 1.5f*0.7
+#define AUTO_MOVE_SPEED 1.5f*1.3
 //遥控器前进摇杆（max 660）转化成车体前进速度（m/s）的比例
 #define CHASSIS_VX_RC_SEN 0.006f
 
