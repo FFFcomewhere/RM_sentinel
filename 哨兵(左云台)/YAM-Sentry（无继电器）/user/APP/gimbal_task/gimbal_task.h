@@ -122,7 +122,7 @@
 
 #define auto_yaw_ccw                2*PI/3
 #define auto_yaw_cw                 0
-#define auto_pitch_up                -2.0
+#define auto_pitch_up                -1.9    
 #define auto_pitch_down              -2.7
 
 

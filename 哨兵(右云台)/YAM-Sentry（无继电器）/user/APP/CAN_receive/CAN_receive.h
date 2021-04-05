@@ -31,13 +31,13 @@ typedef enum
     CAN_CHASSIS_ALL_ID = 0x200,
 
     CAN_REVOLVER_ALL_ID = 0x200,
-		CAN_2006_M1_ID = 0x204, 
+		CAN_2006_M2_ID = 0x204, 
 
 		CAN_GIMBAL_ALL_ID = 0x1FF,
 		CAN_PIT_MOTOR_IDR= 0x207,   //ID为3
 		CAN_YAW_MOTOR_IDR= 0x208,   //ID为4
 		
-    CAN_SIGNAL_TRANSFER_ALL_ID = 0X220,  //右云台传输数据值左云台
+    CAN_SIGNAL_TRANSFER_ALL_ID = 0X217,  //右云台传输数据值左云台
     
 		
 	  

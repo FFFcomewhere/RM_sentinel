@@ -467,9 +467,9 @@ void GIMBAL_AUTO_Ctrl(void)
 /*---------------------pitch÷·--------------------*/	
 	if(auto_mode.pitch_up == TRUE)
 	{			
-		Cloud_Angle_Target[PITCH][MECH] = RAMP_float( auto_pitch_up, Cloud_Angle_Target[PITCH][MECH], 0.08 );
+		Cloud_Angle_Target[PITCH][MECH] = RAMP_float( auto_pitch_up, Cloud_Angle_Target[PITCH][MECH], 0.04 );
 		erro_pitch =  Cloud_Angle_Measure[PITCH][MECH] - auto_pitch_up;
-		if(erro_pitch  < 0.2f && erro_pitch > -0.2f)
+		if(erro_pitch  < 0.1f && erro_pitch > -0.1f)
 		{
 			auto_mode.pitch_up = FALSE;
 			auto_mode.pitch_down = TRUE;
@@ -478,7 +478,7 @@ void GIMBAL_AUTO_Ctrl(void)
 	
 	else if(auto_mode.pitch_down == TRUE)
 	{		
-    Cloud_Angle_Target[PITCH][MECH] = RAMP_float( auto_pitch_down, Cloud_Angle_Target[PITCH][MECH], 0.04);		
+    Cloud_Angle_Target[PITCH][MECH] = RAMP_float( auto_pitch_down, Cloud_Angle_Target[PITCH][MECH], 0.02);		
 		erro_pitch =   Cloud_Angle_Measure[PITCH][MECH] - auto_pitch_down;
 		if(erro_pitch  < 0.1f && erro_pitch > -0.1f )
 		{

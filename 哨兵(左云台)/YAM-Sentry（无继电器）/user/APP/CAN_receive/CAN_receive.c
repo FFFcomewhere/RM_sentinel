@@ -149,17 +149,6 @@ void CAN1_RX0_IRQHandler(void)
 		CHASSIS_UpdateMotorCur(BACK, current_measure_L);
 	}
 	
-	if(RxMessage.StdId == 0x211)//≥¨º∂µÁ»›øÿ÷∆∞Â
-	{
-		Cap_Inputvot  = (float)((int16_t)(RxMessage.Data[1]<<8|RxMessage.Data[0]))/100.0f;
-		
-		Cap_Capvot = (float)((int16_t)(RxMessage.Data[3]<<8|RxMessage.Data[2]))/100.0f;
-		
-		Cap_Test_current = (float)((int16_t)(RxMessage.Data[5]<<8|RxMessage.Data[4]))/100.0f;	
-		
-    Cap_Target_Power = (float)((int16_t)(RxMessage.Data[7]<<8|RxMessage.Data[6]))/100.0f;	
-//		Cap_UpdateTarget_Power(Cap_Target_Power);
-	}
 
 	
 	
