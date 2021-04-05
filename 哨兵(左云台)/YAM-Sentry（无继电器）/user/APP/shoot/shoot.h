@@ -71,8 +71,8 @@
 #define PI_Ten 0.314f
 
 //²¦µ¯ÂÖµç»úPID
-#define TRIGGER_ANGLE_PID_KP 800.0f
-#define TRIGGER_ANGLE_PID_KI 0.5f
+#define TRIGGER_ANGLE_PID_KP 500.0f
+#define TRIGGER_ANGLE_PID_KI 0.0f
 #define TRIGGER_ANGLE_PID_KD 0.0f
 
 #define TRIGGER_BULLET_PID_MAX_OUT 15000.0f

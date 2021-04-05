@@ -369,19 +369,12 @@ void sensor_update(void)
 	Sensor_data[RIGHT] = CJ_R;
 	
 	
-	
-	
+
 
 	static uint16_t change_time = 0;
 	
-	
-//	last_remain_HP = now_remain_Hp;
-//	now_remain_Hp = JUDGE_remain_HP();
-//	
-//	//哨兵被击打，反向运动逃跑
-//	if(now_remain_Hp  <=  590)
-//		if_beat = TRUE;
-	
+
+
 	if(remote_change == TRUE) //从机械模式切过来
 	{
 		remote_change = FALSE;
@@ -650,14 +643,4 @@ void Sensor_UpdateMotorCur(SensorDirection direction, int16_t data)
 void CHASSIS_REST(void)
 {
 	Chassis_Move_X = 0;
-}
-/**
-  * @brief  发送电机最终电流值
-  * @param  void
-  * @retval void
-  * @attention  CAN1发送
-  */
-void CHASSIS_CANSend(void)
-{	 	
-	CAN_CMD_CHASSIS(0, 0, Chassis_Final_Output[0],Chassis_Final_Output[1]);
 }

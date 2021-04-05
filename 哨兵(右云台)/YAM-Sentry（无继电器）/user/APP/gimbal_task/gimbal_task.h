@@ -104,7 +104,7 @@
 #define PITCH_ENCODE_RELATIVE_PID_MAX_IOUT 0.0f
 
 //yaw 角度环 角度由编码器 PID参数以及 PID最大输出，积分输出
-#define YAW_ENCODE_RELATIVE_PID_KP 5000.0f
+#define YAW_ENCODE_RELATIVE_PID_KP 3000.0f
 #define YAW_ENCODE_RELATIVE_PID_KI 0.0f
 #define YAW_ENCODE_RELATIVE_PID_KD 0.0f
 
@@ -113,15 +113,15 @@
 
 #define max_yaw_relative_angle      4*PI
 #define min_yaw_relative_angle     	-4*PI
-#define max_pitch_relative_angle    PI/6-PI/9+PI/3-PI/3
-#define min_pitch_relative_angle    PI/6-PI/9-PI/3
+#define max_pitch_relative_angle    0.3f
+#define min_pitch_relative_angle    -PI/5
 
-#define auto_pitch_up              0.5*PI+PI/6-PI/9+PI/3
-#define auto_pitch_down            0.5*PI+PI/6-PI/9
-#define auto_yaw_ccw                1.5*PI
-#define auto_yaw_cw                 -PI
-#define mid_yaw_angle               -0.11*PI-PI/6
-#define mid_pitch_angle             PI/3-PI/3
+#define auto_pitch_up               0.3f
+#define auto_pitch_down             -PI/5
+#define auto_yaw_ccw                -PI/6
+#define auto_yaw_cw                 -2*PI/3
+#define mid_yaw_angle               -5*PI/12
+#define mid_pitch_angle             0
 
 
 
