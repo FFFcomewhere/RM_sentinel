@@ -277,8 +277,8 @@ void Revolver_Init(void)
 	
 		/* PID参数 */
 	  //速度环
-	Revolver_Speed_kpid[KP] = 18;
-	Revolver_Speed_kpid[KI] = 0.2f;
+	Revolver_Speed_kpid[KP] = 14;
+	Revolver_Speed_kpid[KI] = 0.0f;
 	Revolver_Speed_kpid[KD] = 0;
 	
 

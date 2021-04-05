@@ -120,6 +120,8 @@ void CAN1_RX0_IRQHandler(void)
 		current_measure_L = ((int16_t)RxMessage.Data[4]<<8|RxMessage.Data[5]);
 		Revolver_UpdateMotorCurrent(current_measure_L);
 	}
+
+   
 	
 	
 	//底盘电机转速读取,机械角度暂时没用
@@ -136,8 +138,8 @@ void CAN1_RX0_IRQHandler(void)
 	}
 	
 	if(RxMessage.StdId == CAN_3508_M2_ID)//后
-		rota_measure_L   = ((int16_t)RxMessage.Data[0]<<8|RxMessage.Data[1]);
 	{
+        rota_measure_L   = ((int16_t)RxMessage.Data[0]<<8|RxMessage.Data[1]);
 		CHASSIS_UpdateMotorAngle(BACK, rota_measure_L);
 		
 		speed_measure_L  = ((int16_t)RxMessage.Data[2]<<8|RxMessage.Data[3]);
@@ -147,17 +149,6 @@ void CAN1_RX0_IRQHandler(void)
 		CHASSIS_UpdateMotorCur(BACK, current_measure_L);
 	}
 	
-	if(RxMessage.StdId == 0x211)//超级电容控制板
-	{
-		Cap_Inputvot  = (float)((int16_t)(RxMessage.Data[1]<<8|RxMessage.Data[0]))/100.0f;
-		
-		Cap_Capvot = (float)((int16_t)(RxMessage.Data[3]<<8|RxMessage.Data[2]))/100.0f;
-		
-		Cap_Test_current = (float)((int16_t)(RxMessage.Data[5]<<8|RxMessage.Data[4]))/100.0f;	
-		
-    Cap_Target_Power = (float)((int16_t)(RxMessage.Data[7]<<8|RxMessage.Data[6]))/100.0f;	
-//		Cap_UpdateTarget_Power(Cap_Target_Power);
-	}
 
 	
 	
@@ -307,25 +298,6 @@ void CAN_CMD_Revolver(int16_t motor1, int16_t motor2 )
     TxMessage.Data[7] = 0;
 
     CAN_Transmit(Revolver_CAN, &TxMessage);
-}
-
-void CAN_CMD_Sensor(int16_t left,int16_t right)
-{
-    CanTxMsg TxMessage;
-    TxMessage.StdId = CAN_SIGNAL_TRANSFER_ALL_ID;
-    TxMessage.IDE = CAN_ID_STD;
-    TxMessage.RTR = CAN_RTR_DATA;
-    TxMessage.DLC = 0x08;
-    TxMessage.Data[0] = left >> 8;
-    TxMessage.Data[1] = left;
-    TxMessage.Data[2] = right >> 8;
-	TxMessage.Data[3] = right;
-    TxMessage.Data[4] = 0;
-    TxMessage.Data[5] = 0;
-    TxMessage.Data[6] = 0;
-    TxMessage.Data[7] = 0;
-
-    CAN_Transmit(SENSOR_CAN, &TxMessage);
 }
 
 

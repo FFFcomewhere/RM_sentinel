@@ -207,9 +207,7 @@ void Revolver_task(void *pvParameters)
 					Fric_mode(FRI_OFF);
 				}
 				
-				Revolver_CANSend();
-	
-
+				
 				
 //				if(Fric_GetSpeedReal() > REVOL_CAN_OPEN)//摩擦轮开启
 //		    {
@@ -279,8 +277,8 @@ void Revolver_Init(void)
 	
 		/* PID参数 */
 	  //速度环
-	Revolver_Speed_kpid[KP] = 18;
-	Revolver_Speed_kpid[KI] = 0.2f;
+	Revolver_Speed_kpid[KP] = 5;
+	Revolver_Speed_kpid[KI] = 0.0f;
 	Revolver_Speed_kpid[KD] = 0;
 	
 
@@ -487,7 +485,7 @@ void REVOL_SpeedLoop(void)
 	iTermRevolSpeed   = constrain( iTermRevolSpeed, -iTermRevolSpeedMax, iTermRevolSpeedMax );
 
 	Revolver_Final_Output = constrain_float( pTermRevolSpeed + iTermRevolSpeed, -Revolver_Output_Max, +Revolver_Output_Max );
-//	
+	
 	
 	
 	//fzj
@@ -771,14 +769,5 @@ void Revolver_UpdateMotorCurrent( int16_t current )
 }
 
 
-/**
-  * @brief  发送拨盘电流值
-  * @param  void
-  * @retval void
-  * @attention 
-  */
-void Revolver_CANSend(void)
-{	 	
-	CAN_CMD_Revolver(Revolver_Final_Output, 0);
-}
+
 

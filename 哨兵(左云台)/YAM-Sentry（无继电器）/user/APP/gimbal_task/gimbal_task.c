@@ -258,6 +258,13 @@ void GIMBAL_task(void *pvParameters)
 			}
 			if(SYSTEM_GetRemoteMode() == AUTO)
 			{
+				
+				//
+//				Cloud_Angle_Measure[YAW][MECH] = - Cloud_Angle_Measure[YAW][MECH];
+//				Cloud_Angle_Measure[PITCH][MECH] = - Cloud_Angle_Measure[PITCH][MECH];
+
+				
+				
 				if(op==0)
 				{
 					modeGimbal = CLOUD_MECH_MODE;   //初始pid默认机械模式防止掉头
@@ -436,9 +443,9 @@ void GIMBAL_AUTO_Ctrl(void)
 	
 	if(auto_mode.yaw_cw == TRUE)
 	{			
-		Cloud_Angle_Target[YAW][MECH] = RAMP_float( auto_yaw_cw, Cloud_Angle_Target[YAW][MECH], 0.02 );
+		Cloud_Angle_Target[YAW][MECH] = RAMP_float( auto_yaw_cw, Cloud_Angle_Target[YAW][MECH], 0.03 );
 		erro_yaw = Cloud_Angle_Measure[YAW][MECH]-auto_yaw_cw ;
-		if(erro_yaw < 0.15f || erro_yaw > -0.15f)
+		if(erro_yaw < 0.15f && erro_yaw > -0.15f)
 		{
 			auto_mode.yaw_cw = FALSE;
 			auto_mode.yaw_ccw = TRUE;
@@ -447,9 +454,9 @@ void GIMBAL_AUTO_Ctrl(void)
 
 	else if(auto_mode.yaw_ccw == TRUE)
 	{			
-		Cloud_Angle_Target[YAW][MECH] = RAMP_float( auto_yaw_ccw, Cloud_Angle_Target[YAW][MECH], 0.02 );
+		Cloud_Angle_Target[YAW][MECH] = RAMP_float( auto_yaw_ccw, Cloud_Angle_Target[YAW][MECH], 0.03 );
 		erro_yaw = auto_yaw_ccw-Cloud_Angle_Measure[YAW][MECH];
-		if(erro_yaw < 0.15f || erro_yaw > -0.15f)
+		if(erro_yaw < 0.15f && erro_yaw > -0.15f)
 		{
 			auto_mode.yaw_cw = TRUE;
 			auto_mode.yaw_ccw = FALSE; 
@@ -460,9 +467,9 @@ void GIMBAL_AUTO_Ctrl(void)
 /*---------------------pitch轴--------------------*/	
 	if(auto_mode.pitch_up == TRUE)
 	{			
-		Cloud_Angle_Target[PITCH][MECH] = RAMP_float( auto_pitch_up, Cloud_Angle_Target[PITCH][MECH], 0.03 );
-		erro_pitch = auto_pitch_up - Cloud_Angle_Measure[PITCH][MECH];
-		if( erro_pitch < 0.01f || erro_pitch > -0.01f)
+		Cloud_Angle_Target[PITCH][MECH] = RAMP_float( auto_pitch_up, Cloud_Angle_Target[PITCH][MECH], 0.04 );
+		erro_pitch =  Cloud_Angle_Measure[PITCH][MECH] - auto_pitch_up;
+		if(erro_pitch  < 0.1f && erro_pitch > -0.1f)
 		{
 			auto_mode.pitch_up = FALSE;
 			auto_mode.pitch_down = TRUE;
@@ -471,9 +478,9 @@ void GIMBAL_AUTO_Ctrl(void)
 	
 	else if(auto_mode.pitch_down == TRUE)
 	{		
-    Cloud_Angle_Target[PITCH][MECH] = RAMP_float( auto_pitch_down, Cloud_Angle_Target[PITCH][MECH], 0.01);		
-		erro_pitch =Cloud_Angle_Measure[PITCH][MECH] - auto_pitch_down;
-		if(erro_pitch  < 0.01f || erro_pitch  > -0.01f)
+    Cloud_Angle_Target[PITCH][MECH] = RAMP_float( auto_pitch_down, Cloud_Angle_Target[PITCH][MECH], 0.02);		
+		erro_pitch =   Cloud_Angle_Measure[PITCH][MECH] - auto_pitch_down;
+		if(erro_pitch  < 0.1f && erro_pitch > -0.1f )
 		{
 			auto_mode.pitch_up = TRUE;
 			auto_mode.pitch_down = FALSE;
