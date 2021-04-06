@@ -89,7 +89,7 @@
 #define PITCH_GYRO_ABSOLUTE_PID_MAX_IOUT 1.0f
 
 //yaw 角度环 角度由陀螺仪解算 PID参数以及 PID最大输出，积分输出
-#define YAW_GYRO_ABSOLUTE_PID_KP 700.0f 
+#define YAW_GYRO_ABSOLUTE_PID_KP 700.0f
 #define YAW_GYRO_ABSOLUTE_PID_KI 0.1f
 #define YAW_GYRO_ABSOLUTE_PID_KD 18.0f
 
@@ -101,7 +101,7 @@
 #define PITCH_ENCODE_RELATIVE_PID_KP 15.0f    //15
 #define PITCH_ENCODE_RELATIVE_PID_KI 0.1f
 #define PITCH_ENCODE_RELATIVE_PID_KD 1.5f
- 
+
 #define PITCH_ENCODE_RELATIVE_PID_MAX_OUT 30.0f
 #define PITCH_ENCODE_RELATIVE_PID_MAX_IOUT 0.0f
 
@@ -122,7 +122,7 @@
 
 #define auto_yaw_ccw                2*PI/3
 #define auto_yaw_cw                 0
-#define auto_pitch_up                -2.0    
+#define auto_pitch_up                -1.9    
 #define auto_pitch_down              -2.7
 
 
