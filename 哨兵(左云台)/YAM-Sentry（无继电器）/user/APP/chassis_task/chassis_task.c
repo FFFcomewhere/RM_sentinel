@@ -403,7 +403,19 @@ void sensor_update(void)
 		CHASSIS_REST();
 		Chassis_Mode = CHASSIS_L_MODE;
 	}
-	if(CJ_L==1 && CJ_R==0 && Chassis_Mode==CHASSIS_R_MODE)  //左边的没有识别到，右边的识别到了，且正在往右动，就往左边动
+
+
+
+	if(Vision_If_Update()==TRUE)
+	{
+		change_time++;
+		if(change_time > 100)
+		{
+			change_time = 0;
+			change.stop = TRUE;
+		}
+	}
+	else if(CJ_L==1 && CJ_R==0 && Chassis_Mode==CHASSIS_R_MODE)  //左边的没有识别到，右边的识别到了，且正在往右动，就往左边动
 	{
 		change_time++;
 		if(change_time > Change_TurnBack_Time)
@@ -498,7 +510,9 @@ void sensor_update(void)
 void Chassis_AUTO_Ctrl(void)
 {
 	sensor_update();
-  if(change.TO_left == TRUE)  //左边的没有识别到，右边的识别到了，且正在往右动，就往左边动
+	if (change.stop == TRUE)        //识别到目标,停止运动
+		Chassis_Mode = CHASSIS_STOP_MODE;  //停止
+    else if(change.TO_left == TRUE)  //左边的没有识别到，右边的识别到了，且正在往右动，就往左边动
 	  Chassis_Mode = CHASSIS_L_MODE;  //往左
 		
 	else if (change.TO_right == TRUE)	//左边的识别到，右边的没有识别到，且正在往左动，就往右边动		
@@ -572,6 +586,14 @@ void Chassis_Set_Contorl(void)
 		  Chassis_Move_X = fp32_constrain( -AUTO_MOVE_SPEED, -vx_max_speed, vx_max_speed);//前后
 		}
 	}
+	else if(Chassis_Mode == CHASSIS_STOP_MODE)
+	{
+		change.stop = FALSE;
+
+		Chassis_Move_X = fp32_constrain( 0, -vx_max_speed, vx_max_speed);//停止
+		
+	}
+
 }
 /**
   * @brief  底盘全向算法,计算各电机转速

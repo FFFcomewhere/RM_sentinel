@@ -245,10 +245,6 @@ void GIMBAL_task(void *pvParameters)
 			//便于j-scope调试
 			J_scope_gimbal_test();
 
-
-
-			
-			
 			if(SYSTEM_GetRemoteMode() == RC)
 				
 			{
@@ -258,13 +254,7 @@ void GIMBAL_task(void *pvParameters)
 			}
 			if(SYSTEM_GetRemoteMode() == AUTO)
 			{
-				
-				//
-//				Cloud_Angle_Measure[YAW][MECH] = - Cloud_Angle_Measure[YAW][MECH];
-//				Cloud_Angle_Measure[PITCH][MECH] = - Cloud_Angle_Measure[PITCH][MECH];
-
-				
-				
+							
 				if(op==0)
 				{
 					modeGimbal = CLOUD_MECH_MODE;   //初始pid默认机械模式防止掉头
