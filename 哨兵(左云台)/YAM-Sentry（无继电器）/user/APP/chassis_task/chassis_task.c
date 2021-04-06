@@ -379,8 +379,9 @@ void sensor_update(void)
 
 
 
-	static uint16_t change_time = 0;
-	static uint16_t hp_change_time = 0;
+	static uint16_t change_time = 0;    //光电传感器的识别时间计时器
+	static uint16_t irregular_time = 0; //不规则运动的计时器
+	static uint16_t hp_change_time = 0; //逃跑模式的计时器
 	
 	if(hp_change_time > 1000)
 	{
@@ -402,6 +403,31 @@ void sensor_update(void)
 		remote_change = FALSE;
 		CHASSIS_REST();
 		Chassis_Mode = CHASSIS_L_MODE;
+	}
+
+
+	//不规则运动的控制逻辑
+	if(Chassis_Mode==CHASSIS_R_MODE)  //左边的没有识别到，右边的识别到了，且正在往右动，就往左边动
+	{
+		irregular_time++;
+		if(irregular_time > 6000)
+		{
+			irregular_time = 0;
+			change.TO_left = TRUE;
+			change.TO_right = FALSE;
+			flag = TRUE;
+		}
+	}
+	else if(Chassis_Mode==CHASSIS_L_MODE)  //左边的没有识别到，右边的识别到了，且正在往右动，就往左边动
+	{
+		irregular_time++;
+		if(irregular_time > 8000)
+		{
+			irregular_time = 0;
+			change.TO_left = FALSE;
+			change.TO_right = TRUE;
+			flag = TRUE;
+		}
 	}
 
 
@@ -732,8 +758,8 @@ extern float Revolver_Final_Output_right;
   */
 void CHASSIS_CANSend(void)
 {	 	
-//	Chassis_Final_Output[0] = 0;
-//	Chassis_Final_Output[1] = 0;
+	// Chassis_Final_Output[0] = 0;
+	// Chassis_Final_Output[1] = 0;
 	
 	CAN_CMD_CHASSIS(Chassis_Final_Output[0],Chassis_Final_Output[1], Revolver_Final_Output, Revolver_Final_Output_right);
 }
