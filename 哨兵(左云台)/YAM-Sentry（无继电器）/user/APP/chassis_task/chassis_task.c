@@ -26,6 +26,7 @@
 #include "key.h"
 #include "stdio.h"
 #include "arm_math.h"
+#include "vision.h"
 
 #include "CAN_Receive.h"
 #include "pid.h"
@@ -67,12 +68,18 @@ first_order_filter_type_t chassis_cmd_slow_set_vy;
 		
 extern int16_t Sensor_data[2];
 
+//巡逻下的加速档位
+float acc_grade[3] = {1, 2, 1.5};
+
 bool remote_change = FALSE;	
 bool if_beat = FALSE;              //哨兵被击打
+bool if_move_acc = FALSE;        //哨兵是否加速
 uint16_t last_remain_HP;
 uint16_t now_remain_Hp;
 
-		
+
+
+
 		
 //主任务
 void chassis_task(void *pvParameters)
@@ -382,8 +389,10 @@ void sensor_update(void)
 	static uint16_t change_time = 0;    //光电传感器的识别时间计时器
 	static uint16_t irregular_time = 0; //不规则运动的计时器
 	static uint16_t hp_change_time = 0; //逃跑模式的计时器
+	static uint16_t acc_time = 0;       //底盘加速计时器 被击打启用
+
 	
-	if(hp_change_time > 1000)
+	if(hp_change_time > 100)
 	{
 		hp_change_time = 0;
 		last_remain_HP = now_remain_Hp;
@@ -410,18 +419,18 @@ void sensor_update(void)
 	if(Chassis_Mode==CHASSIS_R_MODE)  //左边的没有识别到，右边的识别到了，且正在往右动，就往左边动
 	{
 		irregular_time++;
-		if(irregular_time > 6000)
+		if(irregular_time > 5000)
 		{
-			irregular_time = 0;
-			change.TO_left = TRUE;
-			change.TO_right = FALSE;
-			flag = TRUE;
+//			irregular_time = 0;
+//			change.TO_left = TRUE;
+//			change.TO_right = FALSE;
+//			flag = TRUE;
 		}
 	}
 	else if(Chassis_Mode==CHASSIS_L_MODE)  //左边的没有识别到，右边的识别到了，且正在往右动，就往左边动
 	{
 		irregular_time++;
-		if(irregular_time > 8000)
+		if(irregular_time > 10000)
 		{
 			irregular_time = 0;
 			change.TO_left = FALSE;
@@ -463,10 +472,9 @@ void sensor_update(void)
 			flag = TRUE;
 		}
 	}
-	else if(((CJ_R==0 && CJ_L==0 )|| if_beat)&& Chassis_Mode==CHASSIS_R_MODE && flag == TRUE)  //左右都识别到障碍物1s以上，就按反方向动 
+	else if((CJ_R==0 && CJ_L==0 )&& Chassis_Mode==CHASSIS_R_MODE && flag == TRUE)  //左右都识别到障碍物1s以上，就按反方向动 
 	{
-		if(if_beat)
-			if_beat = 0;
+		
 		
 		change_time++;		
 		if(change_time > 500)
@@ -477,10 +485,8 @@ void sensor_update(void)
 			flag = FALSE;
 		}
 	}
-	else if(((CJ_R==0 && CJ_L==0 )|| if_beat) && Chassis_Mode==CHASSIS_L_MODE && flag == TRUE)
+	else if(((CJ_R==0 && CJ_L==0 )) && Chassis_Mode==CHASSIS_L_MODE && flag == TRUE)
 	{
-		if(if_beat)
-			if_beat = 0;
 		
 		change_time++;		
 		if(change_time > 500)
@@ -491,34 +497,49 @@ void sensor_update(void)
 			flag = FALSE;
 		}
 	}
-	else if(if_beat && Chassis_Mode==CHASSIS_R_MODE )  //如果受到击打 就按反方向动 
+	
+	if (if_beat)
 	{
-		if(if_beat)
-			if_beat = 0;
-		
-		change_time++;		
-		if(change_time > 500)
+		if_move_acc = TRUE;
+		acc_time++;	
+		if (acc_time > 2000)
 		{
-		  change_time = 0;
-		  change.TO_left = TRUE;
-			change.TO_right = FALSE;
-			flag = FALSE;
+			if_beat = FALSE;
+			if_move_acc  = FALSE;
+			acc_time = 0;
 		}
 	}
-	else if( if_beat && Chassis_Mode==CHASSIS_L_MODE)
-	{
-		if(if_beat)
-			if_beat = 0;
+
+	// else if(if_beat && Chassis_Mode==CHASSIS_R_MODE )  //如果受到击打 就按反方向动 
+	// {
+	// 	if(if_beat)
+	// 		if_beat = 0;
+
+	// 	change_time++;		
+	// 	if(change_time > 400)
+	// 	{
+	// 	  change_time = 0;
+	// 	  change.TO_left = TRUE;
+	// 		change.TO_right = FALSE;
+	// 		flag = FALSE;
+	// 	if_move_acc = TRUE;  //被击打 底盘加速
+	// 	}
+	// }
+	// else if( if_beat && Chassis_Mode==CHASSIS_L_MODE)
+	// {
+	// 	if(if_beat)
+	// 		if_beat = 0;
 		
-		change_time++;		
-		if(change_time > 500)
-		{
-		  change_time = 0;
-		  change.TO_right = TRUE;
-			change.TO_left = FALSE;
-			flag = FALSE;
-		}
-	}
+	// 	change_time++;		
+	// 	if(change_time > 400)
+	// 	{
+	// 	  change_time = 0;
+	// 	  change.TO_right = TRUE;
+	// 		change.TO_left = FALSE;
+	// 		flag = FALSE;
+	// 	if_move_acc = TRUE;  //被击打 底盘加速
+	// 	}
+	// }
 	
 	
 	
@@ -551,12 +572,7 @@ void Chassis_AUTO_Ctrl(void)
 	}
 	
 	
-	
-//	else if(CJ_L==1 && CJ_R==1 && Chassis_Mode==CHASSIS_L_MODE)
-//	{
-//		Chassis_Mode = CHASSIS_R_MODE;
-//		flag = TRUE;
-//	}
+
 }
 
 
@@ -615,10 +631,18 @@ void Chassis_Set_Contorl(void)
 	else if(Chassis_Mode == CHASSIS_STOP_MODE)
 	{
 		change.stop = FALSE;
+		Chassis_Move_X = fp32_constrain( 0, -vx_max_speed, vx_max_speed);//停止		
+	}
 
-		Chassis_Move_X = fp32_constrain( 0, -vx_max_speed, vx_max_speed);//停止
+
+	if(if_move_acc == TRUE) //加速底盘
+	{	
+		if (JUDGE_fGetRemainEnergy() > 100)
+			Chassis_Move_X = acc_grade[1]*Chassis_Move_X;
 		
 	}
+
+
 
 }
 /**
@@ -664,7 +688,7 @@ void Chassis_Motor_Speed_PID(void)
         for (i = 0; i < 4; i++)
         {
             Chassis_Speed_Target[i] *= vector_rate;
-        }
+        }	
     }
 
     //计算pid
@@ -758,8 +782,8 @@ extern float Revolver_Final_Output_right;
   */
 void CHASSIS_CANSend(void)
 {	 	
-	// Chassis_Final_Output[0] = 0;
-	// Chassis_Final_Output[1] = 0;
+	Chassis_Final_Output[0] = 0;
+  Chassis_Final_Output[1] = 0;
 	
 	CAN_CMD_CHASSIS(Chassis_Final_Output[0],Chassis_Final_Output[1], Revolver_Final_Output, Revolver_Final_Output_right);
 }

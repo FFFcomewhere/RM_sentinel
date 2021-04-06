@@ -273,7 +273,7 @@ void GIMBAL_task(void *pvParameters)
 						Auto_Mode_Count=0;
 						
 					modeGimbal=CLOUD_MECH_MODE;
-					GIMBAL_AUTO_Ctrl();
+					//GIMBAL_AUTO_Ctrl();
 				}
 			}
 
@@ -493,14 +493,7 @@ void GIMBAL_AUTO_Mode_Ctrl(void)
 {
 	
 	
-//		if(Auto_Mode_Count>=10)
-//		Gimbal_Pitch_Gyro_PID.kp = PITCH_GYRO_ABSOLUTE_PID_KP;
-//		else		
-//		{
-//		Auto_Mode_Count++;
-//		Gimbal_Pitch_Gyro_PID.kp = PITCH_GYRO_ABSOLUTE_PID_KP_;
-//		}
-	
+
 		Cloud_Angle_Target[YAW][GYRO] = Cloud_Angle_Target[YAW][MECH];
 		Cloud_Angle_Target[PITCH][GYRO] = Cloud_Angle_Target[PITCH][MECH];
 
@@ -512,7 +505,7 @@ void GIMBAL_AUTO_Mode_Ctrl(void)
 		Vision_Error_Angle_Pitch(&Auto_Error_Pitch[NOW]);
 		Vision_Error_Angle_Yaw(&Auto_Error_Yaw[NOW]);
 		Vision_Get_Distance(&Auto_Distance);
-		pitch_angle_ref = (Cloud_Angle_Measure[PITCH][MECH]-Auto_Error_Pitch[NOW]);
+		pitch_angle_ref = (Cloud_Angle_Measure[PITCH][MECH]+Auto_Error_Pitch[NOW]);
 		yaw_angle_ref = (Cloud_Angle_Measure[YAW][MECH]+Auto_Error_Yaw[NOW]);
 		Vision_Clean_Update_Flag();//清零,否则会一直执行
 		Auto_Error_Pitch[NOW] = 0;
@@ -540,7 +533,10 @@ void GIMBAL_AUTO_Mode_Ctrl(void)
 		else if (Cloud_Angle_Target[YAW][GYRO] < min_yaw_relative_angle)
 				Cloud_Angle_Target[YAW][GYRO] = min_yaw_relative_angle;
 		
-		Cloud_Angle_Target[YAW][MECH] = Cloud_Angle_Measure[YAW][MECH];
+		//Cloud_Angle_Target[YAW][MECH] = Cloud_Angle_Measure[YAW][MECH];
+		//Cloud_Angle_Target[PITCH][MECH] = Cloud_Angle_Measure[PITCH][MECH];
+
+		
 		
 	}
 }

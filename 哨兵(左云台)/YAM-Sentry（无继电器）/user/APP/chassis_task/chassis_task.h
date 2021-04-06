@@ -46,11 +46,14 @@ extern void chassis_task(void *pvParameters);
 //底盘任务控制间隔 0.002s
 #define CHASSIS_CONTROL_TIME 0.002
  
+
+
+
 //巡逻下的速度参数
 #define AUTO_PARA 1.3
   
 //底盘电机最大速度
-#define MAX_WHEEL_SPEED 1.5f*AUTO_PARA
+#define MAX_WHEEL_SPEED 1.5f*2  
 
 //底盘运动过程最大前进速度
 #define NORMAL_MAX_CHASSIS_SPEED_X 1.5f*AUTO_PARA //1.5

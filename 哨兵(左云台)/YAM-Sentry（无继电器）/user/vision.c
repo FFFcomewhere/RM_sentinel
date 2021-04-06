@@ -400,26 +400,9 @@ float vision_pitch_dist_far = 4.4f;//超过此距离开放鼠标补偿
 void Vision_Error_Angle_Pitch(float *error)
 {	
 	
-//	if(GIMBAL_AUTO_PITCH_SB() == TRUE)  //判断是否在瞄准哨兵
-//	{
-//		*error = (VisionRecvData.pitch_angle + Vision_Comps_Pitch/SB_K_comps * VisionRecvData.distance/100)* 8192.0f / 360.0f / 10.0f;//因为pitch是机械模式,所以把欧拉角转换成机械角
-//	}
-// if(VisionRecvData.distance/100 >= vision_pitch_dist_far)                             //判断距离补偿
-//	{
-//		mouse_pitch_comps += MOUSE_Y_MOVE_SPEED * kvision_mouse_pitch;//注意正负
-//		//限幅，防止太大
-//		mouse_pitch_comps = constrain_float(mouse_pitch_comps, -3, 0);
-//		*error = (VisionRecvData.pitch_angle
-//						+ Vision_Comps_Pitch * VisionRecvData.distance/100
-//							+ mouse_pitch_comps
-//				 )
-//				 * 8192.0f / 360.0f / 10.0f;//因为pitch是机械模式,所以把欧拉角转换成机械角		
-//		
-//	}
-//	else
-//	{
+
 		*error = ((VisionRecvData.pitch_angle + Vision_Comps_Pitch * VisionRecvData.distance/100)* PI)/180;//因为pitch是机械模式,所以把欧拉角转换成弧度
-//	}
+
 	
 	if(VisionRecvData.pitch_angle == 0)
 	{

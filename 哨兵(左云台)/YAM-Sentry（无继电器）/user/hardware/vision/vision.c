@@ -315,8 +315,9 @@ void Vision_Error_Pitch(float *error)
 void Vision_Error_Angle_Yaw(float *error)
 {
 	//视觉左负右正,请根据云台控制角度选择正负(左加右减)
-	*error = +VisionRecvData.yaw_angle + Vision_Comps_Yaw * VisionRecvData.distance/100;   //转化为弧度
-//				* 8192.0f / 360.0f / 10.0f;//请根据自己对欧拉角的放大倍数来乘对应倍数
+			*error = ((VisionRecvData.yaw_angle + Vision_Comps_Pitch * VisionRecvData.distance/100)* PI)/180;//因为pitch是机械模式,所以把欧拉角转换成弧度
+
+
 	if(VisionRecvData.yaw_angle == 0)//发零
 	{
 		*error = 0;
@@ -335,8 +336,10 @@ float vision_pitch_dist = 2;//固定距离,超过此距离开启距离补偿
 float vision_pitch_dist_far = 4.4f;//超过此距离开放鼠标补偿
 void Vision_Error_Angle_Pitch(float *error)
 {	
-		*error = VisionRecvData.pitch_angle + Vision_Comps_Pitch * VisionRecvData.distance / 100;
+					
 	
+	*error = ((VisionRecvData.pitch_angle + Vision_Comps_Pitch * VisionRecvData.distance/100)* PI)/180;//因为pitch是机械模式,所以把欧拉角转换成弧度
+
 	if(VisionRecvData.pitch_angle == 0)
 		*error = 0;
 }
