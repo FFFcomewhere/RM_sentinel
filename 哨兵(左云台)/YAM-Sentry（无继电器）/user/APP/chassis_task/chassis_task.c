@@ -409,7 +409,7 @@ void sensor_update(void)
 	if(now_remain_Hp !=   last_remain_HP)
 	{
 		if_beat = TRUE;
-		
+		hp_no_change_time = 0;
 	}
 
 	
@@ -471,9 +471,20 @@ void sensor_update(void)
 			hp_no_change_time =0;   //受到攻击,计时器清零
 			if(JUDGE_fGetRemainEnergy() >= 100) // 底盘缓存高于100
 			{
-				
+				chassis_speed_grade = CHASSIS_SPEED_HIGH;
 			}
-
+			else if (JUDGE_fGetRemainEnergy() < 100 && JUDGE_fGetRemainEnergy() > 50)  //底盘功率介于50-100
+			{
+				chassis_speed_grade = CHASSIS_SPEED_NORMAL;
+			}
+			else
+			{
+				chassis_speed_grade = CHASSIS_SPEED_LOW;
+			}
+		}
+		else
+		{
+			if()
 		}
 		
 	}
