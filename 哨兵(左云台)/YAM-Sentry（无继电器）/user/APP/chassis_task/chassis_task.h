@@ -52,9 +52,9 @@ extern void chassis_task(void *pvParameters);
 //巡逻下的速度参数
 #define AUTO_PARA 1.3
 
-#define AUTO_SPEED_LOW 0
-#define AUTO_SPEED_NORMAL 1
-#define AUTO_SPEED_HIGH 2
+#define CHASSIS_SPEED_LOW 0
+#define CHASSIS_SPEED_NORMAL 1
+#define CHASSIS_SPEED_HIGH 2
 
   
 //底盘电机最大速度

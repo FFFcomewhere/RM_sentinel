@@ -69,11 +69,11 @@ first_order_filter_type_t chassis_cmd_slow_set_vy;
 extern int16_t Sensor_data[2];
 
 //巡逻下的速度等级
-float cha_grade[3] = {0.7, 1, 2};
+float chassis_speed[3] = {0.7, 1, 2};
 
 bool remote_change = FALSE;	
 bool if_beat = FALSE;              //哨兵被击打
-uint8_t CHASSIS_SPEED_GRADE  = FALSE;        //哨兵是否加速
+uint8_t chassis_speed_grade = CHASSIS_SPEED_NORMAL;        //哨兵底盘速度等级
 uint16_t last_remain_HP;
 uint16_t now_remain_Hp;
 
@@ -393,8 +393,6 @@ void sensor_update(void)
 	//static uint16_t acc_time = 0;       //底盘加速计时器 被击打启用
 
 	
-
-
 	
 	if(hp_change_time > 100)
 	{
@@ -411,7 +409,7 @@ void sensor_update(void)
 	if(now_remain_Hp !=   last_remain_HP)
 	{
 		if_beat = TRUE;
-		hp_no_change_time =0;   //受到攻击,计时器清零
+		
 	}
 
 	
@@ -449,7 +447,7 @@ void sensor_update(void)
 
 
 
-	if(Vision_If_Update()==TRUE)   //识别到目标
+	if(Vision_If_Update() == TRUE)   //识别到目标
 	{
 		change_time++;
 		if(change_time > 100)
@@ -458,13 +456,34 @@ void sensor_update(void)
 
 			if(JUDGE_remain_HP() < 200) //如果剩余血量低于200,加速
 			{
-				
+				chassis_speed_grade = CHASSIS_SPEED_HIGH;
 			}
 			else //剩余血量高于200
 			{	
 				change.stop = TRUE;
 			}
 		}
+	}
+	else 
+	{
+		if(if_beat)        //受到攻击
+		{
+			hp_no_change_time =0;   //受到攻击,计时器清零
+			if(JUDGE_fGetRemainEnergy() >= 100) // 底盘缓存高于100
+			{
+				
+			}
+
+		}
+		
+	}
+	
+
+
+
+	if(change.stop == TRUE)
+	{
+		Chassis_Mode == CHASSIS_STOP_MODE;
 	}
 	else if(CJ_L==1 && CJ_R==0 && Chassis_Mode==CHASSIS_R_MODE)  //左边的没有识别到，右边的识别到了，且正在往右动，就往左边动
 	{
@@ -514,17 +533,7 @@ void sensor_update(void)
 		}
 	}
 	
-	if (if_beat)
-	{
-		if_move_acc = TRUE;
-		acc_time++;	
-		if (acc_time > 2000)
-		{
-			if_beat = FALSE;
-			if_move_acc  = FALSE;
-			acc_time = 0;
-		}
-	}
+	
 
 	
 	
