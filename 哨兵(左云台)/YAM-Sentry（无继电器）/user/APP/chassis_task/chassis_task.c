@@ -68,12 +68,12 @@ first_order_filter_type_t chassis_cmd_slow_set_vy;
 		
 extern int16_t Sensor_data[2];
 
-//巡逻下的加速档位
-float acc_grade[3] = {1, 2, 1.5};
+//巡逻下的速度等级
+float cha_grade[3] = {0.7, 1, 2};
 
 bool remote_change = FALSE;	
 bool if_beat = FALSE;              //哨兵被击打
-bool if_move_acc = FALSE;        //哨兵是否加速
+uint8_t CHASSIS_SPEED_GRADE  = FALSE;        //哨兵是否加速
 uint16_t last_remain_HP;
 uint16_t now_remain_Hp;
 
@@ -388,23 +388,31 @@ void sensor_update(void)
 
 	static uint16_t change_time = 0;    //光电传感器的识别时间计时器
 	static uint16_t irregular_time = 0; //不规则运动的计时器
-	static uint16_t hp_change_time = 0; //逃跑模式的计时器
-	static uint16_t acc_time = 0;       //底盘加速计时器 被击打启用
+	static uint16_t hp_change_time = 0;     //血量更新的计时器
+	static uint16_t hp_no_change_time = 0;  //未受到攻击的计时器
+	//static uint16_t acc_time = 0;       //底盘加速计时器 被击打启用
+
+	
+
 
 	
 	if(hp_change_time > 100)
 	{
 		hp_change_time = 0;
 		last_remain_HP = now_remain_Hp;
+		++hp_no_change_time;          //未受到攻击,开始计时,当缓存能量较低低,降低速度
 	}
 	else
 		hp_change_time++;
 	
 	now_remain_Hp = JUDGE_remain_HP();
 	
-//	//哨兵被击打，反向运动逃跑
+	//哨兵被击打
 	if(now_remain_Hp !=   last_remain_HP)
+	{
 		if_beat = TRUE;
+		hp_no_change_time =0;   //受到攻击,计时器清零
+	}
 
 	
 	if(remote_change == TRUE) //从机械模式切过来
@@ -441,13 +449,21 @@ void sensor_update(void)
 
 
 
-	if(Vision_If_Update()==TRUE)
+	if(Vision_If_Update()==TRUE)   //识别到目标
 	{
 		change_time++;
 		if(change_time > 100)
 		{
 			change_time = 0;
-			change.stop = TRUE;
+
+			if(JUDGE_remain_HP() < 200) //如果剩余血量低于200,加速
+			{
+				
+			}
+			else //剩余血量高于200
+			{	
+				change.stop = TRUE;
+			}
 		}
 	}
 	else if(CJ_L==1 && CJ_R==0 && Chassis_Mode==CHASSIS_R_MODE)  //左边的没有识别到，右边的识别到了，且正在往右动，就往左边动
@@ -510,38 +526,6 @@ void sensor_update(void)
 		}
 	}
 
-	// else if(if_beat && Chassis_Mode==CHASSIS_R_MODE )  //如果受到击打 就按反方向动 
-	// {
-	// 	if(if_beat)
-	// 		if_beat = 0;
-
-	// 	change_time++;		
-	// 	if(change_time > 400)
-	// 	{
-	// 	  change_time = 0;
-	// 	  change.TO_left = TRUE;
-	// 		change.TO_right = FALSE;
-	// 		flag = FALSE;
-	// 	if_move_acc = TRUE;  //被击打 底盘加速
-	// 	}
-	// }
-	// else if( if_beat && Chassis_Mode==CHASSIS_L_MODE)
-	// {
-	// 	if(if_beat)
-	// 		if_beat = 0;
-		
-	// 	change_time++;		
-	// 	if(change_time > 400)
-	// 	{
-	// 	  change_time = 0;
-	// 	  change.TO_right = TRUE;
-	// 		change.TO_left = FALSE;
-	// 		flag = FALSE;
-	// 	if_move_acc = TRUE;  //被击打 底盘加速
-	// 	}
-	// }
-	
-	
 	
 	
 	

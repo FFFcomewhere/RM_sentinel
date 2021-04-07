@@ -62,7 +62,7 @@
 
 //pitch 速度环 PID参数以及 PID最大输出，积分输出
 //#define PITCH_GYRO_SPEED_PID_KP_ 2000.0f   //5500 由于pid切换过程中导致计算数值变化，所以更改初始PID
-#define PITCH_GYRO_SPEED_PID_KP 200.0f   //5500
+#define PITCH_GYRO_SPEED_PID_KP 0.01f   //5500
 #define PITCH_GYRO_SPEED_PID_KI 0.0f       //1.8
 #define PITCH_GYRO_SPEED_PID_KD 0.0f      //0.9
 
@@ -80,21 +80,36 @@
 /*----------------------------------------角度环--------------------------------------------*/
 ////**陀螺仪模式**//
 //pitch 角度环 角度由陀螺仪解算 PID参数以及 PID最大输出，积分输出
-#define PITCH_GYRO_ABSOLUTE_PID_KP_ 1.0f
-#define PITCH_GYRO_ABSOLUTE_PID_KP 1.0f //15
-#define PITCH_GYRO_ABSOLUTE_PID_KI 0.0f
-#define PITCH_GYRO_ABSOLUTE_PID_KD 0.0f
+// #define PITCH_GYRO_ABSOLUTE_PID_KP_ 1.0f
+// #define PITCH_GYRO_ABSOLUTE_PID_KP 1.0f //15
+// #define PITCH_GYRO_ABSOLUTE_PID_KI 0.0f
+// #define PITCH_GYRO_ABSOLUTE_PID_KD 0.0f
 
-#define PITCH_GYRO_ABSOLUTE_PID_MAX_OUT 30.0f
-#define PITCH_GYRO_ABSOLUTE_PID_MAX_IOUT 1.0f
+// #define PITCH_GYRO_ABSOLUTE_PID_MAX_OUT 30.0f
+// #define PITCH_GYRO_ABSOLUTE_PID_MAX_IOUT 1.0f
+
+// //yaw 角度环 角度由陀螺仪解算 PID参数以及 PID最大输出，积分输出
+// #define YAW_GYRO_ABSOLUTE_PID_KP 700.0f
+// #define YAW_GYRO_ABSOLUTE_PID_KI 0.1f
+// #define YAW_GYRO_ABSOLUTE_PID_KD 18.0f
+
+// #define YAW_GYRO_ABSOLUTE_PID_MAX_OUT 800.0f
+// #define YAW_GYRO_ABSOLUTE_PID_MAX_IOUT 0.0f
+
+#define PITCH_GYRO_ABSOLUTE_PID_KP 200.0f
+#define PITCH_GYRO_ABSOLUTE_PID_KI 0.0f
+#define PITCH_GYRO_ABSOLUTE_PID_KD 1.0f
+
+#define PITCH_GYRO_ABSOLUTE_PID_MAX_OUT 10000.0f
+#define PITCH_GYRO_ABSOLUTE_PID_MAX_IOUT 100.0f
 
 //yaw 角度环 角度由陀螺仪解算 PID参数以及 PID最大输出，积分输出
-#define YAW_GYRO_ABSOLUTE_PID_KP 700.0f
+#define YAW_GYRO_ABSOLUTE_PID_KP 3000.0f//3500
 #define YAW_GYRO_ABSOLUTE_PID_KI 0.1f
-#define YAW_GYRO_ABSOLUTE_PID_KD 18.0f
+#define YAW_GYRO_ABSOLUTE_PID_KD 3.0f
 
-#define YAW_GYRO_ABSOLUTE_PID_MAX_OUT 800.0f
-#define YAW_GYRO_ABSOLUTE_PID_MAX_IOUT 0.0f
+#define YAW_GYRO_ABSOLUTE_PID_MAX_OUT 10000.0f
+#define YAW_GYRO_ABSOLUTE_PID_MAX_IOUT 100.0f
 
 //**机械模式**//
 //pitch 角度环 角度由编码器 PID参数以及 PID最大输出，积分输出
