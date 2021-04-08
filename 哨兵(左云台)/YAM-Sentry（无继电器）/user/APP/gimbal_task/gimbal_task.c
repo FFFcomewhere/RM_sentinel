@@ -768,7 +768,7 @@ void GIMBAL_CanSend(void)
 		fMotorOutput[PITCH] = -given_current[PITCH][GYRO];
 	}
 	
-	fMotorOutput[YAW]  = 0;
+
 		
 	CAN_CMD_GIMBAL(fMotorOutput[PITCH], fMotorOutput[YAW], Pitch_right , Yaw_right);
 }

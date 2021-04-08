@@ -64,7 +64,11 @@ extern void chassis_task(void *pvParameters);
 #define NORMAL_MAX_CHASSIS_SPEED_X 1.5f*AUTO_PARA //1.5
 
 //自主模式运动过程的前进速度
-#define AUTO_MOVE_SPEED 1.5f*AUTO_PARA
+#define AUTO_MOVE_SPEED 1.4f*AUTO_PARA
+
+
+
+
 //遥控器前进摇杆（max 660）转化成车体前进速度（m/s）的比例
 #define CHASSIS_VX_RC_SEN 0.006f
 

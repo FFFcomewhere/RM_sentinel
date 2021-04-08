@@ -232,6 +232,10 @@ float Chassis_Final_Output[4];
   */
 void Chassis_Init(void)
 {
+	//初始化血量
+	last_remain_HP = JUDGE_remain_HP();
+	now_remain_Hp = JUDGE_remain_HP();
+
    	flag = TRUE;
 	  remote_change = TRUE;
     //底盘速度环pid值
@@ -359,11 +363,16 @@ void Chassis_Rc_Control(void)
 
 
 /*-------------------------------------***光电开关判断(0判断到了1没判断到)***----------------------------------------*/
+uint16_t change_time = 0;    //光电传感器的识别时间计时器
+uint16_t irregular_time = 0; //不规则运动的计时器
+uint16_t hp_change_time = 0;     //血量更新的计时器
+uint16_t hp_no_change_time = 0;  //未受到攻击的计时器
+//static uint16_t no_hit_time = 0;       //底盘加速计时器 被击打启用
+
+
 
 void sensor_update(void)
 {	
-
-	
 	//左云台处理
 	//1为未检测到 0为检测到
 	if(Sensor_data[LEFT] == 1)
@@ -386,19 +395,14 @@ void sensor_update(void)
 
 
 
-	static uint16_t change_time = 0;    //光电传感器的识别时间计时器
-	static uint16_t irregular_time = 0; //不规则运动的计时器
-	static uint16_t hp_change_time = 0;     //血量更新的计时器
-	static uint16_t hp_no_change_time = 0;  //未受到攻击的计时器
-	//static uint16_t acc_time = 0;       //底盘加速计时器 被击打启用
-
 	
+	++hp_no_change_time;          //未受到攻击,开始计时,当缓存能量较低低,降低速度
+
 	
 	if(hp_change_time > 100)
 	{
 		hp_change_time = 0;
 		last_remain_HP = now_remain_Hp;
-		++hp_no_change_time;          //未受到攻击,开始计时,当缓存能量较低低,降低速度
 	}
 	else
 		hp_change_time++;
@@ -409,8 +413,12 @@ void sensor_update(void)
 	if(now_remain_Hp !=   last_remain_HP)
 	{
 		if_beat = TRUE;
-		hp_no_change_time = 0;
 	}
+	else
+	{
+		if_beat = FALSE;
+	}
+	
 
 	
 	if(remote_change == TRUE) //从机械模式切过来
@@ -469,32 +477,39 @@ void sensor_update(void)
 		if(if_beat)        //受到攻击
 		{
 			hp_no_change_time =0;   //受到攻击,计时器清零
-			if(JUDGE_fGetRemainEnergy() >= 100) // 底盘缓存高于100
-			{
+			if(JUDGE_fGetRemainEnergy() >= 100) // 底盘缓冲高于100
 				chassis_speed_grade = CHASSIS_SPEED_HIGH;
-			}
-			else if (JUDGE_fGetRemainEnergy() < 100 && JUDGE_fGetRemainEnergy() > 50)  //底盘功率介于50-100
-			{
+			else if (JUDGE_fGetRemainEnergy() < 100 && JUDGE_fGetRemainEnergy() > 50)  //底盘缓冲介于50-100
 				chassis_speed_grade = CHASSIS_SPEED_NORMAL;
-			}
-			else
-			{
+			else if (JUDGE_fGetRemainEnergy() <= 50)   //底盘缓冲低于50
 				chassis_speed_grade = CHASSIS_SPEED_LOW;
-			}
+			
 		}
 		else
 		{
-			if()
+			if(hp_no_change_time > 3000) //当未受到攻击一段时间,可以考虑减速补充缓冲
+			{
+				if(JUDGE_fGetRemainEnergy() < 150)
+					chassis_speed_grade = CHASSIS_SPEED_LOW;
+				else
+					chassis_speed_grade = CHASSIS_SPEED_NORMAL;
+			}
+			// else
+			// 	chassis_speed_grade = CHASSIS_SPEED_NORMAL;
 		}
 		
 	}
 	
+	//确保不会超功率死亡
+	if(JUDGE_fGetRemainEnergy() < 80)
+		chassis_speed_grade = CHASSIS_SPEED_LOW;
 
+	
 
 
 	if(change.stop == TRUE)
 	{
-		Chassis_Mode == CHASSIS_STOP_MODE;
+		Chassis_Mode = CHASSIS_STOP_MODE;
 	}
 	else if(CJ_L==1 && CJ_R==0 && Chassis_Mode==CHASSIS_R_MODE)  //左边的没有识别到，右边的识别到了，且正在往右动，就往左边动
 	{
@@ -520,8 +535,6 @@ void sensor_update(void)
 	}
 	else if((CJ_R==0 && CJ_L==0 )&& Chassis_Mode==CHASSIS_R_MODE && flag == TRUE)  //左右都识别到障碍物1s以上，就按反方向动 
 	{
-		
-		
 		change_time++;		
 		if(change_time > 500)
 		{
@@ -564,8 +577,7 @@ void Chassis_AUTO_Ctrl(void)
 	if (change.stop == TRUE)        //识别到目标,停止运动
 		Chassis_Mode = CHASSIS_STOP_MODE;  //停止
     else if(change.TO_left == TRUE)  //左边的没有识别到，右边的识别到了，且正在往右动，就往左边动
-	  Chassis_Mode = CHASSIS_L_MODE;  //往左
-		
+	  Chassis_Mode = CHASSIS_L_MODE;  //往左	
 	else if (change.TO_right == TRUE)	//左边的识别到，右边的没有识别到，且正在往左动，就往右边动		
 	  Chassis_Mode = CHASSIS_R_MODE;  //往右
 		
@@ -593,7 +605,7 @@ void Chassis_Set_Contorl(void)
 	static fp32 change_time = 0;
 	if(Chassis_Mode == CHASSIS_MECH_MODE)			
 	{    
-		remote_change = TRUE;
+	remote_change = TRUE;
     Chassis_Move_X = fp32_constrain(Chassis_Move_X, vx_min_speed, vx_max_speed);		
 	}	
 	else if(Chassis_Mode == CHASSIS_R_MODE)
@@ -637,16 +649,9 @@ void Chassis_Set_Contorl(void)
 		change.stop = FALSE;
 		Chassis_Move_X = fp32_constrain( 0, -vx_max_speed, vx_max_speed);//停止		
 	}
-
-
-	if(if_move_acc == TRUE) //加速底盘
-	{	
-		if (JUDGE_fGetRemainEnergy() > 100)
-			Chassis_Move_X = acc_grade[1]*Chassis_Move_X;
-		
-	}
-
-
+	
+	//设置速度等级
+	Chassis_Move_X = chassis_speed[chassis_speed_grade]*Chassis_Move_X;
 
 }
 /**
@@ -786,8 +791,8 @@ extern float Revolver_Final_Output_right;
   */
 void CHASSIS_CANSend(void)
 {	 	
-	Chassis_Final_Output[0] = 0;
-  Chassis_Final_Output[1] = 0;
+	// 	Chassis_Final_Output[0] = 0;
+	//   Chassis_Final_Output[1] = 0;
 	
 	CAN_CMD_CHASSIS(Chassis_Final_Output[0],Chassis_Final_Output[1], Revolver_Final_Output, Revolver_Final_Output_right);
 }
