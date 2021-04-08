@@ -438,7 +438,7 @@ void sensor_update(void)
 			flag = TRUE;
 		}
 	}
-
+	
 
 
 	if(Vision_If_Update()==TRUE)
@@ -456,6 +456,7 @@ void sensor_update(void)
 		if(change_time > Change_TurnBack_Time)
 		{
 			change_time = 0;
+			change.stop = FALSE;
 			change.TO_left = TRUE;
 			change.TO_right = FALSE;
 			flag = TRUE;
@@ -467,6 +468,7 @@ void sensor_update(void)
 		if(change_time > Change_TurnBack_Time) 
 		{
 		  change_time = 0;
+			change.stop = FALSE;
 		  change.TO_right = TRUE;
 			change.TO_left = FALSE;
 			flag = TRUE;
@@ -480,6 +482,8 @@ void sensor_update(void)
 		if(change_time > 500)
 		{
 		  change_time = 0;
+						change.stop = FALSE;
+
 		  change.TO_left = TRUE;
 			change.TO_right = FALSE;
 			flag = FALSE;
@@ -492,6 +496,8 @@ void sensor_update(void)
 		if(change_time > 500)
 		{
 		  change_time = 0;
+						change.stop = FALSE;
+
 		  change.TO_right = TRUE;
 			change.TO_left = FALSE;
 			flag = FALSE;
@@ -782,8 +788,8 @@ extern float Revolver_Final_Output_right;
   */
 void CHASSIS_CANSend(void)
 {	 	
-	Chassis_Final_Output[0] = 0;
-  Chassis_Final_Output[1] = 0;
+//	Chassis_Final_Output[0] = 0;
+//  Chassis_Final_Output[1] = 0;
 	
 	CAN_CMD_CHASSIS(Chassis_Final_Output[0],Chassis_Final_Output[1], Revolver_Final_Output, Revolver_Final_Output_right);
 }
