@@ -424,7 +424,7 @@ void sensor_update(void)
 	if(Chassis_Mode==CHASSIS_R_MODE)  //左边的没有识别到，右边的识别到了，且正在往右动，就往左边动
 	{
 		irregular_time++;
-		if(irregular_time > 5000)
+		if(irregular_time > 7000)
 		{
 			irregular_time = 0;
 			change.TO_left = TRUE;
@@ -435,7 +435,7 @@ void sensor_update(void)
 	else if(Chassis_Mode==CHASSIS_L_MODE)  //左边的没有识别到，右边的识别到了，且正在往右动，就往左边动
 	{
 		irregular_time++;
-		if(irregular_time > 10000)
+		if(irregular_time > 12000)
 		{
 			irregular_time = 0;
 			change.TO_left = FALSE;
@@ -499,7 +499,6 @@ void sensor_update(void)
 		if(change_time > Change_TurnBack_Time)
 		{
 			change_time = 0;
-			change.stop = FALSE;
 			change.TO_left = TRUE;
 			change.TO_right = FALSE;
 			flag = TRUE;
@@ -511,7 +510,6 @@ void sensor_update(void)
 		if(change_time > Change_TurnBack_Time) 
 		{
 		  change_time = 0;
-			change.stop = FALSE;
 		  change.TO_right = TRUE;
 			change.TO_left = FALSE;
 			flag = TRUE;
@@ -525,8 +523,6 @@ void sensor_update(void)
 		if(change_time > 500)
 		{
 		  change_time = 0;
-						change.stop = FALSE;
-
 		  change.TO_left = TRUE;
 			change.TO_right = FALSE;
 			flag = FALSE;
@@ -539,8 +535,6 @@ void sensor_update(void)
 		if(change_time > 500)
 		{
 		  change_time = 0;
-						change.stop = FALSE;
-
 		  change.TO_right = TRUE;
 			change.TO_left = FALSE;
 			flag = FALSE;
