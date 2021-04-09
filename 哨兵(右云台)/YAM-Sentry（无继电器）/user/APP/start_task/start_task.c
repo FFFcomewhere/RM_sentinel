@@ -156,7 +156,7 @@ void LED0(void *pvParameters)
 /*******************************************************/
 /*系统状态更新，启动延时，系统保护*/
 //控制模式
-eRemoteMode remoteMode = AUTO;
+eRemoteMode remoteMode = RC;
 
 //系统状态
 eSystemState systemState = SYSTEM_STARTING;

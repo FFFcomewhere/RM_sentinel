@@ -399,8 +399,8 @@ void sensor_update(void)
 		{
 		  change_time = 0;
 		  change.TO_right = TRUE;
-		  change.TO_left = FALSE;
-		  flag = TRUE;
+			change.TO_left = FALSE;
+			flag = TRUE;
 		}
 	}
 	else if(((CJ_R==0 && CJ_L==0 )|| if_beat)&& Chassis_Mode==CHASSIS_R_MODE && flag == TRUE)  //如果受到击打，或者左右都识别到障碍物1s以上，就按反方向动 
