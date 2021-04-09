@@ -68,13 +68,12 @@ first_order_filter_type_t chassis_cmd_slow_set_vy;
 		
 extern int16_t Sensor_data[2];
 
-//巡逻下的加速档位
+//巡逻下的速度等级
 float chassis_speed[3] = {0.7, 1, 2};
-uint8_t chassis_speed_grade = CHASSIS_SPEED_NORMAL;       //设置速度等级
-
 
 bool remote_change = FALSE;	
 bool if_beat = FALSE;              //哨兵被击打
+uint8_t chassis_speed_grade = CHASSIS_SPEED_NORMAL;        //哨兵底盘速度等级
 uint16_t last_remain_HP;
 uint16_t now_remain_Hp;
 
@@ -233,6 +232,10 @@ float Chassis_Final_Output[4];
   */
 void Chassis_Init(void)
 {
+	//初始化血量
+	last_remain_HP = JUDGE_remain_HP();
+	now_remain_Hp = JUDGE_remain_HP();
+
    	flag = TRUE;
 	  remote_change = TRUE;
     //底盘速度环pid值
@@ -360,18 +363,16 @@ void Chassis_Rc_Control(void)
 
 
 /*-------------------------------------***光电开关判断(0判断到了1没判断到)***----------------------------------------*/
-
-uint16_t change_time = 0;   //光电传感器的识别时间计时器
+uint16_t change_time = 0;    //光电传感器的识别时间计时器
 uint16_t irregular_time = 0; //不规则运动的计时器
-uint16_t hp_change_time = 0;     //逃跑模式的计时器
-uint16_t hp_no_change_time = 0;  //未受到伤害计时器
+uint16_t hp_change_time = 0;     //血量更新的计时器
+uint16_t hp_no_change_time = 0;  //未受到攻击的计时器
+//static uint16_t no_hit_time = 0;       //底盘加速计时器 被击打启用
 
 
-   
+
 void sensor_update(void)
 {	
-
-	
 	//左云台处理
 	//1为未检测到 0为检测到
 	if(Sensor_data[LEFT] == 1)
@@ -392,9 +393,10 @@ void sensor_update(void)
 		CJ_R = 0;
 	}
 
-		
+
 
 	
+	++hp_no_change_time;          //未受到攻击,开始计时,当缓存能量较低低,降低速度
 
 	
 	if(hp_change_time > 100)
@@ -407,9 +409,16 @@ void sensor_update(void)
 	
 	now_remain_Hp = JUDGE_remain_HP();
 	
-//	//哨兵被击打，反向运动逃跑
+	//哨兵被击打
 	if(now_remain_Hp !=   last_remain_HP)
+	{
 		if_beat = TRUE;
+	}
+	else
+	{
+		if_beat = FALSE;
+	}
+	
 
 	
 	if(remote_change == TRUE) //从机械模式切过来
@@ -424,18 +433,18 @@ void sensor_update(void)
 	if(Chassis_Mode==CHASSIS_R_MODE)  //左边的没有识别到，右边的识别到了，且正在往右动，就往左边动
 	{
 		irregular_time++;
-		if(irregular_time > 7000)
+		if(irregular_time > 5000)
 		{
-			irregular_time = 0;
-			change.TO_left = TRUE;
-			change.TO_right = FALSE;
-			flag = TRUE;
+//			irregular_time = 0;
+//			change.TO_left = TRUE;
+//			change.TO_right = FALSE;
+//			flag = TRUE;
 		}
 	}
 	else if(Chassis_Mode==CHASSIS_L_MODE)  //左边的没有识别到，右边的识别到了，且正在往右动，就往左边动
 	{
 		irregular_time++;
-		if(irregular_time > 12000)
+		if(irregular_time > 10000)
 		{
 			irregular_time = 0;
 			change.TO_left = FALSE;
@@ -443,20 +452,22 @@ void sensor_update(void)
 			flag = TRUE;
 		}
 	}
-	
 
 
-	if(Vision_If_Update()==TRUE)
+
+	if(Vision_If_Update() == TRUE)   //识别到目标
 	{
 		change_time++;
 		if(change_time > 100)
 		{
 			change_time = 0;
 			if(JUDGE_remain_HP() < 200) //如果剩余血量低于200,加速
-				chassis_speed_grade = CHASSIS_SPEED_HIGH;	
+				chassis_speed_grade = CHASSIS_SPEED_HIGH;
+			
 			else //剩余血量高于200 ,减速
 				chassis_speed_grade = CHASSIS_SPEED_LOW;
-		}		
+
+		}
 	}
 	else 
 	{
@@ -517,8 +528,6 @@ void sensor_update(void)
 	}
 	else if((CJ_R==0 && CJ_L==0)&& Chassis_Mode==CHASSIS_R_MODE && flag == TRUE)  //左右都识别到障碍物1s以上，就按反方向动 
 	{
-		
-		
 		change_time++;		
 		if(change_time > 500)
 		{
@@ -541,7 +550,6 @@ void sensor_update(void)
 		}
 	}
 	
-
 }
 
 /**
@@ -557,8 +565,7 @@ void Chassis_AUTO_Ctrl(void)
 	if (change.stop == TRUE)        //识别到目标,停止运动
 		Chassis_Mode = CHASSIS_STOP_MODE;  //停止
     else if(change.TO_left == TRUE)  //左边的没有识别到，右边的识别到了，且正在往右动，就往左边动
-	  Chassis_Mode = CHASSIS_L_MODE;  //往左
-		
+	  Chassis_Mode = CHASSIS_L_MODE;  //往左	
 	else if (change.TO_right == TRUE)	//左边的识别到，右边的没有识别到，且正在往左动，就往右边动		
 	  Chassis_Mode = CHASSIS_R_MODE;  //往右
 		
@@ -584,7 +591,7 @@ void Chassis_Set_Contorl(void)
 	static fp32 change_time = 0;
 	if(Chassis_Mode == CHASSIS_MECH_MODE)			
 	{    
-		remote_change = TRUE;
+	remote_change = TRUE;
     Chassis_Move_X = fp32_constrain(Chassis_Move_X, vx_min_speed, vx_max_speed);		
 	}	
 	else if(Chassis_Mode == CHASSIS_R_MODE)
@@ -628,11 +635,9 @@ void Chassis_Set_Contorl(void)
 		change.stop = FALSE;
 		Chassis_Move_X = fp32_constrain( 0, -vx_max_speed, vx_max_speed);//停止		
 	}
-
-	//设置速度
+	
+	//设置速度等级
 	Chassis_Move_X = chassis_speed[chassis_speed_grade]*Chassis_Move_X;
-
-
 
 }
 /**
@@ -771,8 +776,8 @@ extern float Revolver_Final_Output_right;
   */
 void CHASSIS_CANSend(void)
 {	 	
-//	Chassis_Final_Output[0] = 0;
-//  Chassis_Final_Output[1] = 0;
+	// 	Chassis_Final_Output[0] = 0;
+	//   Chassis_Final_Output[1] = 0;
 	
 	CAN_CMD_CHASSIS(Chassis_Final_Output[0],Chassis_Final_Output[1], Revolver_Final_Output, Revolver_Final_Output_right);
 }
