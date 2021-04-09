@@ -69,11 +69,12 @@ first_order_filter_type_t chassis_cmd_slow_set_vy;
 extern int16_t Sensor_data[2];
 
 //巡逻下的加速档位
-float acc_grade[3] = {1, 2, 1.5};
+float chassis_speed[3] = {0.7, 1, 2};
+uint8_t chassis_speed_grade = CHASSIS_SPEED_NORMAL;       //设置速度等级
+
 
 bool remote_change = FALSE;	
 bool if_beat = FALSE;              //哨兵被击打
-bool if_move_acc = FALSE;        //哨兵是否加速
 uint16_t last_remain_HP;
 uint16_t now_remain_Hp;
 
@@ -360,6 +361,13 @@ void Chassis_Rc_Control(void)
 
 /*-------------------------------------***光电开关判断(0判断到了1没判断到)***----------------------------------------*/
 
+uint16_t change_time = 0;   //光电传感器的识别时间计时器
+uint16_t irregular_time = 0; //不规则运动的计时器
+uint16_t hp_change_time = 0;     //逃跑模式的计时器
+uint16_t hp_no_change_time = 0;  //未受到伤害计时器
+
+
+   
 void sensor_update(void)
 {	
 
@@ -386,10 +394,7 @@ void sensor_update(void)
 
 		
 
-	static uint16_t change_time = 0;    //光电传感器的识别时间计时器
-	static uint16_t irregular_time = 0; //不规则运动的计时器
-	static uint16_t hp_change_time = 0; //逃跑模式的计时器
-	static uint16_t acc_time = 0;       //底盘加速计时器 被击打启用
+	
 
 	
 	if(hp_change_time > 100)
@@ -421,10 +426,10 @@ void sensor_update(void)
 		irregular_time++;
 		if(irregular_time > 5000)
 		{
-//			irregular_time = 0;
-//			change.TO_left = TRUE;
-//			change.TO_right = FALSE;
-//			flag = TRUE;
+			irregular_time = 0;
+			change.TO_left = TRUE;
+			change.TO_right = FALSE;
+			flag = TRUE;
 		}
 	}
 	else if(Chassis_Mode==CHASSIS_L_MODE)  //左边的没有识别到，右边的识别到了，且正在往右动，就往左边动
@@ -630,13 +635,8 @@ void Chassis_Set_Contorl(void)
 		Chassis_Move_X = fp32_constrain( 0, -vx_max_speed, vx_max_speed);//停止		
 	}
 
-
-	if(if_move_acc == TRUE) //加速底盘
-	{	
-		if (JUDGE_fGetRemainEnergy() > 100)
-			Chassis_Move_X = acc_grade[1]*Chassis_Move_X;
-		
-	}
+	//设置速度
+	Chassis_Move_X = chassis_speed[chassis_speed_grade]*Chassis_Move_X;
 
 
 
