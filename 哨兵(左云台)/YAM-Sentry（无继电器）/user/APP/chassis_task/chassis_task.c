@@ -461,15 +461,12 @@ void sensor_update(void)
 		if(change_time > 100)
 		{
 			change_time = 0;
-
 			if(JUDGE_remain_HP() < 200) //如果剩余血量低于200,加速
-			{
 				chassis_speed_grade = CHASSIS_SPEED_HIGH;
-			}
-			else //剩余血量高于200
-			{	
-				change.stop = TRUE;
-			}
+			
+			else //剩余血量高于200 ,减速
+				chassis_speed_grade = CHASSIS_SPEED_LOW;
+
 		}
 	}
 	else 
@@ -494,17 +491,13 @@ void sensor_update(void)
 				else
 					chassis_speed_grade = CHASSIS_SPEED_NORMAL;
 			}
-			// else
-			// 	chassis_speed_grade = CHASSIS_SPEED_NORMAL;
 		}
-		
 	}
 	
 	//确保不会超功率死亡
 	if(JUDGE_fGetRemainEnergy() < 80)
 		chassis_speed_grade = CHASSIS_SPEED_LOW;
 
-	
 
 
 	if(change.stop == TRUE)
@@ -533,7 +526,7 @@ void sensor_update(void)
 			flag = TRUE;
 		}
 	}
-	else if((CJ_R==0 && CJ_L==0 )&& Chassis_Mode==CHASSIS_R_MODE && flag == TRUE)  //左右都识别到障碍物1s以上，就按反方向动 
+	else if((CJ_R==0 && CJ_L==0)&& Chassis_Mode==CHASSIS_R_MODE && flag == TRUE)  //左右都识别到障碍物1s以上，就按反方向动 
 	{
 		change_time++;		
 		if(change_time > 500)
@@ -544,7 +537,7 @@ void sensor_update(void)
 			flag = FALSE;
 		}
 	}
-	else if(((CJ_R==0 && CJ_L==0 )) && Chassis_Mode==CHASSIS_L_MODE && flag == TRUE)
+	else if(((CJ_R==0 && CJ_L==0)) && Chassis_Mode==CHASSIS_L_MODE && flag == TRUE)
 	{
 		
 		change_time++;		
@@ -556,11 +549,6 @@ void sensor_update(void)
 			flag = FALSE;
 		}
 	}
-	
-	
-
-	
-	
 	
 }
 
@@ -586,8 +574,6 @@ void Chassis_AUTO_Ctrl(void)
 		Chassis_Mode = CHASSIS_L_MODE;
 		flag = TRUE;
 	}
-	
-	
 
 }
 
@@ -666,7 +652,6 @@ void Chassis_Omni_Move_Calculate(void)
 		Chassis_Speed_Target[FRON] = Chassis_Move_X;
 		Chassis_Speed_Target[BACK] = -Chassis_Move_X;
 }
-
 
 
 /**
