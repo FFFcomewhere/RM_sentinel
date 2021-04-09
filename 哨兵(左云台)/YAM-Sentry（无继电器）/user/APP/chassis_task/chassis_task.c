@@ -384,7 +384,7 @@ void sensor_update(void)
 		CJ_R = 0;
 	}
 
-
+		
 
 	static uint16_t change_time = 0;    //光电传感器的识别时间计时器
 	static uint16_t irregular_time = 0; //不规则运动的计时器

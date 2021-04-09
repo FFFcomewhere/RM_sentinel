@@ -183,9 +183,9 @@ void Revolver_task(void *pvParameters)
 					}
 					else
 					{
-//						Revolver_AUTO_Ctrl();
-//						friction_AUTO_Ctrl();
-//						revol_remot_change = TRUE;
+						Revolver_AUTO_Ctrl();
+						friction_AUTO_Ctrl();
+						revol_remot_change = TRUE;
 					}
 				}
 				
@@ -455,6 +455,8 @@ void Reset_Fric(void)
 void Revolver_AUTO_Ctrl(void)
 {
 	
+
+	//如果识别到装甲板且识别到靶心 拨盘转动	
 	if (Vision_If_Update() && VisionRecvData.centre_lock)
 	{
 		Revolver_mode = REVOL_SPEED_MODE;  //速度
