@@ -447,8 +447,46 @@ void sensor_update(void)
 		if(change_time > 100)
 		{
 			change_time = 0;
-			change.stop = TRUE;
+			if(JUDGE_remain_HP() < 200) //如果剩余血量低于200,加速
+				chassis_speed_grade = CHASSIS_SPEED_HIGH;	
+			else //剩余血量高于200 ,减速
+				chassis_speed_grade = CHASSIS_SPEED_LOW;
+		}		
+	}
+	else 
+	{
+		if(if_beat)        //受到攻击
+		{
+			hp_no_change_time =0;   //受到攻击,计时器清零
+			if(JUDGE_fGetRemainEnergy() >= 100) // 底盘缓冲高于100
+				chassis_speed_grade = CHASSIS_SPEED_HIGH;
+			else if (JUDGE_fGetRemainEnergy() < 100 && JUDGE_fGetRemainEnergy() > 50)  //底盘缓冲介于50-100
+				chassis_speed_grade = CHASSIS_SPEED_NORMAL;
+			else if (JUDGE_fGetRemainEnergy() <= 50)   //底盘缓冲低于50
+				chassis_speed_grade = CHASSIS_SPEED_LOW;
+			
 		}
+		else
+		{
+			if(hp_no_change_time > 3000) //当未受到攻击一段时间,可以考虑减速补充缓冲
+			{
+				if(JUDGE_fGetRemainEnergy() < 150)
+					chassis_speed_grade = CHASSIS_SPEED_LOW;
+				else
+					chassis_speed_grade = CHASSIS_SPEED_NORMAL;
+			}
+		}
+	}
+	
+	//确保不会超功率死亡
+	if(JUDGE_fGetRemainEnergy() < 80)
+		chassis_speed_grade = CHASSIS_SPEED_LOW;
+
+
+
+	if(change.stop == TRUE)
+	{
+		Chassis_Mode = CHASSIS_STOP_MODE;
 	}
 	else if(CJ_L==1 && CJ_R==0 && Chassis_Mode==CHASSIS_R_MODE)  //左边的没有识别到，右边的识别到了，且正在往右动，就往左边动
 	{
@@ -474,7 +512,7 @@ void sensor_update(void)
 			flag = TRUE;
 		}
 	}
-	else if((CJ_R==0 && CJ_L==0 )&& Chassis_Mode==CHASSIS_R_MODE && flag == TRUE)  //左右都识别到障碍物1s以上，就按反方向动 
+	else if((CJ_R==0 && CJ_L==0)&& Chassis_Mode==CHASSIS_R_MODE && flag == TRUE)  //左右都识别到障碍物1s以上，就按反方向动 
 	{
 		
 		
@@ -489,7 +527,7 @@ void sensor_update(void)
 			flag = FALSE;
 		}
 	}
-	else if(((CJ_R==0 && CJ_L==0 )) && Chassis_Mode==CHASSIS_L_MODE && flag == TRUE)
+	else if(((CJ_R==0 && CJ_L==0)) && Chassis_Mode==CHASSIS_L_MODE && flag == TRUE)
 	{
 		
 		change_time++;		
@@ -504,53 +542,7 @@ void sensor_update(void)
 		}
 	}
 	
-	if (if_beat)
-	{
-		if_move_acc = TRUE;
-		acc_time++;	
-		if (acc_time > 2000)
-		{
-			if_beat = FALSE;
-			if_move_acc  = FALSE;
-			acc_time = 0;
-		}
-	}
 
-	// else if(if_beat && Chassis_Mode==CHASSIS_R_MODE )  //如果受到击打 就按反方向动 
-	// {
-	// 	if(if_beat)
-	// 		if_beat = 0;
-
-	// 	change_time++;		
-	// 	if(change_time > 400)
-	// 	{
-	// 	  change_time = 0;
-	// 	  change.TO_left = TRUE;
-	// 		change.TO_right = FALSE;
-	// 		flag = FALSE;
-	// 	if_move_acc = TRUE;  //被击打 底盘加速
-	// 	}
-	// }
-	// else if( if_beat && Chassis_Mode==CHASSIS_L_MODE)
-	// {
-	// 	if(if_beat)
-	// 		if_beat = 0;
-		
-	// 	change_time++;		
-	// 	if(change_time > 400)
-	// 	{
-	// 	  change_time = 0;
-	// 	  change.TO_right = TRUE;
-	// 		change.TO_left = FALSE;
-	// 		flag = FALSE;
-	// 	if_move_acc = TRUE;  //被击打 底盘加速
-	// 	}
-	// }
-	
-	
-	
-	
-	
 }
 
 /**
@@ -576,8 +568,6 @@ void Chassis_AUTO_Ctrl(void)
 		Chassis_Mode = CHASSIS_L_MODE;
 		flag = TRUE;
 	}
-	
-	
 
 }
 
@@ -663,7 +653,6 @@ void Chassis_Omni_Move_Calculate(void)
 		Chassis_Speed_Target[FRON] = Chassis_Move_X;
 		Chassis_Speed_Target[BACK] = -Chassis_Move_X;
 }
-
 
 
 /**
