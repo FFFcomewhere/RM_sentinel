@@ -128,6 +128,8 @@ float Error[2][2]; //误差值读取
 //用于j-scpoe调试，j-scpoe不支持读数组
 #define jscpoe_filter  1000
 
+//Cloud_Palstance_Measure
+
 int32_t yaw_mech_measure;
 int32_t yaw_gyro_measure;
 int32_t pitch_mech_measure;
@@ -136,6 +138,10 @@ int32_t yaw_mech_target;
 int32_t yaw_gyro_target;
 int32_t pitch_mech_target;
 int32_t pitch_gyro_target;	
+
+int32_t pitch_pal_mech_Measure;
+
+
 
 
 static void J_scope_gimbal_test(void)
@@ -149,6 +155,11 @@ static void J_scope_gimbal_test(void)
 	yaw_gyro_target = (int32_t)(Cloud_Angle_Target[YAW][GYRO] * jscpoe_filter);
 	pitch_mech_target = (int32_t)(Cloud_Angle_Target[PITCH][MECH] * jscpoe_filter);
 	pitch_gyro_target = (int32_t)(Cloud_Angle_Target[PITCH][GYRO] * jscpoe_filter);
+	
+	
+	
+	pitch_pal_mech_Measure = (int32_t)(Cloud_Palstance_Measure[YAW][MECH] * jscpoe_filter);
+
 
 }
 
@@ -768,7 +779,7 @@ void GIMBAL_CanSend(void)
 		fMotorOutput[PITCH] = -given_current[PITCH][GYRO];
 	}
 	
-	
+
 		
 	CAN_CMD_GIMBAL(fMotorOutput[PITCH], fMotorOutput[YAW], Pitch_right , Yaw_right);
 }
