@@ -462,7 +462,7 @@ void Revolver_AUTO_Ctrl(void)
 		Revolver_mode = REVOL_SPEED_MODE;  //速度
 		Revolver_Speed_Target = constrain_float(Revolver_Speed, -Revolve_Move_Max, Revolve_Move_Max);
 		REVOL_SpeedStuck();//卡弹判断及倒转
-		Vision_Clean_Update_Flag();
+//		Vision_Clean_Update_Flag();
 	}
 	else
 	{

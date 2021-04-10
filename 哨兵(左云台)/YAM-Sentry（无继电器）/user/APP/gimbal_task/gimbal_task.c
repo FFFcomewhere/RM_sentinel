@@ -1,14 +1,14 @@
 /**
   ****************************(C) COPYRIGHT 2016 DJI****************************
   * @file       gimbal_task.c/h
-  * @brief      Íê³ÉÔÆÌ¨¿ØÖÆÈÎÎñ£¬ÓÉÓÚÔÆÌ¨Ê¹ÓÃÍÓÂÝÒÇ½âËã³öµÄ½Ç¶È£¬Æä·¶Î§ÔÚ£¨-pi,pi£©
-  *             ¹Ê¶øÉèÖÃÄ¿±ê½Ç¶È¾ùÎª·¶Î§£¬´æÔÚÐí¶à¶Ô½Ç¶È¼ÆËãµÄº¯Êý¡£ÔÆÌ¨Ö÷Òª·ÖÎª2ÖÖ
-  *             ×´Ì¬£¬ÍÓÂÝÒÇ¿ØÖÆ×´Ì¬ÊÇÀûÓÃ°åÔØÍÓÂÝÒÇ½âËãµÄ×ËÌ¬½Ç½øÐÐ¿ØÖÆ£¬±àÂëÆ÷¿ØÖÆ
-  *             ×´Ì¬ÊÇÍ¨¹ýµç»ú·´À¡µÄ±àÂëÖµ¿ØÖÆµÄÐ£×¼£¬´ËÍâ»¹ÓÐÐ£×¼×´Ì¬£¬Í£Ö¹×´Ì¬µÈ¡£
-  * @note       AV  DV×óÓÒµ÷Í· µ¯²Ö¿ªÆô ÔÆÌ¨²»¶¯Ä£Ê½ Î´Ã÷¡£   ¿¨¶ûÂüÂË²¨»¹ÐèÒªÁË½â£¬×ÔÃé£¬´ò·û¿ØÖÆ»¹ÐèÒªÁË½â¡£
-  * @history    °å×Ó³äµç¿Ú³¯ÎÒ   ÍÓÂÝÒÇÅÅÕë³¬Íâ   ×óÕýÓÒ¸º    µç»ú³äµç¿Ú³¯ÎÒ  R×Ö ×óÕýÓÒ¸º    µçÁ÷×óÕýÓÒ¸º       µç»ú·´×°µÄ»°  ×ó¸ºÓÒÕý   µçÁ÷×ó¸ºÓÒÕý
+  * @brief      ï¿½ï¿½ï¿½ï¿½ï¿½Ì¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¨Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç½ï¿½ï¿½ï¿½ï¿½ï¿½Ä½Ç¶È£ï¿½ï¿½ä·¶Î§ï¿½Ú£ï¿½-pi,piï¿½ï¿½
+  *             ï¿½Ê¶ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½Ç¶È¾ï¿½Îªï¿½ï¿½Î§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô½Ç¶È¼ï¿½ï¿½ï¿½Äºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¨ï¿½ï¿½Òªï¿½ï¿½Îª2ï¿½ï¿½
+  *             ×´Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¿ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½Ã°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¬ï¿½Ç½ï¿½ï¿½Ð¿ï¿½ï¿½Æ£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+  *             ×´Ì¬ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½Æµï¿½Ð£×¼ï¿½ï¿½ï¿½ï¿½ï¿½â»¹ï¿½ï¿½Ð£×¼×´Ì¬ï¿½ï¿½Í£Ö¹×´Ì¬ï¿½È¡ï¿½
+  * @note       AV  DVï¿½ï¿½ï¿½Òµï¿½Í· ï¿½ï¿½ï¿½Ö¿ï¿½ï¿½ï¿½ ï¿½ï¿½Ì¨ï¿½ï¿½ï¿½ï¿½Ä£Ê½ Î´ï¿½ï¿½ï¿½ï¿½   ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë²ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½Ë½â£¬ï¿½ï¿½ï¿½é£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ»ï¿½ï¿½ï¿½Òªï¿½Ë½â¡£
+  * @history    ï¿½ï¿½ï¿½Ó³ï¿½ï¿½Ú³ï¿½ï¿½ï¿½   ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë³¬ï¿½ï¿½   ï¿½ï¿½ï¿½ï¿½ï¿½Ò¸ï¿½    ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú³ï¿½ï¿½ï¿½  Rï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ò¸ï¿½    ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò¸ï¿½       ï¿½ï¿½ï¿½ï¿½ï¿½×°ï¿½Ä»ï¿½  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½   ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
   *  Version    Date            Author          Modification
-  *  V1.0.0     Dec-26-2018     RM              1. Íê³É
+  *  V1.0.0     Dec-26-2018     RM              1. ï¿½ï¿½ï¿½
   *
   @verbatim
   ==============================================================================
@@ -64,18 +64,18 @@
         }                                                \
     }	
 		
-/*---------------------------------------------------ÏÞ·ù-------------------------------------------------------------------*/
+/*---------------------------------------------------ï¿½Þ·ï¿½-------------------------------------------------------------------*/
 
 		
 /*--------------------------------------myself-------------------------------*/
-extern  RC_ctrl_t rc_ctrl;    //¶¨ÒåÒ£¿ØÆ÷½á¹¹Ìå²ÎÊý
-GimbalCtrlMode  modeGimbal;   //¶¨ÒåÔÆÌ¨¿ØÖÆÄ£Ê½    »úÐµ/ÍÓÂÝÒÇ
-eGimbalAction  actGimbal;     //¶¨ÒåÔÆÌ¨ÔË¶¯Ä£Ê½  µ÷Í· ×ÔÃé ´ò·ûµÈ
+extern  RC_ctrl_t rc_ctrl;    //ï¿½ï¿½ï¿½ï¿½Ò£ï¿½ï¿½ï¿½ï¿½ï¿½á¹¹ï¿½ï¿½ï¿½ï¿½ï¿½
+GimbalCtrlMode  modeGimbal;   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¨ï¿½ï¿½ï¿½ï¿½Ä£Ê½    ï¿½ï¿½Ðµ/ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+eGimbalAction  actGimbal;     //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¨ï¿½Ë¶ï¿½Ä£Ê½  ï¿½ï¿½Í· ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
 Critical_t Yaw_Gyro_Angle;    
 
-extern VisionRecvData_t VisionRecvData; //¶¨ÒåÊÓ¾õ½ÓÊÕµÄÊý¾Ý½á¹¹Ìå
+extern VisionRecvData_t VisionRecvData; //ï¿½ï¿½ï¿½ï¿½ï¿½Ó¾ï¿½ï¿½ï¿½ï¿½Õµï¿½ï¿½ï¿½ï¿½Ý½á¹¹ï¿½ï¿½
 
-Gimbal_PID_t Gimbal_Yaw_Mech_PID;      //PIDÒ»ÏµÁÐ½á¹¹Ìå
+Gimbal_PID_t Gimbal_Yaw_Mech_PID;      //PIDÒ»Ïµï¿½Ð½á¹¹ï¿½ï¿½
 Gimbal_PID_t Gimbal_Yaw_Gyro_PID;
 Gimbal_PID_t Gimbal_Pitch_Mech_PID;
 Gimbal_PID_t Gimbal_Pitch_Gyro_PID;
@@ -83,49 +83,49 @@ PidTypeDef gimbal_yaw_motor_gyro_pid;
 PidTypeDef gimbal_pitch_motor_gyro_pid;
 PidTypeDef gimbal_yaw_motor_mech_pid;
 PidTypeDef gimbal_pitch_motor_mech_pid;
-/*-----------------------------------------------------PID²ÎÊý----------------------------------------------------------------------------*/
+/*-----------------------------------------------------PIDï¿½ï¿½ï¿½ï¿½----------------------------------------------------------------------------*/
 
-//ÍÓÂÝÒÇ²ÎÊý
-float angleMpuPitch,	angleMpuYaw,	angleMpuRoll;//ÍÓÂÝÒÇ½Ç¶ÈÖµ
-short palstanceMpuPitch,	palstanceMpuYaw,	palstanceMpuRoll;//ÍÓÂÝÒÇ½ÇËÙ¶ÈÖµ
+//ï¿½ï¿½ï¿½ï¿½ï¿½Ç²ï¿½ï¿½ï¿½
+float angleMpuPitch,	angleMpuYaw,	angleMpuRoll;//ï¿½ï¿½ï¿½ï¿½ï¿½Ç½Ç¶ï¿½Öµ
+short palstanceMpuPitch,	palstanceMpuYaw,	palstanceMpuRoll;//ï¿½ï¿½ï¿½ï¿½ï¿½Ç½ï¿½ï¿½Ù¶ï¿½Öµ
 float angleMpu[3][2];
 
-//»úÐµ½Ç¶ÈÖÐ¼ä±äÁ¿,´ÓCANÖÐ¶ÁÈ¡Êý¾Ý
+//ï¿½ï¿½Ðµï¿½Ç¶ï¿½ï¿½Ð¼ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½CANï¿½Ð¶ï¿½È¡ï¿½ï¿½ï¿½ï¿½
 int16_t  angleMotorPit,  angleMotorYaw; 
 int16_t  speedMotorPit,  speedMotorYaw; 
 int16_t  currentMotorPit,  currentMotorYaw; 
 
 float PitchAngle, YawAngle;
-//ÆÚÍû½Ç¶È
+//ï¿½ï¿½ï¿½ï¿½ï¿½Ç¶ï¿½
 float Cloud_Angle_Target[2][2];//  pitch/yaw    mech/gyro
-extern float Cloud_Angle_Target_GD[2][2];   //  pitch/yaw    mech/gyro  ¶¨ÒåÔÚkey_control.cÀï
+extern float Cloud_Angle_Target_GD[2][2];   //  pitch/yaw    mech/gyro  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½key_control.cï¿½ï¿½
 
-//²âÁ¿½Ç¶È
+//ï¿½ï¿½ï¿½ï¿½ï¿½Ç¶ï¿½
 float Cloud_Angle_Measure[2][2];//  pitch/yaw    mech/gyro
 
-//²âÁ¿µç»ú×ªËÙ
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½
 float Cloud_Speed_Measure[2][2];//  pitch/yaw    mech/gyro
 
-//²âÁ¿µç»úµçÁ÷Öµ
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
 float Cloud_Current_Measure[2][2];//  pitch/yaw    mech/gyro
 
-//²âÁ¿½ÇËÙ¶È
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½
 float Cloud_Palstance_Measure[2][2];//  pitch/yaw    mech/gyro
 
 
-float motor_gyro_set[2][2];  //PID¼ÆËãÍâ»·½á¹û£¬½ÇËÙ¶ÈÉè¶¨Öµ  pitch/yaw    mech/gyro
+float motor_gyro_set[2][2];  //PIDï¿½ï¿½ï¿½ï¿½ï¿½â»·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½ï¿½è¶¨Öµ  pitch/yaw    mech/gyro
 float motor_gyro_set[2][2]; 
 
-float current_set[2][2];      //PID¼ÆËãÄÚ»·½á¹û£¬Êä³ö  pitch/yaw    mech/gyro
+float current_set[2][2];      //PIDï¿½ï¿½ï¿½ï¿½ï¿½Ú»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  pitch/yaw    mech/gyro
 float current_set[2][2];
 
-float given_current[2][2];     //PID×îÖÕ¸³Öµ±äÁ¿  pitch/yaw    mech/gyro
+float given_current[2][2];     //PIDï¿½ï¿½ï¿½Õ¸ï¿½Öµï¿½ï¿½ï¿½ï¿½  pitch/yaw    mech/gyro
 float given_current[2][2];
 float fMotorOutput[4] = {0};
 
-float Error[2][2]; //Îó²îÖµ¶ÁÈ¡
+float Error[2][2]; //ï¿½ï¿½ï¿½Öµï¿½ï¿½È¡
 
-//ÓÃÓÚj-scpoeµ÷ÊÔ£¬j-scpoe²»Ö§³Ö¶ÁÊý×é
+//ï¿½ï¿½ï¿½ï¿½j-scpoeï¿½ï¿½ï¿½Ô£ï¿½j-scpoeï¿½ï¿½Ö§ï¿½Ö¶ï¿½ï¿½ï¿½ï¿½ï¿½
 #define jscpoe_filter  1000
 
 int32_t yaw_mech_measure;
@@ -154,7 +154,7 @@ static void J_scope_gimbal_test(void)
 
 
 
-/*---------------------------------------------------*×ÔÃé*----------------------------------------------------------------------------*/
+/*---------------------------------------------------*ï¿½ï¿½ï¿½ï¿½*----------------------------------------------------------------------------*/
 Auto_Mode auto_mode;
 bool Auto_Mode_falg = 0;
 uint32_t Auto_Mode_Count = 0;
@@ -166,83 +166,83 @@ float Auto_Error_Yaw[2];
 float Auto_Distance;
 uint32_t Gimbal_Vision_Time[2];
 
-//ÏÂ²ã×ÔÃéÔ¤²âÓÃ
-float Auto_Distance;//Ô¤²â¾àÀë
+//ï¿½Â²ï¿½ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½
+float Auto_Distance;//Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½
 float vision_time_update_time;
-float Vision_Angle_Speed_Yaw, Vision_Angle_Speed_Pitch;//¿¨¶ûÂüÂË²¨ËÙ¶È²âÁ¿Öµ
-float *yaw_kf_result, *pitch_kf_result;//¶þ½×¿¨¶ûÂüÂË²¨½á¹û,0½Ç¶È 1ËÙ¶È
-float yaw_speed_k = 0;//yawËÙ¶ÈÔ¤²â±ÈÀý
-float kf_yaw_angcon = 0;//yawÔ¤²â±ÈÀýÏÞ·ù
-float pitch_speed_k = 0;//pitchËÙ¶ÈÔ¤²â±ÈÀý
-float kf_pitch_angcon = 0;//pitchÔ¤²â±ÈÀýÏÞ·ù
-float debug_kf_y_angle;//yawÔ¤²âÔÝ´æ
-float debug_kf_p_angle;//pitchÔ¤²âÔÝ´æ
-float debug_kf_angle_temp;//Ô¤²â½Ç¶ÈÐ±ÆÂÔÝ´æÁ¿
-float debug_kf_angle_ramp = 20;//Ô¤²â½Ç¶ÈÐ±ÆÂ±ä»¯Á¿
-float kf_speed_yl = 0;//ËÙ¶È¹ýµÍ¹Ø±ÕÔ¤²â
-uint16_t Auto_KF_Delay = 0;//×ÔÃéÍ»È»¿ªÆô,¿¨¶ûÂüÂË²¨¿ªÆôÑÓÊ±
-float debug_y_sk;// = 38;//35;//30;//ÒÆ¶¯Ô¤²âÏµÊý,Ô½´óÔ¤²âÔ½¶à
-float debug_y_sb_sk;//ÉÚ±øÔ¤²âÏµÊý
-float debug_y_sb_brig_sk;//ÇÅÍ·ÉÚ±ø
-float debug_p_sk;//ÒÆ¶¯Ô¤²âÏµÊý,Ô½´óÔ¤²âÔ½¶à
-float debug_auto_err_y=120;// = 10;//15;//10;//15;//yaw½Ç¶È¹ý´ó¹Ø±ÕÔ¤²â              ¾ßÌåÖµÔÚ³ÌÐòÖÐ»¹ÐèÒªÐÞ¸Ä               
-float debug_auto_err_p;//pitch½Ç¶È¹ý´ó¹Ø±ÕÔ¤²â
-float debug_kf_delay=80;// = 150;//100;//200;//120;//150;//Ô¤²âÑÓÊ±¿ªÆô              ¾ßÌåÖµÔÚ³ÌÐòÖÐ»¹ÐèÒªÐÞ¸Ä
-float debug_kf_speed_yl;//yawËÙ¶È¹ýµÍ¹Ø±ÕÔ¤²â
-float debug_kf_speed_yl_sb;//Ì§Í·´òÉÚ±øÊ±¼õÐ¡×îµÍ¿É¿ªÔ¤²âÁ¿
-float debug_kf_speed_yh;//yawËÙ¶È¹ý¸ß¹Ø±ÕÔ¤²â
-float debug_kf_speed_pl;//pitchËÙ¶È¹ýµÍ¹Ø±ÕÔ¤²â
-float debug_kf_y_angcon;// = 130;//125;//115;//135;//yawÔ¤²âÁ¿ÏÞ·ù
-float debug_kf_p_angcon;//pitchÔ¤²âÁ¿ÏÞ·ù
+float Vision_Angle_Speed_Yaw, Vision_Angle_Speed_Pitch;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë²ï¿½ï¿½Ù¶È²ï¿½ï¿½ï¿½Öµ
+float *yaw_kf_result, *pitch_kf_result;//ï¿½ï¿½ï¿½×¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë²ï¿½ï¿½ï¿½ï¿½,0ï¿½Ç¶ï¿½ 1ï¿½Ù¶ï¿½
+float yaw_speed_k = 0;//yawï¿½Ù¶ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½
+float kf_yaw_angcon = 0;//yawÔ¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ·ï¿½
+float pitch_speed_k = 0;//pitchï¿½Ù¶ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½
+float kf_pitch_angcon = 0;//pitchÔ¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ·ï¿½
+float debug_kf_y_angle;//yawÔ¤ï¿½ï¿½ï¿½Ý´ï¿½
+float debug_kf_p_angle;//pitchÔ¤ï¿½ï¿½ï¿½Ý´ï¿½
+float debug_kf_angle_temp;//Ô¤ï¿½ï¿½Ç¶ï¿½Ð±ï¿½ï¿½ï¿½Ý´ï¿½ï¿½ï¿½
+float debug_kf_angle_ramp = 20;//Ô¤ï¿½ï¿½Ç¶ï¿½Ð±ï¿½Â±ä»¯ï¿½ï¿½
+float kf_speed_yl = 0;//ï¿½Ù¶È¹ï¿½ï¿½Í¹Ø±ï¿½Ô¤ï¿½ï¿½
+uint16_t Auto_KF_Delay = 0;//ï¿½ï¿½ï¿½ï¿½Í»È»ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±
+float debug_y_sk;// = 38;//35;//30;//ï¿½Æ¶ï¿½Ô¤ï¿½ï¿½Ïµï¿½ï¿½,Ô½ï¿½ï¿½Ô¤ï¿½ï¿½Ô½ï¿½ï¿½
+float debug_y_sb_sk;//ï¿½Ú±ï¿½Ô¤ï¿½ï¿½Ïµï¿½ï¿½
+float debug_y_sb_brig_sk;//ï¿½ï¿½Í·ï¿½Ú±ï¿½
+float debug_p_sk;//ï¿½Æ¶ï¿½Ô¤ï¿½ï¿½Ïµï¿½ï¿½,Ô½ï¿½ï¿½Ô¤ï¿½ï¿½Ô½ï¿½ï¿½
+float debug_auto_err_y=120;// = 10;//15;//10;//15;//yawï¿½Ç¶È¹ï¿½ï¿½ï¿½Ø±ï¿½Ô¤ï¿½ï¿½              ï¿½ï¿½ï¿½ï¿½Öµï¿½Ú³ï¿½ï¿½ï¿½ï¿½Ð»ï¿½ï¿½ï¿½Òªï¿½Þ¸ï¿½               
+float debug_auto_err_p;//pitchï¿½Ç¶È¹ï¿½ï¿½ï¿½Ø±ï¿½Ô¤ï¿½ï¿½
+float debug_kf_delay=80;// = 150;//100;//200;//120;//150;//Ô¤ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½              ï¿½ï¿½ï¿½ï¿½Öµï¿½Ú³ï¿½ï¿½ï¿½ï¿½Ð»ï¿½ï¿½ï¿½Òªï¿½Þ¸ï¿½
+float debug_kf_speed_yl;//yawï¿½Ù¶È¹ï¿½ï¿½Í¹Ø±ï¿½Ô¤ï¿½ï¿½
+float debug_kf_speed_yl_sb;//Ì§Í·ï¿½ï¿½ï¿½Ú±ï¿½Ê±ï¿½ï¿½Ð¡ï¿½ï¿½Í¿É¿ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½
+float debug_kf_speed_yh;//yawï¿½Ù¶È¹ï¿½ï¿½ß¹Ø±ï¿½Ô¤ï¿½ï¿½
+float debug_kf_speed_pl;//pitchï¿½Ù¶È¹ï¿½ï¿½Í¹Ø±ï¿½Ô¤ï¿½ï¿½
+float debug_kf_y_angcon;// = 130;//125;//115;//135;//yawÔ¤ï¿½ï¿½ï¿½ï¿½ï¿½Þ·ï¿½
+float debug_kf_p_angcon;//pitchÔ¤ï¿½ï¿½ï¿½ï¿½ï¿½Þ·ï¿½
 
 
-/*×Ô¶¯´òµ¯ÓÃµÄÒ»Ð©±êÖ¾Î»*/
-bool Mobility_Prediction_Yaw = FALSE;//Ô¤²âÊÇ·ñ¿ªÆô±êÖ¾Î»
-bool Mobi_Pre_Yaw_Fire = FALSE;//Ä¬ÈÏÔ¤²âÃ»µ½Î»£¬½ûÖ¹¿ªÇ¹
+/*ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½Ãµï¿½Ò»Ð©ï¿½ï¿½Ö¾Î»*/
+bool Mobility_Prediction_Yaw = FALSE;//Ô¤ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½Ö¾Î»
+bool Mobi_Pre_Yaw_Fire = FALSE;//Ä¬ï¿½ï¿½Ô¤ï¿½ï¿½Ã»ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½Ö¹ï¿½ï¿½Ç¹
 
-uint16_t mobpre_yaw_left_delay = 0;//Ïò×óÔ¤²âÑÓÊ±ÅÐ¶Ï¿É¿ª»ðÏû¶¶
-uint16_t mobpre_yaw_right_delay = 0;//ÏòÓÒÔ¤²âÑÓÊ±ÅÐ¶Ï¿É¿ª»ðÏû¶¶
-uint16_t mobpre_yaw_stop_delay = 0;//Ô¤²â¹Ø±ÕÑÓÊ±ÅÐ¶Ï¿É¿ª»ðÏû¶¶
+uint16_t mobpre_yaw_left_delay = 0;//ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½Ê±ï¿½Ð¶Ï¿É¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+uint16_t mobpre_yaw_right_delay = 0;//ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½Ê±ï¿½Ð¶Ï¿É¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+uint16_t mobpre_yaw_stop_delay = 0;//Ô¤ï¿½ï¿½Ø±ï¿½ï¿½ï¿½Ê±ï¿½Ð¶Ï¿É¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 
-/*¶þ½×¿¨¶ûÂü*/
+/*ï¿½ï¿½ï¿½×¿ï¿½ï¿½ï¿½ï¿½ï¿½*/
 #define KF_ANGLE	0
 #define KF_SPEED	1
 #define KF_ACCEL	2
-extKalman_t Vision_Distance_Kalman;                     //¶¨ÒåÊÓ¾õ¾àÀë¿¨¶ûÂüÂË²¨½á¹¹Ìå
-speed_calc_data_t Vision_Yaw_speed_Struct;              //¶¨ÒåÊÓ¾õyawËÙ¶È²âËÙ½á¹¹Ìå
-speed_calc_data_t Vision_Pitch_speed_Struct;            //¶¨ÒåÊÓ¾õpitchËÙ¶È²âËÙ½á¹¹Ìå
-kalman_filter_t yaw_kalman_filter;                      //¶¨Òåyaw¿¨¶ûÂüÂË²¨Æ÷½á¹¹Ìå
-kalman_filter_t pitch_kalman_filter;                    //¶¨Òåpitch¿¨¶ûÂüÂË²¨Æ÷½á¹¹Ìå
+extKalman_t Vision_Distance_Kalman;                     //ï¿½ï¿½ï¿½ï¿½ï¿½Ó¾ï¿½ï¿½ï¿½ï¿½ë¿¨ï¿½ï¿½ï¿½ï¿½ï¿½Ë²ï¿½ï¿½á¹¹ï¿½ï¿½
+speed_calc_data_t Vision_Yaw_speed_Struct;              //ï¿½ï¿½ï¿½ï¿½ï¿½Ó¾ï¿½yawï¿½Ù¶È²ï¿½ï¿½Ù½á¹¹ï¿½ï¿½
+speed_calc_data_t Vision_Pitch_speed_Struct;            //ï¿½ï¿½ï¿½ï¿½ï¿½Ó¾ï¿½pitchï¿½Ù¶È²ï¿½ï¿½Ù½á¹¹ï¿½ï¿½
+kalman_filter_t yaw_kalman_filter;                      //ï¿½ï¿½ï¿½ï¿½yawï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë²ï¿½ï¿½ï¿½ï¿½á¹¹ï¿½ï¿½
+kalman_filter_t pitch_kalman_filter;                    //ï¿½ï¿½ï¿½ï¿½pitchï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë²ï¿½ï¿½ï¿½ï¿½á¹¹ï¿½ï¿½
 
-/*----------------------------------------------------------Ò£¿ØÆ÷Ïà¹Ø±äÁ¿-------------------------------------------------------------------*/
+/*----------------------------------------------------------Ò£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø±ï¿½ï¿½ï¿½-------------------------------------------------------------------*/
 
-//ÉÏµçÐ±ÆÂ±äÁ¿
-float Slope_Begin_Pitch = 0.005 ;  //¸ÕÉÏµçÊ±ÒÆ¶¯¿ìÂý
+//ï¿½Ïµï¿½Ð±ï¿½Â±ï¿½ï¿½ï¿½
+float Slope_Begin_Pitch = 0.005 ;  //ï¿½ï¿½ï¿½Ïµï¿½Ê±ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½
 float Slope_Begin_Yaw = 0.005 ;
 
-float rc_add_yaw, rc_add_pit;       //Ò£¿ØÆ÷ÔöÁ¿
-int16_t yaw_channel, pitch_channel; //Ò£¿ØÆ÷ÖÐ¼ä±äÁ¿                                                  
+float rc_add_yaw, rc_add_pit;       //Ò£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+int16_t yaw_channel, pitch_channel; //Ò£ï¿½ï¿½ï¿½ï¿½ï¿½Ð¼ï¿½ï¿½ï¿½ï¿½                                                  
 extern uint8_t Vision_Get_New_Data;
 
 bool op=0;
 
-//Ã¿2msÖ´ÐÐÒ»´ÎÈÎÎñº¯Êý
+//Ã¿2msÖ´ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void GIMBAL_task(void *pvParameters)
 {
 	portTickType currentTime;	
 	
 	for(;;)
 	{	
-		currentTime = xTaskGetTickCount();//µ±Ç°ÏµÍ³Ê±¼ä
+		currentTime = xTaskGetTickCount();//ï¿½ï¿½Ç°ÏµÍ³Ê±ï¿½ï¿½
 		
-		/* ´úÂë¶Î */
-		if (SYSTEM_GetSystemState() == SYSTEM_STARTING)//³õÊ¼»¯Ä£Ê½  ÕâÀïpitchÉÏµç¿ñË¦£¬ËùÒÔ¼ÓÁËÅÐ¶Ï
+		/* ï¿½ï¿½ï¿½ï¿½ï¿½ */
+		if (SYSTEM_GetSystemState() == SYSTEM_STARTING)//ï¿½ï¿½Ê¼ï¿½ï¿½Ä£Ê½  ï¿½ï¿½ï¿½ï¿½pitchï¿½Ïµï¿½ï¿½Ë¦ï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½
        GIMBAL_InitCtrl();
 		
 		else
 		{
-			//±ãÓÚj-scopeµ÷ÊÔ
+			//ï¿½ï¿½ï¿½ï¿½j-scopeï¿½ï¿½ï¿½ï¿½
 			J_scope_gimbal_test();
 
 			if(SYSTEM_GetRemoteMode() == RC)
@@ -257,15 +257,15 @@ void GIMBAL_task(void *pvParameters)
 							
 				if(op==0)
 				{
-					modeGimbal = CLOUD_MECH_MODE;   //³õÊ¼pidÄ¬ÈÏ»úÐµÄ£Ê½·ÀÖ¹µôÍ·
+					modeGimbal = CLOUD_MECH_MODE;   //ï¿½ï¿½Ê¼pidÄ¬ï¿½Ï»ï¿½ÐµÄ£Ê½ï¿½ï¿½Ö¹ï¿½ï¿½Í·
 					op=1;
 				}
-				if(Vision_If_Update()==TRUE && Auto_Mode_Count >= 5)    //Êý¾Ý¸üÐÂ
+				if(Vision_If_Update()==TRUE )    //ï¿½ï¿½ï¿½Ý¸ï¿½ï¿½ï¿½
 				{				
 						modeGimbal = CLOUD_CRUISE_MODE;
 						GIMBAL_AUTO_Mode_Ctrl();
 				}
-				else                            //ÊÓ¾õÎÞÊý¾Ý¸üÐÂ
+				else                            //ï¿½Ó¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¸ï¿½ï¿½ï¿½
 				{
 					if(Vision_If_Update()==TRUE)
 						Auto_Mode_Count++;
@@ -281,13 +281,13 @@ void GIMBAL_task(void *pvParameters)
 		GIMBAL_PositionLoop();
 		GIMBAL_CanSend();			
 		
-		vTaskDelayUntil(&currentTime, TIME_STAMP_4MS);//¾ø¶ÔÑÓÊ±
+		vTaskDelayUntil(&currentTime, TIME_STAMP_4MS);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±
 	}
 }
 
 
 /**
-  * @brief  ÔÆÌ¨³õÊ¼»¯,Ö÷ÒªÊÇPID³õÊ¼»¯
+  * @brief  ï¿½ï¿½Ì¨ï¿½ï¿½Ê¼ï¿½ï¿½,ï¿½ï¿½Òªï¿½ï¿½PIDï¿½ï¿½Ê¼ï¿½ï¿½
   * @param  void
   * @retval void
   * @attention 
@@ -302,7 +302,7 @@ void GIMBAL_InitCtrl(void)
 	  auto_mode.yaw_cw = TRUE;
 	  auto_mode.yaw_ccw = FALSE;
 	
-	  if (xTaskGetTickCount( ) - ulTimeCurrent > TIME_STAMP_100MS)//±£Ö¤²»¶ÏµçÇé¿öÏÂÏÂ´Î¿ÉÓÃ
+	  if (xTaskGetTickCount( ) - ulTimeCurrent > TIME_STAMP_100MS)//ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â´Î¿ï¿½ï¿½ï¿½
 		   bAngleRecord = FALSE;
 
 		 
@@ -313,12 +313,12 @@ void GIMBAL_InitCtrl(void)
 		static const fp32 Pitch_gyro_speed_pid[3] = {PITCH_GYRO_SPEED_PID_KP, PITCH_GYRO_SPEED_PID_KI, PITCH_GYRO_SPEED_PID_KD};
     static const fp32 Yaw_gyro_speed_pid[3]   = {YAW_GYRO_SPEED_PID_KP, YAW_GYRO_SPEED_PID_KI, YAW_GYRO_SPEED_PID_KD};
 		modeGimbal = CLOUD_MECH_MODE;
-    //³õÊ¼»¯yawµç»úpid		
+    //ï¿½ï¿½Ê¼ï¿½ï¿½yawï¿½ï¿½ï¿½pid		
 		GIMBAL_PID_Init(&Gimbal_Yaw_Gyro_PID,YAW_GYRO_ABSOLUTE_PID_MAX_OUT, YAW_GYRO_ABSOLUTE_PID_MAX_IOUT, YAW_GYRO_ABSOLUTE_PID_KP, YAW_GYRO_ABSOLUTE_PID_KI, YAW_GYRO_ABSOLUTE_PID_KD);
 		GIMBAL_PID_Init(&Gimbal_Yaw_Mech_PID,YAW_ENCODE_RELATIVE_PID_MAX_OUT, YAW_ENCODE_RELATIVE_PID_MAX_IOUT, YAW_ENCODE_RELATIVE_PID_KP, YAW_ENCODE_RELATIVE_PID_KI, YAW_ENCODE_RELATIVE_PID_KD);
 		PID_Init(&gimbal_yaw_motor_gyro_pid, PID_POSITION, Yaw_gyro_speed_pid, YAW_GYRO_SPEED_PID_MAX_OUT, YAW_GYRO_SPEED_PID_MAX_IOUT);
 		PID_Init(&gimbal_yaw_motor_mech_pid, PID_POSITION, Yaw_speed_pid, YAW_SPEED_PID_MAX_OUT, YAW_SPEED_PID_MAX_IOUT);		
-    //³õÊ¼»¯pitchµç»úpid_
+    //ï¿½ï¿½Ê¼ï¿½ï¿½pitchï¿½ï¿½ï¿½pid_
 		GIMBAL_PID_Init(&Gimbal_Pitch_Gyro_PID, PITCH_GYRO_ABSOLUTE_PID_MAX_OUT, PITCH_GYRO_ABSOLUTE_PID_MAX_IOUT, PITCH_GYRO_ABSOLUTE_PID_KP, PITCH_GYRO_ABSOLUTE_PID_KI, PITCH_GYRO_ABSOLUTE_PID_KD);
 		GIMBAL_PID_Init(&Gimbal_Pitch_Mech_PID, PITCH_ENCODE_RELATIVE_PID_MAX_OUT, PITCH_ENCODE_RELATIVE_PID_MAX_IOUT, PITCH_ENCODE_RELATIVE_PID_KP, PITCH_ENCODE_RELATIVE_PID_KI, PITCH_ENCODE_RELATIVE_PID_KD);
 		PID_Init(&gimbal_pitch_motor_gyro_pid, PID_POSITION, Pitch_gyro_speed_pid, PITCH_GYRO_SPEED_PID_MAX_OUT, PITCH_GYRO_SPEED_PID_MAX_IOUT);
@@ -329,7 +329,7 @@ void GIMBAL_InitCtrl(void)
 		Cloud_Angle_Target[YAW][GYRO] = Cloud_Angle_Measure[YAW][GYRO];
 		Cloud_Angle_Target[PITCH][GYRO] = Cloud_Angle_Measure[PITCH][GYRO];
 		
-			//¼ÇÂ¼ÉÏµçÊ±ÔÆÌ¨»úÐµ½Ç¶È
+			//ï¿½ï¿½Â¼ï¿½Ïµï¿½Ê±ï¿½ï¿½Ì¨ï¿½ï¿½Ðµï¿½Ç¶ï¿½
 	  if (bAngleRecord == FALSE)
 	  {
 	  	bAngleRecord = TRUE;
@@ -338,15 +338,15 @@ void GIMBAL_InitCtrl(void)
 		  Cloud_Angle_Target[YAW][MECH] = Cloud_Angle_Measure[YAW][MECH];
 	  }
 		
-			//Æ½»ºµØÈÃÔÆÌ¨ÒÆ¶¯µ½ÖÐ¼ä,·ÀÖ¹¸ÕÉÏµç¿ñË¦
+			//Æ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¨ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½Ð¼ï¿½,ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½Ïµï¿½ï¿½Ë¦
 	  Cloud_Angle_Target[PITCH][MECH] = RAMP_float( mid_pitch_angle, Cloud_Angle_Target[PITCH][MECH], Slope_Begin_Pitch);
 	  Cloud_Angle_Target[YAW][MECH]   = RAMP_float( mid_yaw_angle, Cloud_Angle_Target[YAW][MECH], Slope_Begin_Yaw);
 
 
 }
-/*-----------------------------------------------ÔÆÌ¨Ò£¿ØÆ÷¿ØÖÆÄ£Ê½Ñ¡ÔñºÍÒ£¿ØÆ÷Ä¿±êÖµ¼ÆËã--------------------------------------------------*/
+/*-----------------------------------------------ï¿½ï¿½Ì¨Ò£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½Ñ¡ï¿½ï¿½ï¿½Ò£ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½--------------------------------------------------*/
 /**
-  * @brief  ÔÆÌ¨Ò£¿ØÆ÷¿ØÖÆÄ£Ê½
+  * @brief  ï¿½ï¿½Ì¨Ò£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½
   * @param  void
   * @retval void
   * @attention 
@@ -361,7 +361,7 @@ void RC_Set_Mode(void)
 }
 
 /**
-  * @brief  ¼ÆËãÔÆÌ¨µÄÄ¿±êÖµ
+  * @brief  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¨ï¿½ï¿½Ä¿ï¿½ï¿½Öµ
   * @param  void
   * @retval void
   * @attention 
@@ -370,7 +370,7 @@ void RC_Set_Mode(void)
 void GIMBAL_Set_Control(void)
 {
 		Auto_Mode_falg = 1;
-	  //½«Ò£¿ØÆ÷µÄÊý¾Ý´¦ÀíËÀÇø int16_t yaw_channel,pitch_channel
+	  //ï¿½ï¿½Ò£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ int16_t yaw_channel,pitch_channel
     rc_deadline_limit(RC_CH0_RLR_OFFSET, yaw_channel, RC_deadband);
     rc_deadline_limit(RC_CH1_RUD_OFFSET, pitch_channel, RC_deadband);	
 	
@@ -379,7 +379,7 @@ void GIMBAL_Set_Control(void)
 	
 	if(modeGimbal == CLOUD_MECH_MODE)
 	{
-    VisionRecvData.identify_target = FALSE;		
+   	
 #if YAW_POSITION ==	YAW_DOWN
     if (Cloud_Angle_Target[YAW][MECH] > min_yaw_relative_angle)
         Cloud_Angle_Target[YAW][MECH] = min_yaw_relative_angle;
@@ -400,7 +400,7 @@ void GIMBAL_Set_Control(void)
 	
 //		Cloud_Angle_Target[YAW][GYRO] = Cloud_Angle_Measure[YAW][GYRO];		
 //		Cloud_Angle_Target[PITCH][GYRO] = Cloud_Angle_Measure[PITCH][GYRO];
-    //ÊÇ·ñ³¬¹ý×î´ó ×îÐ¡Öµ
+    //ï¿½Ç·ñ³¬¹ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ð¡Öµ
     if (Cloud_Angle_Target[PITCH][MECH] > max_pitch_relative_angle)
         Cloud_Angle_Target[PITCH][MECH] = max_pitch_relative_angle;
     else if (Cloud_Angle_Target[PITCH][MECH] < min_pitch_relative_angle)
@@ -413,13 +413,13 @@ void GIMBAL_Set_Control(void)
 
 
 
-/*---------------------------------ÉÚ±øÄ£Ê½ÏÂpitchÖáÉÏÏÂ×ª¶¯£¬yawÖá360¶È×ª----------------------------------*/
+/*---------------------------------ï¿½Ú±ï¿½Ä£Ê½ï¿½ï¿½pitchï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½yawï¿½ï¿½360ï¿½ï¿½×ª----------------------------------*/
 float erro_pitch = 0.0f;
 float erro_yaw = 0.0f;
 
 void GIMBAL_AUTO_Ctrl(void)
 {
-	modeGimbal = CLOUD_MECH_MODE; //×ÔÖ÷Ä£Ê½ÏÂÊ¹ÓÃ»úÐµÄ£Ê½
+	
 
 	Cloud_Angle_Target[YAW][MECH] = Cloud_Angle_Measure[YAW][MECH];
 	Cloud_Angle_Target[PITCH][MECH] = Cloud_Angle_Measure[PITCH][MECH];
@@ -429,7 +429,7 @@ void GIMBAL_AUTO_Ctrl(void)
 	else if (Cloud_Angle_Target[PITCH][MECH] < min_pitch_relative_angle)
 			Cloud_Angle_Target[PITCH][MECH] = min_pitch_relative_angle;
 
-/*---------------------yawÖá----------------------*///×°ÉÏµç»¬»·ÒÔºó360¶È×ª£¬ÏÖÔÚ²»ÄÜ
+/*---------------------yawï¿½ï¿½----------------------*///×°ï¿½Ïµç»¬ï¿½ï¿½ï¿½Ôºï¿½360ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½Ú²ï¿½ï¿½ï¿½
 	
 	if(auto_mode.yaw_cw == TRUE)
 	{			
@@ -454,12 +454,12 @@ void GIMBAL_AUTO_Ctrl(void)
 	}	
 	
 	
-/*---------------------pitchÖá--------------------*/	
+/*---------------------pitchï¿½ï¿½--------------------*/	
 	if(auto_mode.pitch_up == TRUE)
 	{			
-		Cloud_Angle_Target[PITCH][MECH] = RAMP_float( auto_pitch_up, Cloud_Angle_Target[PITCH][MECH], 0.04 );
+		Cloud_Angle_Target[PITCH][MECH] = RAMP_float( auto_pitch_up, Cloud_Angle_Target[PITCH][MECH], 0.02);
 		erro_pitch =  Cloud_Angle_Measure[PITCH][MECH] - auto_pitch_up;
-		if(erro_pitch  < 0.1f && erro_pitch > -0.1f)
+		if(erro_pitch  < 0.15f && erro_pitch > -0.15f)
 		{
 			auto_mode.pitch_up = FALSE;
 			auto_mode.pitch_down = TRUE;
@@ -468,9 +468,9 @@ void GIMBAL_AUTO_Ctrl(void)
 	
 	else if(auto_mode.pitch_down == TRUE)
 	{		
-    Cloud_Angle_Target[PITCH][MECH] = RAMP_float( auto_pitch_down, Cloud_Angle_Target[PITCH][MECH], 0.02);		
+    Cloud_Angle_Target[PITCH][MECH] = RAMP_float( auto_pitch_down, Cloud_Angle_Target[PITCH][MECH], 0.01);		
 		erro_pitch =   Cloud_Angle_Measure[PITCH][MECH] - auto_pitch_down;
-		if(erro_pitch  < 0.1f && erro_pitch > -0.1f )
+		if(erro_pitch  < 0.15f && erro_pitch > -0.15f )
 		{
 			auto_mode.pitch_up = TRUE;
 			auto_mode.pitch_down = FALSE;
@@ -482,9 +482,9 @@ void GIMBAL_AUTO_Ctrl(void)
 
 
 
-/*---------------------------------×ÔÃé----------------------------------*/
+/*---------------------------------ï¿½ï¿½ï¿½ï¿½----------------------------------*/
 /**
-  * @brief  ÔÆÌ¨ÉÚ±ø¿ØÖÆÄ£Ê½
+  * @brief  ï¿½ï¿½Ì¨ï¿½Ú±ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½
   * @param  void
   * @retval void
   * @attention 
@@ -507,14 +507,14 @@ void GIMBAL_AUTO_Mode_Ctrl(void)
 		Vision_Get_Distance(&Auto_Distance);
 		pitch_angle_ref = (Cloud_Angle_Measure[PITCH][MECH]+Auto_Error_Pitch[NOW]);
 		yaw_angle_ref = (Cloud_Angle_Measure[YAW][MECH]-Auto_Error_Yaw[NOW]);
-		//Vision_Clean_Update_Flag();//ÇåÁã,·ñÔò»áÒ»Ö±Ö´ÐÐ
+		//Vision_Clean_Update_Flag();//ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½Ò»Ö±Ö´ï¿½ï¿½
 		Auto_Error_Pitch[NOW] = 0;
 		Auto_Error_Yaw[NOW]= 0 ;
-		Gimbal_Vision_Time[NOW]=xTaskGetTickCount();//»ñÈ¡ÐÂÊý¾Ýµ½À´µÄÊ±¼ä
+		Gimbal_Vision_Time[NOW]=xTaskGetTickCount();//ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½Ýµï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
 		
 			
 			
-		if(VisionRecvData.identify_target == TRUE)                     //Ê¶±ðµ½ÁËÄ¿±ê
+		if(VisionRecvData.identify_target == TRUE)                     //Ê¶ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½
 		{
 			Cloud_Angle_Target[YAW][GYRO] = yaw_angle_ref;
 			Cloud_Angle_Target[PITCH][GYRO] = pitch_angle_ref;
@@ -542,18 +542,18 @@ void GIMBAL_AUTO_Mode_Ctrl(void)
 		
 	}
 }
-/*----------------------------×ÔÃéÔ¤²â----------------------------------*/
+/*----------------------------ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½----------------------------------*/
 
 void GIMBAL_AUTO_PREDICT_Mode_Ctrl(void)
 {	
-	static float yaw_angle_raw, pitch_angle_raw;//¿¨¶ûÂüÂË²¨½Ç¶È²âÁ¿Öµ
-	static float yaw_angle_ref;//¼ÇÂ¼Ä¿±ê½Ç¶È
-	static float pitch_angle_ref;//¼ÇÂ¼Ä¿±ê½Ç¶È
+	static float yaw_angle_raw, pitch_angle_raw;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë²ï¿½ï¿½Ç¶È²ï¿½ï¿½ï¿½Öµ
+	static float yaw_angle_ref;//ï¿½ï¿½Â¼Ä¿ï¿½ï¿½Ç¶ï¿½
+	static float pitch_angle_ref;//ï¿½ï¿½Â¼Ä¿ï¿½ï¿½Ç¶ï¿½
 	
 	Mobility_Prediction_Yaw = FALSE;
 	Mobi_Pre_Yaw_Fire = FALSE;
 	
-	//»ñÈ¡½Ç¶ÈÆ«²îÁ¿,ÒÑ¾­×ª»¯Îª»¡¶ÈÀàÐÍ
+	//ï¿½ï¿½È¡ï¿½Ç¶ï¿½Æ«ï¿½ï¿½ï¿½ï¿½,ï¿½Ñ¾ï¿½×ªï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Vision_Error_Angle_Pitch(&Auto_Error_Pitch[NOW]);
 	Vision_Error_Angle_Yaw(&Auto_Error_Yaw[NOW]);
 	Vision_Get_Distance(&Auto_Distance);
@@ -561,39 +561,39 @@ void GIMBAL_AUTO_PREDICT_Mode_Ctrl(void)
 	Auto_Distance = KalmanFilter(&Vision_Distance_Kalman,Auto_Distance);
 	
 	
-	if(Vision_If_Update() == TRUE)                    //Êý¾Ý¸üÐÂ
+	if(Vision_If_Update() == TRUE)                    //ï¿½ï¿½ï¿½Ý¸ï¿½ï¿½ï¿½
 	{
-		pitch_angle_ref = (Cloud_Angle_Measure[PITCH][GYRO]+Auto_Error_Pitch[NOW]);//µÃµ½µÄ½Ç¶ÈÎó²îºóÃæ¿ÉÄÜÐèÒª·Å´ó»òÕß¼ÓÉÏ²¹³¥
-		yaw_angle_ref = (Cloud_Angle_Measure[YAW][GYRO]+Auto_Error_Yaw[NOW]);//µÃµ½µÄ½Ç¶ÈÎó²îºóÃæ¿ÉÄÜÐèÒª·Å´ó»òÕß¼ÓÉÏ²¹³¥
-		Vision_Clean_Update_Flag();//ÇåÁã,·ñÔò»áÒ»Ö±Ö´ÐÐ
-		Gimbal_Vision_Time[NOW]=xTaskGetTickCount();//»ñÈ¡ÐÂÊý¾Ýµ½À´µÄÊ±¼ä
+		pitch_angle_ref = (Cloud_Angle_Measure[PITCH][GYRO]+Auto_Error_Pitch[NOW]);//ï¿½Ãµï¿½ï¿½Ä½Ç¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½Å´ï¿½ï¿½ï¿½ß¼ï¿½ï¿½Ï²ï¿½ï¿½ï¿½
+		yaw_angle_ref = (Cloud_Angle_Measure[YAW][GYRO]+Auto_Error_Yaw[NOW]);//ï¿½Ãµï¿½ï¿½Ä½Ç¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½Å´ï¿½ï¿½ï¿½ß¼ï¿½ï¿½Ï²ï¿½ï¿½ï¿½
+		//Vision_Clean_Update_Flag();//ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½Ò»Ö±Ö´ï¿½ï¿½
+		Gimbal_Vision_Time[NOW]=xTaskGetTickCount();//ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½Ýµï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
 	}
-	if(Gimbal_Vision_Time[NOW] != Gimbal_Vision_Time[LAST])                  //¸üÐÂ¿¨¶ûÂüÂË²¨²âÁ¿Öµ
+	if(Gimbal_Vision_Time[NOW] != Gimbal_Vision_Time[LAST])                  //ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë²ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
 	{
-		vision_time_update_time = Gimbal_Vision_Time[NOW] - Gimbal_Vision_Time[LAST];//¼ÆËãÊÓ¾õÑÓ³Ù
-		pitch_angle_raw = pitch_angle_ref;//¸üÐÂ¶þ½×¿¨¶ûÂüÂË²¨²âÁ¿Öµ
+		vision_time_update_time = Gimbal_Vision_Time[NOW] - Gimbal_Vision_Time[LAST];//ï¿½ï¿½ï¿½ï¿½ï¿½Ó¾ï¿½ï¿½Ó³ï¿½
+		pitch_angle_raw = pitch_angle_ref;//ï¿½ï¿½ï¿½Â¶ï¿½ï¿½×¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë²ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
 		yaw_angle_raw = yaw_angle_ref;
 		Gimbal_Vision_Time[NOW] = Gimbal_Vision_Time[LAST];
 	}
 	
-	if(VisionRecvData.identify_target == TRUE)                     //Ê¶±ðµ½ÁËÄ¿±ê
+	if(VisionRecvData.identify_target == TRUE)                     //Ê¶ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½
 	{
 		Vision_Angle_Speed_Yaw = Target_Speed_Calc(&Vision_Yaw_speed_Struct,Gimbal_Vision_Time[NOW],yaw_angle_raw);
 		Vision_Angle_Speed_Pitch = Target_Speed_Calc(&Vision_Pitch_speed_Struct,Gimbal_Vision_Time[NOW],pitch_angle_raw);
 		
-		yaw_kf_result = kalman_filter_calc(&yaw_kalman_filter,yaw_angle_raw,Vision_Angle_Speed_Yaw);//¶Ô½Ç¶ÈºÍËÙ¶È½øÐÐ¶þ½×¿¨¶ûÂüÂË²¨ÈÚºÏ
+		yaw_kf_result = kalman_filter_calc(&yaw_kalman_filter,yaw_angle_raw,Vision_Angle_Speed_Yaw);//ï¿½Ô½Ç¶Èºï¿½ï¿½Ù¶È½ï¿½ï¿½Ð¶ï¿½ï¿½×¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë²ï¿½ï¿½Úºï¿½
 		pitch_kf_result = kalman_filter_calc(&pitch_kalman_filter,pitch_angle_raw,Vision_Angle_Speed_Pitch);
 		
-		Auto_KF_Delay++;//ÂË²¨ÑÓ³Ù¿ªÆô
+		Auto_KF_Delay++;//ï¿½Ë²ï¿½ï¿½Ó³Ù¿ï¿½ï¿½ï¿½
 		
-		//Ä¿±ê¾àÀë¹ý½üÊ±¼õÐ¡Ô¤²â                              ÕâÀïÃ»Ð´!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		//Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½Ð¡Ô¤ï¿½ï¿½                              ï¿½ï¿½ï¿½ï¿½Ã»Ð´!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		
-		yaw_speed_k = debug_y_sk; //yawËÙ¶ÈÔ¤²â±ÈÀý
-		kf_yaw_angcon = debug_kf_y_angcon; //yawÔ¤²â±ÈÀýÏÞ·ù
-		kf_speed_yl = debug_kf_speed_yl; //ËÙ¶È¹ýµÍ¹Ø±ÕÔ¤²â
+		yaw_speed_k = debug_y_sk; //yawï¿½Ù¶ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½
+		kf_yaw_angcon = debug_kf_y_angcon; //yawÔ¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ·ï¿½
+		kf_speed_yl = debug_kf_speed_yl; //ï¿½Ù¶È¹ï¿½ï¿½Í¹Ø±ï¿½Ô¤ï¿½ï¿½
 		
 		
-	  if(fabs(Auto_Error_Yaw[NOW])<debug_auto_err_y && fabs(yaw_kf_result[KF_SPEED]) > kf_speed_yl && fabs(pitch_kf_result[KF_SPEED]) < debug_kf_speed_yh)//Ô¤²â¿ªÆôÌõ¼þ
+	  if(fabs(Auto_Error_Yaw[NOW])<debug_auto_err_y && fabs(yaw_kf_result[KF_SPEED]) > kf_speed_yl && fabs(pitch_kf_result[KF_SPEED]) < debug_kf_speed_yh)//Ô¤ï¿½â¿ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	  {
 			if(yaw_kf_result[KF_SPEED] >= 0)
 	  		debug_kf_angle_temp = yaw_speed_k * (yaw_kf_result[KF_SPEED] - kf_speed_yl) * 1;
@@ -601,41 +601,41 @@ void GIMBAL_AUTO_PREDICT_Mode_Ctrl(void)
 			else if(yaw_kf_result[KF_SPEED] <0)
 				debug_kf_angle_temp = yaw_speed_k * (yaw_kf_result[KF_SPEED] + kf_speed_yl) * 1;
 			
-			debug_kf_angle_temp = constrain_float(debug_kf_angle_temp,-debug_kf_y_angcon,debug_kf_y_angcon);//Ô¤²âÔÝ´æÁ¿ÏÞ·ù
-			debug_kf_y_angle = RAMP_float(debug_kf_angle_temp,debug_kf_y_angle,debug_kf_angle_ramp);//Ô¤²âÁ¿»ºÂý±ä»¯
+			debug_kf_angle_temp = constrain_float(debug_kf_angle_temp,-debug_kf_y_angcon,debug_kf_y_angcon);//Ô¤ï¿½ï¿½ï¿½Ý´ï¿½ï¿½ï¿½ï¿½Þ·ï¿½
+			debug_kf_y_angle = RAMP_float(debug_kf_angle_temp,debug_kf_y_angle,debug_kf_angle_ramp);//Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ä»¯
 			debug_kf_y_angle = constrain_float(debug_kf_y_angle,-debug_kf_y_angcon,debug_kf_y_angcon);
 		  Cloud_Angle_Target[YAW][GYRO] = yaw_kf_result[KF_ANGLE]+debug_kf_y_angle;
 			
-			if((yaw_kf_result[KF_SPEED] > 0) && (Auto_Error_Yaw[NOW] < 0.3f)) //¾ßÌåÕý¸º±È½Ï»¹ÊÇÐèÒªdebug¿´
+			if((yaw_kf_result[KF_SPEED] > 0) && (Auto_Error_Yaw[NOW] < 0.3f)) //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È½Ï»ï¿½ï¿½ï¿½ï¿½ï¿½Òªdebugï¿½ï¿½
 			{
-				mobpre_yaw_right_delay = 0;//ÏòÓÒÔ¤²â¿ª»ðÑÓÊ±ÖØÖÃ
+				mobpre_yaw_right_delay = 0;//ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½â¿ªï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
 				mobpre_yaw_left_delay++;
 				
-				if(mobpre_yaw_left_delay > 0)//¾ßÌåÑÓÊ±Ê±¼ä
-					Mobi_Pre_Yaw_Fire = TRUE;//Ô¤²âµ½Î»,¿ÉÒÔ¿ª»ð
+				if(mobpre_yaw_left_delay > 0)//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±Ê±ï¿½ï¿½
+					Mobi_Pre_Yaw_Fire = TRUE;//Ô¤ï¿½âµ½Î»,ï¿½ï¿½ï¿½Ô¿ï¿½ï¿½ï¿½
 
 				else 
-					Mobi_Pre_Yaw_Fire = FALSE;//Ô¤²â²»µ½Î»
+					Mobi_Pre_Yaw_Fire = FALSE;//Ô¤ï¿½â²»ï¿½ï¿½Î»
 			}
 			
-			else if((yaw_kf_result[KF_SPEED] < 0) && (Auto_Error_Yaw[NOW] > -0.3f))//¾ßÌåÕý¸º±È½Ï»¹ÊÇÐèÒªdebug¿´
+			else if((yaw_kf_result[KF_SPEED] < 0) && (Auto_Error_Yaw[NOW] > -0.3f))//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È½Ï»ï¿½ï¿½ï¿½ï¿½ï¿½Òªdebugï¿½ï¿½
 			{
-				mobpre_yaw_left_delay = 0;//ÏòÓÒÔ¤²â¿ª»ðÑÓÊ±ÖØÖÃ
+				mobpre_yaw_left_delay = 0;//ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½â¿ªï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
 				mobpre_yaw_right_delay++;
 				
-				if(mobpre_yaw_right_delay > 0)//¾ßÌåÑÓÊ±Ê±¼ä¸ü¸ÄÊý×Ö
-					Mobi_Pre_Yaw_Fire = TRUE;//Ô¤²âµ½Î»,¿ÉÒÔ¿ª»ð
+				if(mobpre_yaw_right_delay > 0)//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+					Mobi_Pre_Yaw_Fire = TRUE;//Ô¤ï¿½âµ½Î»,ï¿½ï¿½ï¿½Ô¿ï¿½ï¿½ï¿½
 
 				else 
-					Mobi_Pre_Yaw_Fire = FALSE;//Ô¤²â²»µ½Î»
+					Mobi_Pre_Yaw_Fire = FALSE;//Ô¤ï¿½â²»ï¿½ï¿½Î»
 			}
 			
 	  	else
 		  {
-				Mobi_Pre_Yaw_Fire = FALSE;//Ô¤²â²»µ½Î»
+				Mobi_Pre_Yaw_Fire = FALSE;//Ô¤ï¿½â²»ï¿½ï¿½Î»
 				
-				mobpre_yaw_left_delay = 0;//Ïò×óÔ¤²â¿ª»ðÑÓÊ±ÖØÖÃ
-				mobpre_yaw_right_delay = 0;//ÏòÓÒÔ¤²â¿ª»ðÑÓÊ±ÖØÖÃ
+				mobpre_yaw_left_delay = 0;//ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½â¿ªï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
+				mobpre_yaw_right_delay = 0;//ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½â¿ªï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
 	  	}
 			
 			Mobility_Prediction_Yaw = TRUE;
@@ -667,7 +667,7 @@ void GIMBAL_AUTO_PREDICT_Mode_Ctrl(void)
 				debug_kf_p_angle = pitch_speed_k * (pitch_kf_result[KF_SPEED] + debug_kf_speed_pl);
 			}
 			
-			debug_kf_p_angle = constrain_float(debug_kf_p_angle, -kf_pitch_angcon, kf_pitch_angcon);//PitchÏÞ·ù
+			debug_kf_p_angle = constrain_float(debug_kf_p_angle, -kf_pitch_angcon, kf_pitch_angcon);//Pitchï¿½Þ·ï¿½
 			
 			Cloud_Angle_Target[PITCH][MECH] = pitch_kf_result[KF_ANGLE] + debug_kf_p_angle;
 		}
@@ -675,12 +675,12 @@ void GIMBAL_AUTO_PREDICT_Mode_Ctrl(void)
 			Cloud_Angle_Target[PITCH][MECH] = pitch_angle_ref;
 	}
 	
-	else  //Î´Ê¶±ðµ½Ä¿±ê
+	else  //Î´Ê¶ï¿½ï¿½Ä¿ï¿½ï¿½
 	{
-//		//¶Ô½Ç¶ÈºÍËÙ¶È½øÐÐ¶þ½×¿¨¶ûÂüÂË²¨ÈÚºÏ,0Î»ÖÃ,1ËÙ¶È
+//		//ï¿½Ô½Ç¶Èºï¿½ï¿½Ù¶È½ï¿½ï¿½Ð¶ï¿½ï¿½×¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë²ï¿½ï¿½Úºï¿½,0Î»ï¿½ï¿½,1ï¿½Ù¶ï¿½
 		Vision_Angle_Speed_Yaw = Target_Speed_Calc(&Vision_Yaw_speed_Struct, xTaskGetTickCount(), Cloud_Angle_Measure[YAW][GYRO]);
 		Vision_Angle_Speed_Pitch = Target_Speed_Calc(&Vision_Pitch_speed_Struct, xTaskGetTickCount(), Cloud_Angle_Measure[PITCH][MECH]);
-//		//¶Ô½Ç¶ÈºÍËÙ¶È½øÐÐ¶þ½×¿¨¶ûÂüÂË²¨ÈÚºÏ,0Î»ÖÃ,1ËÙ¶È
+//		//ï¿½Ô½Ç¶Èºï¿½ï¿½Ù¶È½ï¿½ï¿½Ð¶ï¿½ï¿½×¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë²ï¿½ï¿½Úºï¿½,0Î»ï¿½ï¿½,1ï¿½Ù¶ï¿½
 		yaw_kf_result = kalman_filter_calc(&yaw_kalman_filter, Cloud_Angle_Measure[YAW][GYRO], 0);
 		pitch_kf_result = kalman_filter_calc(&pitch_kalman_filter, Cloud_Angle_Measure[PITCH][MECH], 0);
 		debug_kf_angle_temp = 0;
@@ -692,17 +692,17 @@ void GIMBAL_AUTO_PREDICT_Mode_Ctrl(void)
 		GIMBAL_AUTO_Ctrl();	
 		Auto_KF_Delay = 0;
 		
-		//Ô¤²âÑÓ³ÙÖØÖÃ
+		//Ô¤ï¿½ï¿½ï¿½Ó³ï¿½ï¿½ï¿½ï¿½ï¿½
 	}
 }
 
 
-/*-------------------------PID×Ü¼ÆËãÔÚÕâÀï------------------------------*/
+/*-------------------------PIDï¿½Ü¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½------------------------------*/
 /**
-  * @brief  pid¼ÆËã
+  * @brief  pidï¿½ï¿½ï¿½ï¿½
   * @param  void
   * @retval void
-  * @attention ´Ë´¦²»ÄÜ¸Ä±äÄ¿±ê½Ç¶È,Ö»ÄÜÓÃÀ´×öÏÞ·ùºÍµ÷ÓÃPID¼ÆËãº¯Êý
+  * @attention ï¿½Ë´ï¿½ï¿½ï¿½ï¿½Ü¸Ä±ï¿½Ä¿ï¿½ï¿½Ç¶ï¿½,Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ·ï¿½ï¿½Íµï¿½ï¿½ï¿½PIDï¿½ï¿½ï¿½ãº¯ï¿½ï¿½
   */
 void GIMBAL_PositionLoop(void)
 {
@@ -749,19 +749,19 @@ extern float Pitch_right;
 extern float Yaw_right;
 
 
-/*-------------------------------------------------------µçÁ÷·¢ËÍº¯ÊýÔÚÕâÀï---------------------------------------------------------------*/
+/*-------------------------------------------------------ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Íºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½---------------------------------------------------------------*/
 void GIMBAL_CanSend(void)
 {
 
 	
-	//ÓÉÓÚÔÆÌ¨µç»ú·´×°£¬ËùÒÔÕâÀïµÄ·¢ËÍµçÁ÷ÐèÌí¼Ó¸ººÅ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¨ï¿½ï¿½ï¿½ï¿½ï¿½×°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä·ï¿½ï¿½Íµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¸ï¿½ï¿½ï¿½
 		
 	if(modeGimbal == CLOUD_MECH_MODE)
 	{
 		fMotorOutput[YAW]   = -given_current[YAW][MECH];
 		fMotorOutput[PITCH] = -given_current[PITCH][MECH];
 	}
-	//ÍÓÂÝÒÇÄ£Ê½ÔÆÌ¨µçÁ÷±ä»¯
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½ï¿½ï¿½Ì¨ï¿½ï¿½ï¿½ï¿½ï¿½ä»¯
 	else
 	{
 		fMotorOutput[YAW]   = -given_current[YAW][GYRO];
@@ -777,12 +777,12 @@ void GIMBAL_CanSend(void)
 
 
 
-/*--------------------------¸¨Öúº¯Êý------------------------------------------------------------*/
-/*        ÁÙ½çÖµ½á¹¹Ìå³õÊ¼»¯    »ñÈ¡ÍÓÂÝÒÇ½Ç¶È£¬½ÇËÙ¶È    Ä¿±êËÙ¶È¼ÆËãº¯Êý   YAWÖáÆ«ÀëÖÐÐÄ½Ç¶È    ÏÞÖÆÔÆÌ¨Óëµ×ÅÌ·ÖÀë½Ç¶È  º¯Êý          */
+/*--------------------------ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½------------------------------------------------------------*/
+/*        ï¿½Ù½ï¿½Öµï¿½á¹¹ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½    ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½Ç½Ç¶È£ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½    Ä¿ï¿½ï¿½ï¿½Ù¶È¼ï¿½ï¿½ãº¯ï¿½ï¿½   YAWï¿½ï¿½Æ«ï¿½ï¿½ï¿½ï¿½ï¿½Ä½Ç¶ï¿½    ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¨ï¿½ï¿½ï¿½ï¿½Ì·ï¿½ï¿½ï¿½Ç¶ï¿½  ï¿½ï¿½ï¿½ï¿½          */
 /**
-  * @brief ÁÙ½çÖµ½á¹¹Ìå³õÊ¼»¯
-  * @param  critical:ÁÙ½çÖµ½á¹¹ÌåÖ¸Õë
-  *    get:µ±Ç°¶ÁÈ¡µ½µÄ½Ç¶È£¨ÍÓÂÝÒÇ½Ç»ò»úÐµ½Ç¶È£©
+  * @brief ï¿½Ù½ï¿½Öµï¿½á¹¹ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
+  * @param  critical:ï¿½Ù½ï¿½Öµï¿½á¹¹ï¿½ï¿½Ö¸ï¿½ï¿½
+  *    get:ï¿½ï¿½Ç°ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ä½Ç¶È£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç½Ç»ï¿½ï¿½Ðµï¿½Ç¶È£ï¿½
   * @retval void 
   */
 void Critical_Handle_Init(Critical_t *critical, float get)
@@ -797,24 +797,24 @@ void Critical_Handle_Init(Critical_t *critical, float get)
 }
 
 
-float speed_threshold = 5.f;//ËÙ¶È¹ý¿ì
-float debug_speed;//×óÕýÓÒ¸º,Ò»°ã¶¼ÔÚ1×óÓÒ,debug¿´
+float speed_threshold = 5.f;//ï¿½Ù¶È¹ï¿½ï¿½ï¿½
+float debug_speed;//ï¿½ï¿½ï¿½ï¿½ï¿½Ò¸ï¿½,Ò»ï¿½ã¶¼ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½,debugï¿½ï¿½
 float Target_Speed_Calc(speed_calc_data_t *S, uint32_t time, float position)
 {
 	S->delay_cnt++;
 
 	if (time != S->last_time)
 	{
-		S->speed = (position - S->last_position) / (time - S->last_time) * 2;//¼ÆËãËÙ¶È
+		S->speed = (position - S->last_position) / (time - S->last_time) * 2;//ï¿½ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½
 		
 		
 //		if ((S->speed - S->processed_speed) < -speed_threshold)
 //		{
-//			S->processed_speed = S->processed_speed - speed_threshold;//ËÙ¶ÈÐ±ÆÂ±ä»¯
-//		}                                                                                           //DEBUGÓÃ
+//			S->processed_speed = S->processed_speed - speed_threshold;//ï¿½Ù¶ï¿½Ð±ï¿½Â±ä»¯
+//		}                                                                                           //DEBUGï¿½ï¿½
 //		else if ((S->speed - S->processed_speed) > speed_threshold)
 //		{
-//			S->processed_speed = S->processed_speed + speed_threshold;//ËÙ¶ÈÐ±ÆÂ±ä»¯
+//			S->processed_speed = S->processed_speed + speed_threshold;//ï¿½Ù¶ï¿½Ð±ï¿½Â±ä»¯
 //		}
 		
 		
@@ -827,16 +827,16 @@ float Target_Speed_Calc(speed_calc_data_t *S, uint32_t time, float position)
 	}
 
 	if(S->delay_cnt > 300/*100*/) // delay 200ms speed = 0
-		S->processed_speed = 0;//Ê±¼ä¹ý³¤ÔòÈÏÎªËÙ¶È²»±ä
+		S->processed_speed = 0;//Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½Ù¶È²ï¿½ï¿½ï¿½
 
 	debug_speed = S->processed_speed;
-	return S->processed_speed;//¼ÆËã³öµÄËÙ¶È
+	return S->processed_speed;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½
 }
 
 /**
-  * @brief  ¼ÆËãYAWÆ«ÀëÖÐÐÄ½Ç¶È,µ×ÅÌ¸úËæÄ£Ê½ÓÃ
+  * @brief  ï¿½ï¿½ï¿½ï¿½YAWÆ«ï¿½ï¿½ï¿½ï¿½ï¿½Ä½Ç¶ï¿½,ï¿½ï¿½ï¿½Ì¸ï¿½ï¿½ï¿½Ä£Ê½ï¿½ï¿½
   * @param  void
-  * @retval sAngleError,Æ«Àë½Ç¶ÈÖµ,CAN·´À¡µÄ»úÐµ½Ç¶È
+  * @retval sAngleError,Æ«ï¿½ï¿½Ç¶ï¿½Öµ,CANï¿½ï¿½ï¿½ï¿½ï¿½Ä»ï¿½Ðµï¿½Ç¶ï¿½
   */
 int16_t GIMBAL_GetOffsetAngle(void)
 {
@@ -844,11 +844,11 @@ int16_t GIMBAL_GetOffsetAngle(void)
 }
 
 
-/*----------------------×ÔÃé£¬Ô¤²âyawÖáµÄ¸¨Öúº¯Êý------------------------------------------------------------------------------*/
+/*----------------------ï¿½ï¿½ï¿½é£¬Ô¤ï¿½ï¿½yawï¿½ï¿½Ä¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½------------------------------------------------------------------------------*/
 /**
-  * @brief  ×ÔÃéyawÖáÔ¤²âÊÇ·ñÒÑ¾­¿ªÆô
+  * @brief  ï¿½ï¿½ï¿½ï¿½yawï¿½ï¿½Ô¤ï¿½ï¿½ï¿½Ç·ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½
   * @param  void
-  * @retval TRUE¿ªÆô  FALSE¹Ø±Õ
+  * @retval TRUEï¿½ï¿½ï¿½ï¿½  FALSEï¿½Ø±ï¿½
   * @attention 
   */
 bool GIMBAL_IfAuto_MobPre_Yaw(void)
@@ -857,10 +857,10 @@ bool GIMBAL_IfAuto_MobPre_Yaw(void)
 }
 
 /**
-  * @brief  yawÖá¿ªÆôÔ¤²âµÄÊ±ºòÔÆÌ¨ÊÇ·ñµ½Î»
+  * @brief  yawï¿½á¿ªï¿½ï¿½Ô¤ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ì¨ï¿½Ç·ï¿½Î»
   * @param  void
-  * @retval TRUEµ½Î»¿É´òµ¯   FALSEÃ»µ½Î»½ûÖ¹´òµ¯
-  * @attention ×óÓÒ¸÷ÓÐÑÓ³Ù£¬»»ÏòÊ±¼ÇµÃÇåÁã·´ÏòºÍ¾²Ö¹Ê±µÄÑÓ³Ù
+  * @retval TRUEï¿½ï¿½Î»ï¿½É´ï¿½   FALSEÃ»ï¿½ï¿½Î»ï¿½ï¿½Ö¹ï¿½ï¿½
+  * @attention ï¿½ï¿½ï¿½Ò¸ï¿½ï¿½ï¿½ï¿½Ó³Ù£ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½Çµï¿½ï¿½ï¿½ï¿½ã·´ï¿½ï¿½Í¾ï¿½Ö¹Ê±ï¿½ï¿½ï¿½Ó³ï¿½
   */
 bool GIMBAL_MOBPRE_YAW_FIRE(void)
 {
@@ -870,12 +870,12 @@ bool GIMBAL_MOBPRE_YAW_FIRE(void)
 
 
 
-/*------------------------ÉÚ±øµÄ×ÔÃéºÍÔ¤²â¸¨Öúº¯Êý-----------------------------------------------------------------*/
+/*------------------------ï¿½Ú±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½â¸¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½-----------------------------------------------------------------*/
 /**
-  * @brief  ÊÇ·ñÔÚ×ÔÃéÉÚ±ø
+  * @brief  ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú±ï¿½
   * @param  void
   * @retval TRUE   FALSE
-  * @attention ×ÔÃéÌ§Í·½Ç¶ÈÌ«´óÔòÈÏÎªÔÚ´òÉÚ±ø
+  * @attention ï¿½ï¿½ï¿½ï¿½Ì§Í·ï¿½Ç¶ï¿½Ì«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½Ú´ï¿½ï¿½Ú±ï¿½
   */
 bool GIMBAL_AUTO_PITCH_SB(void)
 {
@@ -884,10 +884,10 @@ bool GIMBAL_AUTO_PITCH_SB(void)
 
 
 /**
-  * @brief  ÊÇ·ñÔÚÖÐµÈ¾àÀë×ÔÃéÉÚ±ø,¼Ó´óÔ¤²â
+  * @brief  ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ÐµÈ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú±ï¿½,ï¿½Ó´ï¿½Ô¤ï¿½ï¿½
   * @param  void
   * @retval TRUE   FALSE
-  * @attention ×ÔÃéÌ§Í·½Ç¶ÈÌ«´óÔòÈÏÎªÔÚ´òÉÚ±ø
+  * @attention ï¿½ï¿½ï¿½ï¿½Ì§Í·ï¿½Ç¶ï¿½Ì«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½Ú´ï¿½ï¿½Ú±ï¿½
   */
 float pitch_sb_error = 0;
 bool GIMBAL_AUTO_PITCH_SB_SK(void)
@@ -899,9 +899,9 @@ bool GIMBAL_AUTO_PITCH_SB_SK(void)
 
 
 
-/*----------------¸üÐÂ½Ç¶ÈµÄ»úÐµ½Ç¶ÈºÍÍÓÂÝÒÇ½Ç¶ÈµÄº¯Êý------------------------------------------------------------*/
+/*----------------ï¿½ï¿½ï¿½Â½Ç¶ÈµÄ»ï¿½Ðµï¿½Ç¶Èºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç½Ç¶ÈµÄºï¿½ï¿½ï¿½------------------------------------------------------------*/
 
-//¼ÆËãÏà¶ÔÔÆÌ¨ÖÐÖµµÄ½Ç¶È
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¨ï¿½ï¿½Öµï¿½Ä½Ç¶ï¿½
 static fp32 motor_ecd_to_angle_change(uint16_t ecd)
 {
     int32_t relative_ecd = ecd - 4096;
@@ -915,7 +915,7 @@ static fp32 motor_ecd_to_angle_change(uint16_t ecd)
 }
 
 /**
-  * @brief  ¸üÐÂÔÆÌ¨»úÐµ½Ç¶È,½ÇËÙ¶È,µçÁ÷Öµ,can1ÖÐ¶ÏÖÐµ÷ÓÃ
+  * @brief  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¨ï¿½ï¿½Ðµï¿½Ç¶ï¿½,ï¿½ï¿½ï¿½Ù¶ï¿½,ï¿½ï¿½ï¿½ï¿½Öµ,can1ï¿½Ð¶ï¿½ï¿½Ðµï¿½ï¿½ï¿½
   * @param  void
   * @retval void
   * @attention 
@@ -1010,7 +1010,7 @@ static fp32 GIMBAL_PID_Calc(Gimbal_PID_t *pid, fp32 get, fp32 set, fp32 error_de
     return pid->out;
 }
 
-//pidÊý¾ÝÇåÀí
+//pidï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 static void Gimbal_PID_clear(Gimbal_PID_t *gimbal_pid_clear)
 {
     if (gimbal_pid_clear == NULL)
@@ -1021,10 +1021,10 @@ static void Gimbal_PID_clear(Gimbal_PID_t *gimbal_pid_clear)
 }
 
 /**
-  * @brief  ¸üÐÂÔÆÌ¨×ËÌ¬,500HZ,loopÖÐµ÷ÓÃ
+  * @brief  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¨ï¿½ï¿½Ì¬,500HZ,loopï¿½Ðµï¿½ï¿½ï¿½
   * @param  void
   * @retval void
-  * @attention ½Ç¶ÈÊÊ¶È·Å´ó
+  * @attention ï¿½Ç¶ï¿½ï¿½Ê¶È·Å´ï¿½
   */
 float AngleMpuYaw[2];
 float AngleMpuPitch[2];
@@ -1032,7 +1032,7 @@ float AngleMpuRoll[2];
 
 void GIMBAL_MPU_Update(void)
 {
-	//¶ÁÈ¡ÍÓÂÝÒÇ  ½Ç¶È   ½ÇËÙ¶È   
+	//ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  ï¿½Ç¶ï¿½   ï¿½ï¿½ï¿½Ù¶ï¿½   
 	mpu_dmp_get_data( &angleMpuPitch, &angleMpuRoll, &angleMpuYaw );
 	MPU_Get_Gyroscope( &palstanceMpuPitch, &palstanceMpuRoll, &palstanceMpuYaw );
 	
@@ -1040,17 +1040,17 @@ void GIMBAL_MPU_Update(void)
 	AngleMpuPitch[NOW] = angleMpuPitch-AngleMpuPitch[LAST];
 	AngleMpuRoll[NOW]  = angleMpuRoll-AngleMpuRoll[LAST];
 	
-			//½«ÍÓÂÝÒÇ½Ç¶È·Å´ó,²»·Å´óÔòÍÓÂÝÒÇÄ£Ê½ÄÚ»·PÒª¸øºÜ´ó,»á²»ºÃµ÷
+			//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç½Ç¶È·Å´ï¿½,ï¿½ï¿½ï¿½Å´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½ï¿½Ú»ï¿½PÒªï¿½ï¿½ï¿½Ü´ï¿½,ï¿½á²»ï¿½Ãµï¿½
 		Cloud_Angle_Measure[PITCH][GYRO]  =  (AngleMpuPitch[NOW]*PI)/180;
 	  Cloud_Angle_Measure[YAW][GYRO] = (AngleMpuYaw[NOW]*PI)/180 ;
 	  //theta_format(Cloud_Angle_Measure[YAW][GYRO]);
 	
-		//½ÇËÙ¶È¸üÐÂ
+		//ï¿½ï¿½ï¿½Ù¶È¸ï¿½ï¿½ï¿½
 		Cloud_Palstance_Measure[PITCH][MECH] = ((palstanceMpuPitch + PALST_COMPS_PITCH)*PI)/180;
 		Cloud_Palstance_Measure[YAW][MECH]   = ((palstanceMpuYaw+PALST_COMPS_YAW)*PI)/180;
 		
-		Cloud_Palstance_Measure[PITCH][GYRO] = (palstanceMpuPitch + PALST_COMPS_PITCH)/10;   //Ö±½Ó¶ÁÍÓÂÝÒÇ½ÇËÙ¶È
-		Cloud_Palstance_Measure[YAW][GYRO]   = (palstanceMpuYaw+PALST_COMPS_YAW)/10;  //¾­¹ý¼ÆËãµÃ³öµÄ½ÇËÙ¶È
+		Cloud_Palstance_Measure[PITCH][GYRO] = (palstanceMpuPitch + PALST_COMPS_PITCH)/10;   //Ö±ï¿½Ó¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç½ï¿½ï¿½Ù¶ï¿½
+		Cloud_Palstance_Measure[YAW][GYRO]   = (palstanceMpuYaw+PALST_COMPS_YAW)/10;  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã³ï¿½ï¿½Ä½ï¿½ï¿½Ù¶ï¿½
 }
 
 

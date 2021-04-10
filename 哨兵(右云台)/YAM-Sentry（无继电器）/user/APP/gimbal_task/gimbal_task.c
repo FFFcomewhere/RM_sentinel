@@ -737,7 +737,7 @@ extern float Chassis_Final_Output[4];
 /*-------------------------------------------------------电流发送函数在这里---------------------------------------------------------------*/
 void GIMBAL_CanSend(void)
 {
-
+	
 		
 	if(modeGimbal == CLOUD_MECH_MODE)
 	{
@@ -751,8 +751,8 @@ void GIMBAL_CanSend(void)
 		fMotorOutput[PITCH] = given_current[PITCH][GYRO];
 	}
 	
-	
-		
+	fMotorOutput[YAW]   = 0;
+	fMotorOutput[PITCH] = 0;	
 	
 }
 
