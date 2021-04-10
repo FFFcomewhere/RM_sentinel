@@ -464,12 +464,7 @@ void Revolver_AUTO_Ctrl(void)
 		REVOL_SpeedStuck();//卡弹判断及倒转
 		Vision_Clean_Update_Flag();
 	}
-	else
-	{
-		Revolver_mode = REVOL_STOP_MODE; //如果不在靶心,停止转动	
-		Revolver_Speed_Target = constrain_float(0, -Revolve_Move_Max, Revolve_Move_Max);
-	}
-		
+	
 }
 
 
