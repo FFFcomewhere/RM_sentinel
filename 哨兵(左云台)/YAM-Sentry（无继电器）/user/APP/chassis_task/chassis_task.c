@@ -233,9 +233,9 @@ float Chassis_Final_Output[4];
 void Chassis_Init(void)
 {
 	//初始化血量
-	last_remain_HP = JUDGE_remain_HP();
-	now_remain_Hp = JUDGE_remain_HP();
 
+	now_remain_Hp = JUDGE_remain_HP();
+	last_remain_HP = now_remain_Hp;
    	flag = TRUE;
 	  remote_change = TRUE;
     //底盘速度环pid值

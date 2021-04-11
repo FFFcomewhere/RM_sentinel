@@ -160,7 +160,7 @@ float Slope_Chassis_Move_Left, Slope_Chassis_Move_Righ;
 float Slope_Chassis_Revolve_Move;
 
 /*-----------------------------------------------***光电开关***--------------------------------------------------------*/
-#define Change_TurnBack_Time   100       //识别到的时间，大于这个时间才算识别到        
+#define Change_TurnBack_Time   50       //识别到的时间，大于这个时间才算识别到        
 fp32 CJ_L;
 fp32 CJ_R;
 bool flag=TRUE;
@@ -235,6 +235,8 @@ void Chassis_Init(void)
     const static fp32 motor_speed_pid[3] = {M3505_MOTOR_SPEED_PID_KP, M3505_MOTOR_SPEED_PID_KI, M3505_MOTOR_SPEED_PID_KD};
     const static fp32 chassis_x_order_filter[1] = {CHASSIS_ACCEL_X_NUM};
     uint8_t i;
+		
+		
 		
     //初始化PID 运动
     for (i = 0; i < 4; i++)
@@ -356,6 +358,7 @@ void Chassis_Rc_Control(void)
 
 
 /*-------------------------------------***光电开关判断(0判断到了1没判断到)***----------------------------------------*/
+uint16_t change_time = 0;
 
 void sensor_update(void)
 {	
@@ -371,7 +374,6 @@ void sensor_update(void)
 	
 
 
-	static uint16_t change_time = 0;
 	
 
 

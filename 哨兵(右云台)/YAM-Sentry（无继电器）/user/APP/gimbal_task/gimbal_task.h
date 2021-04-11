@@ -119,8 +119,8 @@
 
 #define auto_pitch_up               0.3f
 #define auto_pitch_down             -PI/5
-#define auto_yaw_ccw                -PI/6
-#define auto_yaw_cw                 -2*PI/3
+#define auto_yaw_ccw                2*PI
+#define auto_yaw_cw                 -2*PI
 #define mid_yaw_angle               -5*PI/12
 #define mid_pitch_angle             0
 

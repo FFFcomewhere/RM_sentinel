@@ -269,7 +269,7 @@ void GIMBAL_task(void *pvParameters)
 						Auto_Mode_Count=0;
 						
 					modeGimbal=CLOUD_MECH_MODE;
-					GIMBAL_AUTO_Ctrl();
+//					GIMBAL_AUTO_Ctrl();
 				}
 			}
 
@@ -751,8 +751,8 @@ void GIMBAL_CanSend(void)
 		fMotorOutput[PITCH] = given_current[PITCH][GYRO];
 	}
 	
-	fMotorOutput[YAW]   = 0;
-	fMotorOutput[PITCH] = 0;	
+//	fMotorOutput[YAW]   = 0;
+//	fMotorOutput[PITCH] = 0;	
 	
 }
 
