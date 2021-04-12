@@ -152,7 +152,7 @@ float  Revolver_Speed_Target;//转速过低容易卡弹,尽量让转速上6000
 int16_t Revolver_Freq;
 
 #define  Revolver_Speed_Low 2.5
-#define  Revolver_Speed_Mid 3   //5
+#define  Revolver_Speed_Mid 5   
 #define  Revolver_Speed_High 10
 
 /*********************************************摩擦轮*********************************************************/
@@ -183,9 +183,9 @@ void Revolver_task(void *pvParameters)
 					}
 					else
 					{
-						Revolver_AUTO_Ctrl();
-						friction_AUTO_Ctrl();
-						revol_remot_change = TRUE;
+//						Revolver_AUTO_Ctrl();
+//						friction_AUTO_Ctrl();
+//						revol_remot_change = TRUE;
 					}
 				}
 				
@@ -373,7 +373,7 @@ void Revolver_RC_Ctrl(void)
 		
 		if(IF_RC_SW1_DOWN)//sw1下打弹
 		{
-			Revolver_Freq = Revolver_Speed_Mid;//射频选择
+			Revolver_Freq = Revolver_Speed_High;//射频选择
 			//速度环转速设置
 			Revolver_Speed_Target = REVOL_SPEED_RATIO/REVOL_SPEED_GRID*Revolver_Freq;
 		}
@@ -466,7 +466,6 @@ void Revolver_AUTO_Ctrl(void)
 	}
 	else
 	{
-		Revolver_mode = REVOL_STOP_MODE; //如果不在靶心,停止转动	
 		Revolver_Speed_Target = constrain_float(0, -Revolve_Move_Max, Revolve_Move_Max);
 	}
 		

@@ -6,7 +6,7 @@
 #include "delay.h"
 #include "judge.h"
 #include "stdbool.h"
-
+#include "vision.h"
 
 #include "FreeRTOSConfig.h"
 #include "FreeRTOS.h" 
@@ -15,7 +15,7 @@
 extern  RC_ctrl_t rc_ctrl;
 
 /**************************摩擦轮控制***********************************/
-float Friction_PWM_Output[3]     = {0, 500, 700};//关闭  低速 500 哨兵  700
+float Friction_PWM_Output[3]     = {0, 300, 450};//关闭  低速 200 哨兵  500
 
 //摩擦轮不同pwm下对应的热量增加值(射速),最好比实际值高5
 uint16_t Friction_PWM_HeatInc[5] = {0,  20,  26,  34,  36};//测试时随便定的速度,后面测试更改
@@ -36,6 +36,7 @@ float Frict_Speed_Level_Target;
 //摩擦轮实际输出速度,用来做斜坡输出
 float Friction_Speed_Real;
 
+extern VisionRecvData_t      VisionRecvData; 
 
 /*********************************************************************************************************/
 
@@ -73,7 +74,7 @@ void FRICTION_StopMotor(void)
   * @retval void
   * @attention 摩擦轮停止转动,红外关闭,摩擦轮从关闭到开启,云台抬头归中
   */
-
+	
 void friction_Init(void)
 {
 	 Fric_Speed_Level = FRI_OFF;
@@ -93,7 +94,7 @@ void friction_Init(void)
   */
 void friction_RC_Ctrl(void)
 {
-	Fric_Speed_Level = FRI_LOW;//遥控模式下的速度选择，低射速，方便检录发光弹
+	Fric_Speed_Level = FRI_SENTRY;//遥控模式下的速度选择，低射速，方便检录发光弹
 	
 	if (FRIC_RcSwitch() == TRUE)//判断状态切换
 	{	//切换为关
@@ -151,6 +152,8 @@ if (FRIC_RcSwitch() == TRUE)//判断状态切换
 }
 
 
+
+
 /**
   * @brief  摩擦轮哨兵模式控制函数
   * @param  void
@@ -159,12 +162,16 @@ if (FRIC_RcSwitch() == TRUE)//判断状态切换
   */
 void friction_AUTO_Ctrl(void)
 {
-	Friction_Speed_Target = Friction_PWM_Output[FRI_SENTRY];
-	
+
+	//初始状态为低速,识别到目标摩擦轮转速设置为高速
+	if (VisionRecvData.centre_lock)
+		Friction_Speed_Target = Friction_PWM_Output[FRI_LOW];
+	else
+		Friction_Speed_Target = Friction_PWM_Output[FRI_SENTRY];
+	//摩擦轮输出
 	Friction_Ramp();
 
-	TIM4_FrictionPwmOutp(Friction_Speed_Real, Friction_Speed_Real);
-//	TIM5_FrictionPwmOutp(Friction_Speed_Real, Friction_Speed_Real);
+	TIM4_FrictionPwmOutp(Friction_Speed_Real, Friction_Speed_Real);	
 }
 
 

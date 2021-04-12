@@ -15,7 +15,7 @@
 extern  RC_ctrl_t rc_ctrl;
 
 /**************************摩擦轮控制***********************************/
-float Friction_PWM_Output[3]     = {0, 600, 600};//关闭  低速 200 哨兵  500
+float Friction_PWM_Output[3]     = {0, 300, 450};//关闭  低速 200 哨兵  500
 
 //摩擦轮不同pwm下对应的热量增加值(射速),最好比实际值高5
 uint16_t Friction_PWM_HeatInc[5] = {0,  20,  26,  34,  36};//测试时随便定的速度,后面测试更改
@@ -93,7 +93,7 @@ void friction_Init(void)
   */
 void friction_RC_Ctrl(void)
 {
-	Fric_Speed_Level = FRI_LOW;//遥控模式下的速度选择，低射速，方便检录发光弹
+	Fric_Speed_Level = FRI_SENTRY;//遥控模式下的速度选择，低射速，方便检录发光弹
 	
 	if (FRIC_RcSwitch() == TRUE)//判断状态切换
 	{	//切换为关
@@ -162,9 +162,9 @@ void friction_AUTO_Ctrl(void)
 
 	//初始状态为低速,识别到目标摩擦轮转速设置为高速
 	if (Vision_If_Update())
-		Friction_Speed_Target = Friction_PWM_Output[FRI_SENTRY];
-	else
 		Friction_Speed_Target = Friction_PWM_Output[FRI_LOW];
+	else
+		Friction_Speed_Target = Friction_PWM_Output[FRI_SENTRY];
 	//摩擦轮输出
 	Friction_Ramp();
 

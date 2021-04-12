@@ -11,7 +11,7 @@
 #define FRI_OFF  	0
 #define FRI_LOW  	1		//低速
 #define FRI_MID  	2		//中速	
-#define FRI_HIGH 	3		//高速
+#define FRI_HIGH 	3		//高速      
 #define FRI_MAD  	4		//打符射速
 #define FRI_SENTRY  5		//哨兵射速
 

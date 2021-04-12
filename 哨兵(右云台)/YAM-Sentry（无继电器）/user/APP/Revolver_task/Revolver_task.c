@@ -152,7 +152,7 @@ float  Revolver_Speed_Target;//转速过低容易卡弹,尽量让转速上6000
 int16_t Revolver_Freq;
 
 #define  Revolver_Speed_Low 2.5
-#define  Revolver_Speed_Mid 5   //5
+#define  Revolver_Speed_Mid 3   //5
 #define  Revolver_Speed_High 10
 
 /*********************************************摩擦轮*********************************************************/
@@ -183,9 +183,9 @@ void Revolver_task(void *pvParameters)
 					}
 					else
 					{
-//						Revolver_AUTO_Ctrl();
-//						friction_AUTO_Ctrl();
-//						revol_remot_change = TRUE;
+						Revolver_AUTO_Ctrl();
+						friction_AUTO_Ctrl();
+						revol_remot_change = TRUE;
 					}
 				}
 				
@@ -455,14 +455,21 @@ void Reset_Fric(void)
 void Revolver_AUTO_Ctrl(void)
 {
 	
+
+	//如果识别到装甲板且识别到靶心 拨盘转动	
 	if (Vision_If_Update() && VisionRecvData.centre_lock)
 	{
 		Revolver_mode = REVOL_SPEED_MODE;  //速度
 		Revolver_Speed_Target = constrain_float(Revolver_Speed, -Revolve_Move_Max, Revolve_Move_Max);
 		REVOL_SpeedStuck();//卡弹判断及倒转
-		Vision_Clean_Update_Flag();
+//		Vision_Clean_Update_Flag();
 	}
-	
+	else
+	{
+			
+		Revolver_Speed_Target = constrain_float(0, -Revolve_Move_Max, Revolve_Move_Max);
+	}
+		
 }
 
 
@@ -485,7 +492,7 @@ void REVOL_SpeedLoop(void)
 	iTermRevolSpeed   = constrain( iTermRevolSpeed, -iTermRevolSpeedMax, iTermRevolSpeedMax );
 
 	Revolver_Final_Output = constrain_float( pTermRevolSpeed + iTermRevolSpeed, -Revolver_Output_Max, +Revolver_Output_Max );
-	
+//	
 	
 	
 	//fzj
@@ -767,6 +774,7 @@ void Revolver_UpdateMotorCurrent( int16_t current )
 {
 	Revolver_Current_Measure = current;
 }
+
 
 
 

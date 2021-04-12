@@ -77,7 +77,7 @@
 #define YAW_GYRO_SPEED_PID_MAX_OUT 10000.0f
 #define YAW_GYRO_SPEED_PID_MAX_IOUT 1000.0f
 
-/*----------------------------------------角度环--------------------------------------------*/
+/*----------------------------------------角度环---------------------------	-----------------*/
 ////**陀螺仪模式**//
 //pitch 角度环 角度由陀螺仪解算 PID参数以及 PID最大输出，积分输出
 #define PITCH_GYRO_ABSOLUTE_PID_KP_ 1.0f
@@ -89,7 +89,7 @@
 #define PITCH_GYRO_ABSOLUTE_PID_MAX_IOUT 1.0f
 
 //yaw 角度环 角度由陀螺仪解算 PID参数以及 PID最大输出，积分输出
-#define YAW_GYRO_ABSOLUTE_PID_KP 500.0f
+#define YAW_GYRO_ABSOLUTE_PID_KP 700.0f
 #define YAW_GYRO_ABSOLUTE_PID_KI 0.1f
 #define YAW_GYRO_ABSOLUTE_PID_KD 2.0f
 
