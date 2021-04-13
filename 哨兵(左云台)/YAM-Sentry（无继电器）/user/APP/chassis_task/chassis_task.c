@@ -114,7 +114,7 @@ void chassis_task(void *pvParameters)
 				Chassis_Motor_Speed_PID(); //PID计算			
 				
 				//发送底盘电机和拨盘电机速度	
-				//CHASSIS_CANSend();
+				CHASSIS_CANSend();
 				
 				vTaskDelay(TIME_STAMP_2MS);
 			}
@@ -368,6 +368,8 @@ uint16_t irregular_time = 0; //不规则运动的计时器
 uint16_t hp_change_time = 0;     //血量更新的计时器
 uint16_t hp_no_change_time = 0;  //未受到攻击的计时器
 //static uint16_t no_hit_time = 0;       //底盘加速计时器 被击打启用
+uint16_t hit_cal_time = 0;       //底盘血量计算计时器 用于判断对方射击能力 如果3s内扣血超过50,开启加速
+uint16_t delay_hp = 0;   //规定时间内扣血量
 
 
 
@@ -393,6 +395,17 @@ void sensor_update(void)
 		CJ_R = 0;
 	}
 
+
+	//8秒内扣血超过40,开启加速
+	if(hit_cal_time > 8000)
+	{
+		hit_cal_time = 0;
+		delay_hp = JUDGE_remain_HP();
+	}
+	else
+	{
+		++hit_cal_time;
+	}
 
 
 	
@@ -462,7 +475,7 @@ void sensor_update(void)
 		if(change_time > 100)
 		{
 			change_time = 0;
-			if(JUDGE_remain_HP() < 200) //如果剩余血量低于200,加速
+			if(JUDGE_remain_HP() < 300) //如果剩余血量低于200,加速
 				chassis_speed_grade = CHASSIS_SPEED_HIGH;
 			
 			else //剩余血量高于200 ,减速
@@ -494,10 +507,19 @@ void sensor_update(void)
 			}
 		}
 	}
-	
+
+	//额定时间内受到50点伤害,开启加速
+	if(delay_hp - now_remain_Hp > 50)
+	{
+		chassis_speed_grade = CHASSIS_SPEED_HIGH;
+	}
+
+
 	//确保不会超功率死亡
 	if(JUDGE_fGetRemainEnergy() < 80)
 		chassis_speed_grade = CHASSIS_SPEED_LOW;
+
+
 
 
 

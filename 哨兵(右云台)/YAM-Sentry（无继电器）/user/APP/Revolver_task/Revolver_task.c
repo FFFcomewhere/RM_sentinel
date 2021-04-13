@@ -183,9 +183,9 @@ void Revolver_task(void *pvParameters)
 					}
 					else
 					{
-						Revolver_AUTO_Ctrl();
-						friction_AUTO_Ctrl();
-						revol_remot_change = TRUE;
+//						Revolver_AUTO_Ctrl();
+//						friction_AUTO_Ctrl();
+//						revol_remot_change = TRUE;
 					}
 				}
 				
