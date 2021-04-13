@@ -285,7 +285,14 @@ void chassis_feedback_update(void)
     for (i = 0; i < 4; i++)
     {
       motor_chassis_speed[i] = CHASSIS_MOTOR_RPM_TO_VECTOR_SEN*Chassis_Speed_Measure[i];  //转换成m/s的转速			
-    }	
+    }
+		//右云台处理
+	CJ_L=GPIO_ReadInputDataBit(GPIOH,GPIO_Pin_10); //D
+	CJ_R=GPIO_ReadInputDataBit(GPIOH,GPIO_Pin_11); //C
+	
+	
+	Sensor_data[LEFT] = CJ_L;
+	Sensor_data[RIGHT] = CJ_R;		
 }
 
 
@@ -372,11 +379,6 @@ void sensor_update(void)
 	Sensor_data[RIGHT] = CJ_R;
 	
 	
-
-
-	
-
-
 	if(remote_change == TRUE) //从机械模式切过来
 	{
 		remote_change = FALSE;

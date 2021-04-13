@@ -6,7 +6,7 @@
 #include "delay.h"
 #include "judge.h"
 #include "stdbool.h"
-#include "vision.h"
+
 
 #include "FreeRTOSConfig.h"
 #include "FreeRTOS.h" 
@@ -36,7 +36,6 @@ float Frict_Speed_Level_Target;
 //摩擦轮实际输出速度,用来做斜坡输出
 float Friction_Speed_Real;
 
-extern VisionRecvData_t      VisionRecvData; 
 
 /*********************************************************************************************************/
 
@@ -74,7 +73,7 @@ void FRICTION_StopMotor(void)
   * @retval void
   * @attention 摩擦轮停止转动,红外关闭,摩擦轮从关闭到开启,云台抬头归中
   */
-	
+
 void friction_Init(void)
 {
 	 Fric_Speed_Level = FRI_OFF;
@@ -152,8 +151,6 @@ if (FRIC_RcSwitch() == TRUE)//判断状态切换
 }
 
 
-
-
 /**
   * @brief  摩擦轮哨兵模式控制函数
   * @param  void
@@ -164,14 +161,14 @@ void friction_AUTO_Ctrl(void)
 {
 
 	//初始状态为低速,识别到目标摩擦轮转速设置为高速
-	if (VisionRecvData.centre_lock)
+	if (Vision_If_Update())
 		Friction_Speed_Target = Friction_PWM_Output[FRI_LOW];
 	else
 		Friction_Speed_Target = Friction_PWM_Output[FRI_SENTRY];
 	//摩擦轮输出
 	Friction_Ramp();
 
-	TIM4_FrictionPwmOutp(Friction_Speed_Real, Friction_Speed_Real);	
+	TIM4_FrictionPwmOutp(Friction_Speed_Real, Friction_Speed_Real);
 }
 
 

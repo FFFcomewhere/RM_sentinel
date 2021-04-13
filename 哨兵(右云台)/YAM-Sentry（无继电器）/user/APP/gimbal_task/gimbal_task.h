@@ -125,6 +125,8 @@
 #define mid_pitch_angle             0
 
 
+#define max_yaw_no_strike 
+#define min_yaw_no_strike
 
 #endif
 

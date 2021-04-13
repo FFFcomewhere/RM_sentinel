@@ -225,6 +225,10 @@ extern uint8_t Vision_Get_New_Data;
 
 bool op=0;
 
+
+
+extern ChassisCtrlMode Chassis_Mode;
+
 //每2ms执行一次任务函数
 void GIMBAL_task(void *pvParameters)
 {
@@ -268,12 +272,31 @@ void GIMBAL_task(void *pvParameters)
 					else
 						Auto_Mode_Count=0;
 						
-					modeGimbal=CLOUD_MECH_MODE;
-					//GIMBAL_AUTO_Ctrl();
+					modeGimbal=CLOUD_MECH_MODE;	
+					GIMBAL_AUTO_Ctrl();
 				}
 			}
 
 		}
+
+		//防撞限幅
+		if(Chassis_Mode == CHASSIS_R_MODE)  //如果哨兵向右运动,保证云台不会撞到柱子上
+		{
+			if(modeGimbal == CLOUD_MECH_MODE)
+			{
+				
+				if (Cloud_Angle_Target[YAW][MECH] < -2.3)
+					Cloud_Angle_Target[YAW][MECH] = -2.3;
+			}
+
+			if(modeGimbal == CLOUD_CRUISE_MODE)
+			{
+				
+				if (Cloud_Angle_Target[YAW][GYRO] < -2.3)
+					Cloud_Angle_Target[YAW][GYRO] = -2.3;
+			}
+		}
+
 		GIMBAL_PositionLoop();
 		GIMBAL_CanSend();
 

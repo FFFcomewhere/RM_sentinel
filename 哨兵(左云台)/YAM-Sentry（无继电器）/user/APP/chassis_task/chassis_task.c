@@ -114,7 +114,7 @@ void chassis_task(void *pvParameters)
 				Chassis_Motor_Speed_PID(); //PID计算			
 				
 				//发送底盘电机和拨盘电机速度	
-				CHASSIS_CANSend();
+				//CHASSIS_CANSend();
 				
 				vTaskDelay(TIME_STAMP_2MS);
 			}
@@ -429,29 +429,30 @@ void sensor_update(void)
 	}
 
 
-	//不规则运动的控制逻辑
-	if(Chassis_Mode==CHASSIS_R_MODE)  //左边的没有识别到，右边的识别到了，且正在往右动，就往左边动
-	{
-		irregular_time++;
-		if(irregular_time > 5000)
-		{
-//			irregular_time = 0;
-//			change.TO_left = TRUE;
-//			change.TO_right = FALSE;
-//			flag = TRUE;
-		}
-	}
-	else if(Chassis_Mode==CHASSIS_L_MODE)  //左边的没有识别到，右边的识别到了，且正在往右动，就往左边动
-	{
-		irregular_time++;
-		if(irregular_time > 10000)
-		{
-			irregular_time = 0;
-			change.TO_left = FALSE;
-			change.TO_right = TRUE;
-			flag = TRUE;
-		}
-	}
+//短轨道没有必要使用不规则运动,效果不明显
+// 	//不规则运动的控制逻辑
+// 	if(Chassis_Mode==CHASSIS_R_MODE)  //左边的没有识别到，右边的识别到了，且正在往右动，就往左边动
+// 	{
+// 		irregular_time++;
+// 		if(irregular_time > 5000)
+// 		{
+// //			irregular_time = 0;
+// //			change.TO_left = TRUE;
+// //			change.TO_right = FALSE;
+// //			flag = TRUE;
+// 		}
+// 	}
+// 	else if(Chassis_Mode==CHASSIS_L_MODE)  //左边的没有识别到，右边的识别到了，且正在往右动，就往左边动
+// 	{
+// 		irregular_time++;
+// 		if(irregular_time > 10000)
+// 		{
+// 			irregular_time = 0;
+// 			change.TO_left = FALSE;
+// 			change.TO_right = TRUE;
+// 			flag = TRUE;
+// 		}
+// 	}
 
 
 
@@ -776,8 +777,8 @@ extern float Revolver_Final_Output_right;
   */
 void CHASSIS_CANSend(void)
 {	 	
-	Chassis_Final_Output[0] = 0;
- Chassis_Final_Output[1] = 0;
+//	Chassis_Final_Output[0] = 0;
+// Chassis_Final_Output[1] = 0;
 	
 	CAN_CMD_CHASSIS(Chassis_Final_Output[0],Chassis_Final_Output[1], Revolver_Final_Output, Revolver_Final_Output_right);
 }
