@@ -58,7 +58,7 @@ extern void chassis_task(void *pvParameters);
 
   
 //底盘电机最大速度
-#define MAX_WHEEL_SPEED 1.6f*2  
+#define MAX_WHEEL_SPEED 1.6f*1.7
 
 //底盘运动过程最大前进速度
 #define NORMAL_MAX_CHASSIS_SPEED_X 1.6f*AUTO_PARA //1.5
