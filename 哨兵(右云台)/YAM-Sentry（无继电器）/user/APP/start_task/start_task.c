@@ -226,7 +226,7 @@ void remote_StateControl(void)
 	}
 	else 
 	{
-		remoteMode=RC;
+		remoteMode=AUTO;
 	}
 }
 /*******************************************************/
