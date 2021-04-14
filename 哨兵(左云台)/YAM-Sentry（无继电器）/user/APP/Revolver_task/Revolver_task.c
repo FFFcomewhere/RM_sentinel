@@ -165,6 +165,7 @@ void Revolver_task(void *pvParameters)
 {
 //    //ø’œ–“ª∂Œ ±º‰
 //    vTaskDelay(CHASSIS_TASK_INIT_TIME);
+			//friction_Init();
 			for(;;)
 			{
 				if(SYSTEM_GetSystemState() == SYSTEM_STARTING)

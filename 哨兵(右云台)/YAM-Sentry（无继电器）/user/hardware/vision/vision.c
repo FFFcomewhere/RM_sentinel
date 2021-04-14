@@ -84,16 +84,8 @@ void Vision_Read_Data(uint8_t *ReadFormUart7)
 			{
 				//接收数据拷贝
 				memcpy( &VisionRecvData, ReadFormUart7, VISION_LEN_PACKED);	
-				if(VisionRecvData.identify_target == TRUE)
-				{
-					Vision_Get_New_Data = TRUE;//标记视觉数据更新了
-				}
-				else
-				{
-					Vision_Get_New_Data = FALSE;
-
-				}
-
+				Vision_Get_New_Data = TRUE;//标记视觉数据更新了
+				
 				//帧计算
 				Vision_Time_Test[NOW] = xTaskGetTickCount();
 				Vision_Ping = Vision_Time_Test[NOW] - Vision_Time_Test[LAST];//计算时间间隔

@@ -69,7 +69,7 @@ first_order_filter_type_t chassis_cmd_slow_set_vy;
 extern int16_t Sensor_data[2];
 
 //巡逻下的速度等级
-float chassis_speed[3] = {0.9, 1, 1.7};
+float chassis_speed[3] = {0.9, 1, 1.8};
 
 bool remote_change = FALSE;	
 bool if_beat = FALSE;              //哨兵被击打
@@ -98,8 +98,8 @@ void chassis_task(void *pvParameters)
 					if (SYSTEM_GetRemoteMode() == RC) //遥控模式
 					{													
 						Chassis_Set_Mode();    //切换模式  
-            			chassis_feedback_update();	//更新数据			  				
-            			Chassis_Rc_Control(); //遥控器输入   
+            chassis_feedback_update();	//更新数据			  				
+            Chassis_Rc_Control(); //遥控器输入   
 						Chassis_Set_Contorl();  //不同模式不同处理	  					
 					}				
 					else
@@ -114,7 +114,7 @@ void chassis_task(void *pvParameters)
 				Chassis_Motor_Speed_PID(); //PID计算			
 				
 				//发送底盘电机和拨盘电机速度	
-				CHASSIS_CANSend();
+				//CHASSIS_CANSend();
 				
 				vTaskDelay(TIME_STAMP_2MS);
 			}
@@ -474,12 +474,8 @@ void sensor_update(void)
 		change_time++;
 		if(change_time > 100)
 		{
-			change_time = 0;
-			if(JUDGE_remain_HP() < 400) //如果剩余血量低于300,加速
-				chassis_speed_grade = CHASSIS_SPEED_HIGH;
-			
-			else //剩余血量高于300 ,减速
-				chassis_speed_grade = CHASSIS_SPEED_LOW;
+			change_time = 0;	
+			chassis_speed_grade = CHASSIS_SPEED_HIGH;			
 
 		}
 	}
