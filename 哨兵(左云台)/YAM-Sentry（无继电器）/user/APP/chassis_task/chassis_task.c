@@ -69,7 +69,7 @@ first_order_filter_type_t chassis_cmd_slow_set_vy;
 extern int16_t Sensor_data[2];
 
 //巡逻下的速度等级
-float chassis_speed[3] = {0.7, 1, 2};
+float chassis_speed[3] = {0.9, 1, 1.7};
 
 bool remote_change = FALSE;	
 bool if_beat = FALSE;              //哨兵被击打
@@ -397,7 +397,7 @@ void sensor_update(void)
 
 
 	//8秒内扣血超过40,开启加速
-	if(hit_cal_time > 8000)
+	if(hit_cal_time > 6000)
 	{
 		hit_cal_time = 0;
 		delay_hp = JUDGE_remain_HP();
@@ -475,10 +475,10 @@ void sensor_update(void)
 		if(change_time > 100)
 		{
 			change_time = 0;
-			if(JUDGE_remain_HP() < 300) //如果剩余血量低于200,加速
+			if(JUDGE_remain_HP() < 400) //如果剩余血量低于300,加速
 				chassis_speed_grade = CHASSIS_SPEED_HIGH;
 			
-			else //剩余血量高于200 ,减速
+			else //剩余血量高于300 ,减速
 				chassis_speed_grade = CHASSIS_SPEED_LOW;
 
 		}
@@ -509,7 +509,7 @@ void sensor_update(void)
 	}
 
 	//额定时间内受到50点伤害,开启加速
-	if(delay_hp - now_remain_Hp > 50)
+	if(delay_hp - now_remain_Hp > 20)
 	{
 		chassis_speed_grade = CHASSIS_SPEED_HIGH;
 	}
@@ -801,6 +801,7 @@ void CHASSIS_CANSend(void)
 {	 	
 //	Chassis_Final_Output[0] = 0;
 // Chassis_Final_Output[1] = 0;
-	
+//	Revolver_Final_Output = 0;
+//	Revolver_Final_Output_right = 0;
 	CAN_CMD_CHASSIS(Chassis_Final_Output[0],Chassis_Final_Output[1], Revolver_Final_Output, Revolver_Final_Output_right);
 }

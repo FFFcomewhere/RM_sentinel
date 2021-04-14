@@ -152,8 +152,8 @@ float  Revolver_Speed_Target;//转速过低容易卡弹,尽量让转速上6000
 int16_t Revolver_Freq;
 
 #define  Revolver_Speed_Low 2.5
-#define  Revolver_Speed_Mid 5   
-#define  Revolver_Speed_High 10
+#define  Revolver_Speed_Mid 3  
+#define  Revolver_Speed_High 6
 
 /*********************************************摩擦轮*********************************************************/
 
@@ -183,9 +183,9 @@ void Revolver_task(void *pvParameters)
 					}
 					else
 					{
-//						Revolver_AUTO_Ctrl();
-//						friction_AUTO_Ctrl();
-//						revol_remot_change = TRUE;
+						Revolver_AUTO_Ctrl();
+						friction_AUTO_Ctrl();
+						revol_remot_change = TRUE;
 					}
 				}
 				

@@ -152,8 +152,8 @@ float  Revolver_Speed_Target;//转速过低容易卡弹,尽量让转速上6000
 int16_t Revolver_Freq;
 
 #define  Revolver_Speed_Low 2.5
-#define  Revolver_Speed_Mid 3   //5
-#define  Revolver_Speed_High 10
+#define  Revolver_Speed_Mid 3   
+#define  Revolver_Speed_High 6
 
 /*********************************************摩擦轮*********************************************************/
 
@@ -183,9 +183,9 @@ void Revolver_task(void *pvParameters)
 					}
 					else
 					{
-//						Revolver_AUTO_Ctrl();
-//						friction_AUTO_Ctrl();
-//						revol_remot_change = TRUE;
+						Revolver_AUTO_Ctrl();
+						friction_AUTO_Ctrl();
+						revol_remot_change = TRUE;
 					}
 				}
 				
@@ -277,7 +277,7 @@ void Revolver_Init(void)
 	
 		/* PID参数 */
 	  //速度环
-	Revolver_Speed_kpid[KP] = 5;
+	Revolver_Speed_kpid[KP] = 14;
 	Revolver_Speed_kpid[KI] = 0.0f;
 	Revolver_Speed_kpid[KD] = 0;
 	
@@ -373,7 +373,7 @@ void Revolver_RC_Ctrl(void)
 		
 		if(IF_RC_SW1_DOWN)//sw1下打弹
 		{
-			Revolver_Freq = Revolver_Speed_Mid;//射频选择
+			Revolver_Freq = Revolver_Speed_High;//射频选择
 			//速度环转速设置
 			Revolver_Speed_Target = REVOL_SPEED_RATIO/REVOL_SPEED_GRID*Revolver_Freq;
 		}
@@ -454,21 +454,36 @@ void Reset_Fric(void)
 
 void Revolver_AUTO_Ctrl(void)
 {
-	
-
-	//如果识别到装甲板且识别到靶心 拨盘转动	
-	if (Vision_If_Update() && VisionRecvData.centre_lock)
+	//如果识别到内环  拨盘转动 高速档	
+	if ( VisionRecvData.centre_lock == 2)
 	{
 		Revolver_mode = REVOL_SPEED_MODE;  //速度
-		Revolver_Speed_Target = constrain_float(Revolver_Speed, -Revolve_Move_Max, Revolve_Move_Max);
+		Revolver_Freq = Revolver_Speed_High;//射频选择
+		//速度环转速设置
+		Revolver_Speed_Target = REVOL_SPEED_RATIO/REVOL_SPEED_GRID*Revolver_Freq;
+		
 		REVOL_SpeedStuck();//卡弹判断及倒转
-//		Vision_Clean_Update_Flag();
+
+	}
+	else if ( VisionRecvData.centre_lock == 1)  //如果识别到外环  拨盘转动 中速档	  
+	{
+		Revolver_mode = REVOL_SPEED_MODE;  //速度
+		Revolver_Freq = Revolver_Speed_Mid;//射频选择
+		//速度环转速设置
+		Revolver_Speed_Target = REVOL_SPEED_RATIO/REVOL_SPEED_GRID*Revolver_Freq;
+		
+		REVOL_SpeedStuck();//卡弹判断及倒转
 	}
 	else
+		Revolver_Speed_Target = 0;
+	
+	//枪口热量限制 哨兵热量上限为320 当热量过高时,哨兵摩擦轮停止击打
+	if(JUDGE_usGetShootCold() > 250)
 	{
-			
-		Revolver_Speed_Target = constrain_float(0, -Revolve_Move_Max, Revolve_Move_Max);
+		Revolver_Speed_Target = 0;
 	}
+
+	
 		
 }
 
@@ -774,8 +789,6 @@ void Revolver_UpdateMotorCurrent( int16_t current )
 {
 	Revolver_Current_Measure = current;
 }
-
-
 
 
 
