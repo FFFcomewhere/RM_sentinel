@@ -75,7 +75,7 @@ int main(void)
     }
 }
 
-//四个24v 输出 依次开启 间隔 709us
+//四个24v 输出 依次开启 间隔 709us	
 #define POWER_CTRL_ONE_BY_ONE_TIME 709
 
 void BSP_init(void)

@@ -261,7 +261,9 @@ void GIMBAL_task(void *pvParameters)
 					op=1;
 				}
 				if(Vision_If_Update()==TRUE )    //ï¿½ï¿½ï¿½Ý¸ï¿½ï¿½ï¿½
-				{				
+				{		
+				
+
 						modeGimbal = CLOUD_CRUISE_MODE;
 						GIMBAL_AUTO_Mode_Ctrl();
 				}
@@ -283,6 +285,8 @@ void GIMBAL_task(void *pvParameters)
 		
 		GIMBAL_PositionLoop();
 		GIMBAL_CanSend();			
+		CAN_CMD_Send_Mode(SYSTEM_GetRemoteMode());  //·¢ËÍÄ£Ê½¿ØÖÆ
+		
 		
 		vTaskDelayUntil(&currentTime, TIME_STAMP_4MS);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±
 	}

@@ -24,6 +24,7 @@
 #define CAP_CAN CAN1
 #define Revolver_CAN CAN1
 #define SENSOR_CAN CAN1
+#define Send_Mode_CAN CAN1
 
 /* CAN send and receive ID */
 typedef enum
@@ -41,6 +42,8 @@ typedef enum
 		
 		 
     CAN_SIGNAL_TRANSFER_ALL_ID = 0X217,
+
+    CAN_SEND_MODE_ID = 0X250    //就是左云台发送的模式数据
  
 
 } can_msg_id_e;
@@ -67,6 +70,8 @@ extern void CAN_CMD_CHASSIS(int16_t motor1, int16_t motor2, int16_t motor3, int1
 void CAN_CMD_Revolver(int16_t motor1,int16_t motor2);
 //发送传感器信号
 void CAN_CMD_Sensor(int16_t left,int16_t right);
+
+void CAN_CMD_Send_Mode(int16_t mode_right);
 
 //返回yaw电机变量地址，通过指针方式获取原始数据
 extern const motor_measure_t *get_Yaw_Gimbal_Motor_Measure_Point(void);

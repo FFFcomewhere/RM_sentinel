@@ -158,9 +158,9 @@ int16_t Revolver_Freq;
 /*********************************************摩擦轮*********************************************************/
 
 #define    REVOL_CAN_OPEN    340  //摩擦轮实际速度超过这个值才允许拨盘转动,根据摩擦轮最小目标速度来改变
+uint8_t mode_chanege_op = FALSE;
 
-
-uint8_t revol_remot_change = TRUE;
+uint8_t revol_remot_change = FALSE;
 void Revolver_task(void *pvParameters)
 {
 //    //空闲一段时间
@@ -169,23 +169,41 @@ void Revolver_task(void *pvParameters)
 			{
 				if(SYSTEM_GetSystemState() == SYSTEM_STARTING)
 				{
-				   REVOLVER_Rest();
-           Revolver_Init();	
-					 friction_Init();
-					 
+				   	REVOLVER_Rest();
+           			Revolver_Init();	
+					friction_Init();
 				}
 				else
 				{
 					if (SYSTEM_GetRemoteMode() == RC) //遥控模式
-					{										
+					{	
+						if(mode_chanege_op == FALSE)
+						{
+							friction_Init();
+							mode_chanege_op = TRUE;
+						}
+						
+
 						Revolver_RC_Ctrl();					
 						friction_RC_Ctrl();
+						
+						
+
 					}
 					else
 					{
+						if(mode_chanege_op == TRUE)
+						{
+							friction_Init();
+							mode_chanege_op = FALSE;
+						}
+						else if(Fric_GetSpeedReal() == 0 )
+							friction_Init();
 						Revolver_AUTO_Ctrl();
 						friction_AUTO_Ctrl();
-						revol_remot_change = TRUE;
+						
+					
+
 					}
 				}
 				

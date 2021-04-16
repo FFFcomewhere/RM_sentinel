@@ -24,7 +24,7 @@
 #define CAP_CAN CAN1
 #define Revolver_CAN CAN1
 #define TRANSFER_CAN CAN1
-
+#define Send_Mode_CAN CAN1
 /* CAN send and receive ID */
 typedef enum
 {
@@ -38,7 +38,7 @@ typedef enum
 		CAN_YAW_MOTOR_IDR= 0x208,   //ID为4
 		
     CAN_SIGNAL_TRANSFER_ALL_ID = 0X217,  //右云台传输数据值左云台
-    
+    CAN_SEND_MODE_ID = 0X250    //就是左云台发送的模式数据
 		
 	  
 

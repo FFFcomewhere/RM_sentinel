@@ -27,6 +27,7 @@
 #include "Revolver_task.h"
 #include "mpu6050.h"
 #include "inv_mpu.h"
+#include "Start_Task.h"
 //底盘电机数据读取
 #define get_motor_measure(ptr, rx_message)                                                     \
     {                                                                                          \
@@ -300,6 +301,25 @@ void CAN_CMD_Revolver(int16_t motor1, int16_t motor2 )
     CAN_Transmit(Revolver_CAN, &TxMessage);
 }
 
+
+void CAN_CMD_Send_Mode(int16_t mode_right)
+{
+    CanTxMsg TxMessage;
+    TxMessage.StdId = CAN_SEND_MODE_ID;
+    TxMessage.IDE = CAN_ID_STD;
+    TxMessage.RTR = CAN_RTR_DATA;
+    TxMessage.DLC = 0x08;
+    TxMessage.Data[0] = SYSTEM_GetRemoteMode() >> 8;
+    TxMessage.Data[1] = SYSTEM_GetRemoteMode();
+    TxMessage.Data[2] = 0;
+	TxMessage.Data[3] = 0;
+    TxMessage.Data[4] = 0;
+    TxMessage.Data[5] = 0;
+    TxMessage.Data[6] = 0;
+    TxMessage.Data[7] = 0;
+
+    CAN_Transmit(Send_Mode_CAN, &TxMessage);
+}
 
 
 //返回yaw电机变量地址，通过指针方式获取原始数据

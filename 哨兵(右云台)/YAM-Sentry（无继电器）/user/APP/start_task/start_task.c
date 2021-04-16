@@ -156,7 +156,7 @@ void LED0(void *pvParameters)
 /*******************************************************/
 /*系统状态更新，启动延时，系统保护*/
 //控制模式
-eRemoteMode remoteMode = AUTO;
+eRemoteMode remoteMode = RC;
 
 //系统状态
 eSystemState systemState = SYSTEM_STARTING;
@@ -187,11 +187,11 @@ void System_control(void *pvParameters)
       system_update();
 	  	remote_StateControl();
 		}
-		else
+		else	
 		{
 			GIMBAL_MPU_Update();
 		  Gimbal_Error_Read();
-			remote_StateControl();
+		//	remote_StateControl();
 		}
 		vTaskDelayUntil(&currentTime, TIME_STAMP_1MS);//绝对延时
   }
@@ -226,7 +226,7 @@ void remote_StateControl(void)
 	}
 	else 
 	{
-		remoteMode=AUTO;
+		remoteMode=RC;
 	}
 }
 /*******************************************************/

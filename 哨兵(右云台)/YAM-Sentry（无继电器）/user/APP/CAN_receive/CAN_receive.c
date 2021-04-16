@@ -27,6 +27,7 @@
 #include "Revolver_task.h"
 #include "mpu6050.h"
 #include "inv_mpu.h"
+#include "Start_Task.h"
 //底盘电机数据读取
 #define get_motor_measure(ptr, rx_message)                                                     \
     {                                                                                          \
@@ -57,6 +58,8 @@ static CanTxMsg GIMBAL_TxMessage;
 static uint8_t delay_time = 100;
 #endif
 
+		
+extern eRemoteMode remoteMode;
 /**
   * @brief  CAN1接收中断
   * @param  void
@@ -113,8 +116,11 @@ void CAN1_RX0_IRQHandler(void)
 		Revolver_UpdateMotorCurrent(current_measure_L);
 	}
 	
-
-	
+    
+	if(RxMessage.StdId  == CAN_SEND_MODE_ID)//拨盘电机
+	{
+		remoteMode = ((int16_t)RxMessage.Data[0]<<8|RxMessage.Data[1]);	
+	}
 }
 
 

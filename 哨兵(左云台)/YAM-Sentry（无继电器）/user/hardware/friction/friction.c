@@ -150,7 +150,7 @@ if (FRIC_RcSwitch() == TRUE)//判断状态切换
 //	TIM5_FrictionPwmOutp(Friction_Speed_Real, Friction_Speed_Real);
 }
 
-
+extern  uint8_t game_begin ; //用于防止开始前裁判杀死哨兵导致摩擦轮失效
 /**
   * @brief  摩擦轮哨兵模式控制函数
   * @param  void
@@ -159,12 +159,19 @@ if (FRIC_RcSwitch() == TRUE)//判断状态切换
   */
 void friction_AUTO_Ctrl(void)
 {
-
-	//初始状态为低速,识别到目标摩擦轮转速设置为高速
-	if (Vision_If_Update())
+	if(game_begin == FALSE && Vision_If_Update()==TRUE) 	
+	{
+		friction_Init();
+	  game_begin = TRUE;
+	}
+	else if(game_begin == TRUE)
+	{
+		//初始状态为低速,识别到目标摩擦轮转速设置为高速
+	
 		Friction_Speed_Target = Friction_PWM_Output[FRI_LOW];
-	else
+		if (Vision_If_Update())
 		Friction_Speed_Target = Friction_PWM_Output[FRI_SENTRY];
+	}
 	//摩擦轮输出
 	Friction_Ramp();
 
@@ -302,4 +309,12 @@ void Friction_Ramp(void)
 float Fric_GetSpeedReal(void)
 {
 	return Friction_Speed_Real;
+}
+
+
+void if_death_of_judgy()
+{
+	Friction_Speed_Target = Friction_PWM_Output[FRI_OFF];	
+	Friction_Ramp();
+	TIM4_FrictionPwmOutp(Friction_Speed_Real, Friction_Speed_Real);
 }

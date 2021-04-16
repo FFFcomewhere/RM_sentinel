@@ -91,7 +91,6 @@ void Vision_Read_Data(uint8_t *ReadFormUart7)
 				else
 				{
 					Vision_Get_New_Data = FALSE;
-
 				}
 
 				//÷°º∆À„

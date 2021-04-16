@@ -12,13 +12,17 @@
 #include "pid.h"
 #include "stdio.h"
 #include "Remote_Control.h"
-
+#include "gimbal_task.h"
 
 #include "FreeRTOSConfig.h"
 #include "FreeRTOS.h"
 #include "task.h"
 extern  RC_ctrl_t rc_ctrl;
 extern VisionRecvData_t VisionRecvData;
+extern float Cloud_Angle_Measure[2][2];
+float last_yaw_angle = 0;
+
+
 #define abs(x) ((x)>0? (x):(-(x)))
 
 /******拨盘,控制逻辑与云台类似*********/
@@ -158,9 +162,13 @@ int16_t Revolver_Freq;
 /*********************************************摩擦轮*********************************************************/
 
 #define    REVOL_CAN_OPEN    340  //摩擦轮实际速度超过这个值才允许拨盘转动,根据摩擦轮最小目标速度来改变
-
+uint8_t mode_chanege_op = FALSE;
+uint16_t if_death_tim = 0;
 
 uint8_t revol_remot_change = TRUE;
+uint8_t game_begin = FALSE; //用于防止开始前裁判杀死哨兵导致摩擦轮失效
+
+
 void Revolver_task(void *pvParameters)
 {
 //    //空闲一段时间
@@ -169,23 +177,45 @@ void Revolver_task(void *pvParameters)
 			{
 				if(SYSTEM_GetSystemState() == SYSTEM_STARTING)
 				{
-				   REVOLVER_Rest();
-           Revolver_Init();	
-					 friction_Init();
+				    REVOLVER_Rest();
+           	Revolver_Init();	
+					  friction_Init();
 					 
 				}
 				else
 				{
+					
+
 					if (SYSTEM_GetRemoteMode() == RC) //遥控模式
-					{										
+					{	
+						if(mode_chanege_op == FALSE)		
+						{
+						friction_Init();
+						mode_chanege_op = TRUE;
+					  	}
+															
 						Revolver_RC_Ctrl();					
-						friction_RC_Ctrl();
+						friction_RC_Ctrl();	
 					}
 					else
 					{
+						
+
+						
+						if(mode_chanege_op == TRUE)
+						{
+							friction_Init();
+							mode_chanege_op = FALSE;
+						}
+						
+
 						Revolver_AUTO_Ctrl();
 						friction_AUTO_Ctrl();
-						revol_remot_change = TRUE;
+						if(game_begin == FALSE && Vision_If_Update()==TRUE) 	
+						{
+							friction_Init();
+							game_begin = TRUE;
+						}
 					}
 				}
 				

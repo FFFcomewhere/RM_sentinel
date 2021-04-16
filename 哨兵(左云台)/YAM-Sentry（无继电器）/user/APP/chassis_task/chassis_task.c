@@ -501,8 +501,8 @@ void sensor_update(void)
 			if(hp_no_change_time > 3000) //当未受到攻击一段时间,可以考虑减速补充缓冲
 			{
 				if(JUDGE_fGetRemainEnergy() < 150)
-					chassis_speed_grade = CHASSIS_SPEED_LOW;
-				else
+					chassis_speed_grade = CHASSIS_SPEED_LOW;	
+				else     
 					chassis_speed_grade = CHASSIS_SPEED_NORMAL;
 			}
 		}
