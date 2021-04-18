@@ -220,13 +220,13 @@ void system_update(void)
 void remote_StateControl(void)
 {
 	
-	if(IF_RC_SW2_DOWN)
+	if(IF_RC_SW2_MID)
 	{
-		remoteMode=AUTO;
+		remoteMode=RC;
 	}
 	else 
 	{
-		remoteMode=RC;
+		remoteMode=AUTO;
 	}
 }
 /*******************************************************/

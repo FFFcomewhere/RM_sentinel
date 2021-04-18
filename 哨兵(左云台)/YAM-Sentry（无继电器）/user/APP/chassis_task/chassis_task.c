@@ -69,7 +69,10 @@ first_order_filter_type_t chassis_cmd_slow_set_vy;
 extern int16_t Sensor_data[2];
 
 //巡逻下的速度等级
-float chassis_speed[3] = {0.9, 1, 1.7};
+
+float chassis_speed[3] = {0.9, 1, 2};
+float chassis_speed_copy[3] = {0.5, 0.7, 1.2};
+float chassis_speed_fast[3] = {0.9, 1, 2};
 
 bool remote_change = FALSE;	
 bool if_beat = FALSE;              //哨兵被击打
@@ -94,7 +97,9 @@ void chassis_task(void *pvParameters)
 				}
 				else
 				{
-					
+					speed_change();
+
+
 					if (SYSTEM_GetRemoteMode() == RC) //遥控模式
 					{													
 						Chassis_Set_Mode();    //切换模式  
@@ -401,7 +406,7 @@ void sensor_update(void)
 	{
 		hit_cal_time = 0;
 		delay_hp = JUDGE_remain_HP();
-	}
+	}  
 	else
 	{
 		++hit_cal_time;
@@ -472,16 +477,18 @@ void sensor_update(void)
 	if(Vision_If_Update() == TRUE)   //识别到目标
 	{
 		change_time++;
-		if(change_time > 100)
-		{
-			change_time = 0;
-			if(JUDGE_remain_HP() < 400) //如果剩余血量低于300,加速
-				chassis_speed_grade = CHASSIS_SPEED_HIGH;
+		// if(change_time > 100)
+		// {
+		// 	change_time = 0;
+		// 	if(JUDGE_remain_HP() < 400) //如果剩余血量低于300,加速
+		// 		chassis_speed_grade = CHASSIS_SPEED_HIGH;
 			
-			else //剩余血量高于300 ,减速
-				chassis_speed_grade = CHASSIS_SPEED_LOW;
+		// 	else //剩余血量高于300 ,减速
+		// 		chassis_speed_grade = CHASSIS_SPEED_LOW;
 
-		}
+		// }
+
+		chassis_speed_grade = CHASSIS_SPEED_NORMAL;
 	}
 	else 
 	{
@@ -804,4 +811,24 @@ void CHASSIS_CANSend(void)
 //	Revolver_Final_Output = 0;
 //	Revolver_Final_Output_right = 0;
 	CAN_CMD_CHASSIS(Chassis_Final_Output[0],Chassis_Final_Output[1], Revolver_Final_Output, Revolver_Final_Output_right);
+}
+
+
+void speed_change()
+{
+
+	if(IF_RC_SW2_UP)
+	{
+    chassis_speed[0] = chassis_speed_copy[0];
+	chassis_speed[1] = chassis_speed_copy[1];
+	chassis_speed[2] = chassis_speed_copy[2];
+	}
+	else if(IF_RC_SW2_DOWN)
+	{
+	chassis_speed[0] = chassis_speed_fast[0];
+	chassis_speed[1] = chassis_speed_fast[1];
+	chassis_speed[2] = chassis_speed_fast[2];
+	}
+
+	
 }

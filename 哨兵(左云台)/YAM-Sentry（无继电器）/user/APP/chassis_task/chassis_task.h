@@ -29,7 +29,7 @@
 
 extern void chassis_task(void *pvParameters);
 
-
+extern void speed_change(void);
 //底盘电机速度环PID
 #define M3505_MOTOR_SPEED_PID_KP 5000.0f//15000
 #define M3505_MOTOR_SPEED_PID_KI 0.0f  //10
