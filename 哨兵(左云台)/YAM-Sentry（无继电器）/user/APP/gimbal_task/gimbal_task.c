@@ -423,6 +423,9 @@ void GIMBAL_Set_Control(void)
 /*---------------------------------锟节憋拷模式锟斤拷pitch锟斤拷锟斤拷锟斤拷转锟斤拷锟斤拷yaw锟斤拷360锟斤拷转----------------------------------*/
 float erro_pitch = 0.0f;
 float erro_yaw = 0.0f;
+/*---甩头---*/
+int glancing = 0;//计数变量
+float glancing_Target = 0;//甩头角度
 
 void GIMBAL_AUTO_Ctrl(void)
 {
@@ -436,28 +439,35 @@ void GIMBAL_AUTO_Ctrl(void)
 	else if (Cloud_Angle_Target[PITCH][MECH] < min_pitch_relative_angle)
 			Cloud_Angle_Target[PITCH][MECH] = min_pitch_relative_angle;
 
-/*---------------------yaw锟斤拷----------------------*///装锟较电滑锟斤拷锟皆猴拷360锟斤拷转锟斤拷锟斤拷锟节诧拷锟斤拷
-	
-	if(auto_mode.yaw_cw == TRUE)
-	{			
-		Cloud_Angle_Target[YAW][MECH] = RAMP_float( auto_yaw_cw, Cloud_Angle_Target[YAW][MECH], 0.025 );
-		erro_yaw = Cloud_Angle_Measure[YAW][MECH]-auto_yaw_cw ;
-		if(erro_yaw < 0.05f && erro_yaw > -0.05f)
-		{
-			auto_mode.yaw_cw = FALSE;
-			auto_mode.yaw_ccw = TRUE;
+/*---------------------yaw轴----------------------*///装上电滑环以后360度转，现在不能
+	if (glancing < 4){                               //巡逻两个来回甩头一次
+		if(auto_mode.yaw_cw == TRUE)
+		{			
+			Cloud_Angle_Target[YAW][MECH] = RAMP_float( auto_yaw_cw, Cloud_Angle_Target[YAW][MECH], 0.03 );
+			erro_yaw = Cloud_Angle_Measure[YAW][MECH]-auto_yaw_cw ;
+			if(erro_yaw < 0.15f && erro_yaw > -0.15f)
+			{
+				auto_mode.yaw_cw = FALSE;
+				auto_mode.yaw_ccw = TRUE;
+			}
+			glancing++;//计数加1
+		}
+
+		else if(auto_mode.yaw_ccw == TRUE)
+		{			
+			Cloud_Angle_Target[YAW][MECH] = RAMP_float( auto_yaw_ccw, Cloud_Angle_Target[YAW][MECH], 0.03 );
+			erro_yaw = auto_yaw_ccw-Cloud_Angle_Measure[YAW][MECH];
+			if(erro_yaw < 0.15f && erro_yaw > -0.15f)
+			{
+				auto_mode.yaw_cw = TRUE;
+				auto_mode.yaw_ccw = FALSE; 
+			}
+			glancing++;//计数加1
 		}
 	}
-
-	else if(auto_mode.yaw_ccw == TRUE)
-	{			
-		Cloud_Angle_Target[YAW][MECH] = RAMP_float( auto_yaw_ccw, Cloud_Angle_Target[YAW][MECH], 0.025 );
-		erro_yaw = auto_yaw_ccw-Cloud_Angle_Measure[YAW][MECH];
-		if(erro_yaw < 0.05f && erro_yaw > -0.05f)
-		{
-			auto_mode.yaw_cw = TRUE;
-			auto_mode.yaw_ccw = FALSE; 
-		}
+	else{
+			glancing_Target = Cloud_Angle_Measure[YAW][MECH] + 3*PI/2;//甩头角度为当前角度加上270度
+			glancing = 0;
 	}	
 	
 	
