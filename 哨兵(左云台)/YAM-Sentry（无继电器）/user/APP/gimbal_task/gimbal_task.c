@@ -425,7 +425,8 @@ float erro_pitch = 0.0f;
 float erro_yaw = 0.0f;
 /*---甩头---*/
 int glancing = 0;//计数变量
-float glancing_Target = 0;//甩头角度
+float glancing_Angle_Target;
+
 
 void GIMBAL_AUTO_Ctrl(void)
 {
@@ -440,35 +441,46 @@ void GIMBAL_AUTO_Ctrl(void)
 			Cloud_Angle_Target[PITCH][MECH] = min_pitch_relative_angle;
 
 /*---------------------yaw轴----------------------*///装上电滑环以后360度转，现在不能
-	if (glancing < 4){                               //巡逻两个来回甩头一次
-		if(auto_mode.yaw_cw == TRUE)
-		{			
-			Cloud_Angle_Target[YAW][MECH] = RAMP_float( auto_yaw_cw, Cloud_Angle_Target[YAW][MECH], 0.03 );
-			erro_yaw = Cloud_Angle_Measure[YAW][MECH]-auto_yaw_cw ;
-			if(erro_yaw < 0.15f && erro_yaw > -0.15f)
-			{
-				auto_mode.yaw_cw = FALSE;
-				auto_mode.yaw_ccw = TRUE;
-			}
-			glancing++;//计数加1
-		}
 
-		else if(auto_mode.yaw_ccw == TRUE)
-		{			
-			Cloud_Angle_Target[YAW][MECH] = RAMP_float( auto_yaw_ccw, Cloud_Angle_Target[YAW][MECH], 0.03 );
-			erro_yaw = auto_yaw_ccw-Cloud_Angle_Measure[YAW][MECH];
-			if(erro_yaw < 0.15f && erro_yaw > -0.15f)
-			{
-				auto_mode.yaw_cw = TRUE;
-				auto_mode.yaw_ccw = FALSE; 
-			}
+	if(auto_mode.yaw_cw == TRUE)
+	{			
+		if (glancing > 6){
+			Cloud_Angle_Target[YAW][MECH] = RAMP_float( glancing_angle, Cloud_Angle_Target[YAW][MECH], 0.2 );
+			erro_yaw = glancing_angle - Cloud_Angle_Measure[YAW][MECH];
+		}else{
+			Cloud_Angle_Target[YAW][MECH] = RAMP_float( auto_yaw_cw, Cloud_Angle_Target[YAW][MECH], 0.03 );
+			erro_yaw = auto_yaw_cw - Cloud_Angle_Measure[YAW][MECH];
+		}
+		if(erro_yaw < 0.15f && erro_yaw > -0.15f)
+		{
+			auto_mode.yaw_cw = FALSE;
+			auto_mode.yaw_ccw = TRUE;
 			glancing++;//计数加1
+			if (glancing > 7){
+				glancing = 0;
+			}
 		}
 	}
-	else{
-			glancing_Target = Cloud_Angle_Measure[YAW][MECH] + 3*PI/2;//甩头角度为当前角度加上270度
-			glancing = 0;
-	}	
+	else if(auto_mode.yaw_ccw == TRUE)
+	{			
+		if (glancing > 6){
+			Cloud_Angle_Target[YAW][MECH] = RAMP_float( glancing_angle, Cloud_Angle_Target[YAW][MECH], 0.2 );
+			erro_yaw = glancing_angle - Cloud_Angle_Measure[YAW][MECH];
+		}else{
+			erro_yaw = auto_yaw_ccw - Cloud_Angle_Measure[YAW][MECH];
+			Cloud_Angle_Target[YAW][MECH] = RAMP_float( auto_yaw_ccw, Cloud_Angle_Target[YAW][MECH], 0.03 );
+		}
+		if(erro_yaw < 0.15f && erro_yaw > -0.15f)
+		{
+			auto_mode.yaw_cw = TRUE;
+			auto_mode.yaw_ccw = FALSE;
+			glancing++;//计数加1
+			if (glancing > 7){
+				glancing = 0;
+			}			
+		}
+	}
+		
 	
 	
 /*---------------------pitch锟斤拷--------------------*/	

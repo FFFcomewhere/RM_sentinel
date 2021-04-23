@@ -54,3 +54,6 @@
 *.scvd
 *.iex
 *.ini
+*.c
+哨兵(左云台)/YAM-Sentry（无继电器）/user/APP/gimbal_task/gimbal_task.c
+*.c

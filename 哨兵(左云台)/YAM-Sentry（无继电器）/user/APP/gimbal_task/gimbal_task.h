@@ -129,6 +129,8 @@
 #define mid_yaw_angle               1.05                   
 #define mid_pitch_angle             -2.1
 
+#define glancing_angle              -PI
+
 
 
 
