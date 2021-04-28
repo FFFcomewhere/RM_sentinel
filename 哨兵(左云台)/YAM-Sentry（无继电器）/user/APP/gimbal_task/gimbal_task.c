@@ -226,6 +226,7 @@ int16_t yaw_channel, pitch_channel; //ң�����м����
 extern uint8_t Vision_Get_New_Data;
 
 bool op=0;
+uint32_t 	Auto_Mode_Count_Past;		
 
 //ÿ2msִ��һ��������
 void GIMBAL_task(void *pvParameters)
@@ -254,7 +255,7 @@ void GIMBAL_task(void *pvParameters)
 			}
 			if(SYSTEM_GetRemoteMode() == AUTO)
 			{
-				uint32_t 	Auto_Mode_Count_Past;		
+				
 				if(op==0)
 				{
 					modeGimbal = CLOUD_MECH_MODE;   //��ʼpidĬ�ϻ�еģʽ��ֹ��ͷ
@@ -275,16 +276,17 @@ void GIMBAL_task(void *pvParameters)
 					}
 					else{
 						if (Auto_Mode_Count_Past > 0){
-								delay_ms(300);
+							Auto_Mode_Count_Past--;
 						}
 						else
 						{
 						Auto_Mode_Count=0;
 						Auto_Mode_Count_Past = 0;
+						modeGimbal = CLOUD_MECH_MODE;
+					  GIMBAL_AUTO_Ctrl();
 						}
 					}
-					modeGimbal = CLOUD_MECH_MODE;
-					GIMBAL_AUTO_Ctrl();
+					
 				}
 			}
 
