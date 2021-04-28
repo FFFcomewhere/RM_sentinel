@@ -254,7 +254,7 @@ void GIMBAL_task(void *pvParameters)
 			}
 			if(SYSTEM_GetRemoteMode() == AUTO)
 			{
-							
+				uint32_t 	Auto_Mode_Count_Past;		
 				if(op==0)
 				{
 					modeGimbal = CLOUD_MECH_MODE;   //��ʼpidĬ�ϻ�еģʽ��ֹ��ͷ
@@ -269,11 +269,20 @@ void GIMBAL_task(void *pvParameters)
 				}
 				else                            //�Ӿ������ݸ���
 				{
-					if(Vision_If_Update()==TRUE)
+					if(Vision_If_Update()==TRUE){
 						Auto_Mode_Count++;
-					else
+						Auto_Mode_Count_Past = Auto_Mode_Count;
+					}
+					else{
+						if (Auto_Mode_Count_Past > 0){
+								delay_ms(300);
+						}
+						else
+						{
 						Auto_Mode_Count=0;
-						
+						Auto_Mode_Count_Past = 0;
+						}
+					}
 					modeGimbal = CLOUD_MECH_MODE;
 					GIMBAL_AUTO_Ctrl();
 				}
