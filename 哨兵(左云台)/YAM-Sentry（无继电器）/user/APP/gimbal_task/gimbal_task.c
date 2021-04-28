@@ -263,8 +263,6 @@ void GIMBAL_task(void *pvParameters)
 				}
 				if(Vision_If_Update()==TRUE )    //���ݸ���
 				{		
-				
-
 						modeGimbal = CLOUD_CRUISE_MODE;
 						GIMBAL_AUTO_Mode_Ctrl();
 				}
@@ -272,18 +270,21 @@ void GIMBAL_task(void *pvParameters)
 				{
 					if(Vision_If_Update()==TRUE){
 						Auto_Mode_Count++;
-						Auto_Mode_Count_Past = Auto_Mode_Count;
+						Auto_Mode_Count_Past = 1000;
 					}
 					else{
+						
 						if (Auto_Mode_Count_Past > 0){
 							Auto_Mode_Count_Past--;
+						//	delay_ms(300);
+							GIMBAL_AUTO_Mode_Ctrl();
 						}
 						else
 						{
-						Auto_Mode_Count=0;
-						Auto_Mode_Count_Past = 0;
-						modeGimbal = CLOUD_MECH_MODE;
-					  GIMBAL_AUTO_Ctrl();
+							Auto_Mode_Count=0;
+							Auto_Mode_Count_Past = 0;
+							modeGimbal = CLOUD_MECH_MODE;
+							GIMBAL_AUTO_Ctrl();
 						}
 					}
 					

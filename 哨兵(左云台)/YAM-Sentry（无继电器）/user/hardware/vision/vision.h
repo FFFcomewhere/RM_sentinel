@@ -3,38 +3,38 @@
 
 #include "main.h"
 
-#define ATTACK_NONE    0	//²»Ê¶±ğ
-#define ATTACK_RED     1	//Ê¶±ğºì·½
-#define ATTACK_BLUE    2	//Ê¶±ğÀ¶·½
+#define ATTACK_NONE    0	//ä¸è¯†åˆ«
+#define ATTACK_RED     1	//è¯†åˆ«çº¢æ–¹
+#define ATTACK_BLUE    2	//è¯†åˆ«è“æ–¹
 
 
-#define    VISION_DATA_ERROR      0          //ÊÓ¾õÊı¾İ´íÎó
-#define    VISION_DATA_CORRECT    1          //ÊÓ¾õÊı¾İ´íÎó
+#define    VISION_DATA_ERROR      0          //è§†è§‰æ•°æ®é”™è¯¯
+#define    VISION_DATA_CORRECT    1          //è§†è§‰æ•°æ®é”™è¯¯
 
-#define    VISION_LEN_HEADER      3          //Ö¡Í·³¤
-#define    VISION_LEN_DATA        17         //Êı¾İ¶Î³¤¶È,¿É×Ô¶¨Òå
-#define    VISIOV_LEN_TAIL        2	         //Ö¡Î²CRC16
-#define    VISION_LEN_PACKED      22         //Êı¾İ°ü³¤¶È
+#define    VISION_LEN_HEADER      3          //å¸§å¤´é•¿
+#define    VISION_LEN_DATA        17         //æ•°æ®æ®µé•¿åº¦,å¯è‡ªå®šä¹‰
+#define    VISIOV_LEN_TAIL        2	         //å¸§å°¾CRC16
+#define    VISION_LEN_PACKED      22         //æ•°æ®åŒ…é•¿åº¦
 
-#define    VISION_OFF         		  (0x00)   //¹Ø±ÕÊÓ¾õ
-#define    VISION_RED           	  (0x01)   //Ê¶±ğºìÉ«
-#define    VISION_BLUE          	  (0x02)   //Ê¶±ğÀ¶É«
-#define    VISION_RBUFF_ANTI   	 	  (0x03)   //ºìÄæ ´ó·û
-#define    VISION_BBUFF_ANTI   		  (0x04)   //À¶Äæ ´ó·û
-#define    VISION_RBUFF_CLOCKWISE   (0x05)   //ºìË³ ´ó·û
-#define    VISION_BBUFF_CLOCKWISE   (0x06)   //À¶Ë³ ´ó·û
-#define    VISION_RBUFF_STAND   	  (0x07)   //ºì Ğ¡·û
-#define    VISION_BBUFF_STAND   	  (0x08)   //À¶ Ğ¡·û
+#define    VISION_OFF         		  (0x00)   //å…³é—­è§†è§‰
+#define    VISION_RED           	  (0x01)   //è¯†åˆ«çº¢è‰²
+#define    VISION_BLUE          	  (0x02)   //è¯†åˆ«è“è‰²
+#define    VISION_RBUFF_ANTI   	 	  (0x03)   //çº¢é€† å¤§ç¬¦
+#define    VISION_BBUFF_ANTI   		  (0x04)   //è“é€† å¤§ç¬¦
+#define    VISION_RBUFF_CLOCKWISE   (0x05)   //çº¢é¡º å¤§ç¬¦
+#define    VISION_BBUFF_CLOCKWISE   (0x06)   //è“é¡º å¤§ç¬¦
+#define    VISION_RBUFF_STAND   	  (0x07)   //çº¢ å°ç¬¦
+#define    VISION_BBUFF_STAND   	  (0x08)   //è“ å°ç¬¦
 
-//ÆğÊ¼×Ö½Ú,Ğ­Òé¹Ì¶¨Îª0xA5
-#define    VISION_SOF              (0xA5)     //¿É¸ü¸Ä£¿
-#define    VISION_WEI              (0xFF)     //Ö¡Î²
+//èµ·å§‹å­—èŠ‚,åè®®å›ºå®šä¸º0xA5
+#define    VISION_SOF              (0xA5)     //å¯æ›´æ”¹ï¼Ÿ
+#define    VISION_WEI              (0xFF)     //å¸§å°¾
 
-/*-------ÊÓ¾õ·Ö±æÂÊÔ¤±àÒë--------*/
+/*-------è§†è§‰åˆ†è¾¨ç‡é¢„ç¼–è¯‘--------*/
 #define VISION_MID_YAW		444//640
 #define VISION_MID_PITCH	500//360
 
-/*------------------×ÔÃéÔ¤±àÒë,½Ç¶È³õÊ¼»¯²¹³¥------------------------*/
+/*------------------è‡ªç„é¢„ç¼–è¯‘,è§’åº¦åˆå§‹åŒ–è¡¥å¿------------------------*/
 #define	COMPENSATION_YAW	0
 #define	COMPENSATION_PITCH	0
 #define COMPENSATION_PITCH_DIST 0
@@ -43,123 +43,123 @@
 
 /* 	STM32 -> PC
 
-	CmdID   0x00   ¹Ø±ÕÊÓ¾õ
-	CmdID   0x01   Ê¶±ğºìÉ«×°¼×
-	CmdID   0x02   Ê¶±ğÀ¶É«×°¼×
-	CmdID   0x03   ºì·û
-	CmdID   0x04   À¶·û
+	CmdID   0x00   å…³é—­è§†è§‰
+	CmdID   0x01   è¯†åˆ«çº¢è‰²è£…ç”²
+	CmdID   0x02   è¯†åˆ«è“è‰²è£…ç”²
+	CmdID   0x03   çº¢ç¬¦
+	CmdID   0x04   è“ç¬¦
 */
 
 /* 	PC -> STM32
 
-	CmdID   0x00   ¹Ø±ÕÊÓ¾õ
-	CmdID   0x01   Ê¶±ğºìÉ«×°¼×
-	CmdID   0x02   Ê¶±ğÀ¶É«×°¼×
-	CmdID   0x03   Ğ¡·û
-	CmdID   0x04   ´ó·û
+	CmdID   0x00   å…³é—­è§†è§‰
+	CmdID   0x01   è¯†åˆ«çº¢è‰²è£…ç”²
+	CmdID   0x02   è¯†åˆ«è“è‰²è£…ç”²
+	CmdID   0x03   å°ç¬¦
+	CmdID   0x04   å¤§ç¬¦
 */
 
-//¿ÉÀûÓÃÊÕºÍ·¢µÄÖ¸ÁîÂë½øĞĞ±È½Ï,µ±ÊÕºÍ·¢µÄÖ¸ÁîÂëÏàÍ¬Ê±,¿ÉÅĞ¶¨ÎªÊı¾İ¿ÉÓÃ
+//å¯åˆ©ç”¨æ”¶å’Œå‘çš„æŒ‡ä»¤ç è¿›è¡Œæ¯”è¾ƒ,å½“æ”¶å’Œå‘çš„æŒ‡ä»¤ç ç›¸åŒæ—¶,å¯åˆ¤å®šä¸ºæ•°æ®å¯ç”¨
 
-//Ö¡Í·¼ÓCRC8Ğ£Ñé,±£Ö¤·¢ËÍµÄÖ¸ÁîÊÇÕıÈ·µÄ
+//å¸§å¤´åŠ CRC8æ ¡éªŒ,ä¿è¯å‘é€çš„æŒ‡ä»¤æ˜¯æ­£ç¡®çš„
 
-//PCÊÕ·¢ÓëSTM32ÊÕ·¢³É¾µÏñ¹ØÏµ,ÒÔÏÂ½á¹¹ÌåÊÊÓÃÓÚSTM32,PCĞèÉÔ×÷ĞŞ¸Ä
+//PCæ”¶å‘ä¸STM32æ”¶å‘æˆé•œåƒå…³ç³»,ä»¥ä¸‹ç»“æ„ä½“é€‚ç”¨äºSTM32,PCéœ€ç¨ä½œä¿®æ”¹
 
 typedef enum
 {
 	VISION_MANU =0,
 	VISION_BUFF =1,
 	VISION_AUTO =2,
-}VisionActData_t;      //ÊÓ¾õÄ£Ê½Ñ¡Ôñ
+}VisionActData_t;      //è§†è§‰æ¨¡å¼é€‰æ‹©
 
 
 typedef __packed struct    //3 Byte
 {
-	/* Í· */
-	uint8_t   SOF;			//Ö¡Í·ÆğÊ¼Î»,Ôİ¶¨0xA5
-	uint8_t   CmdID;		//Ö¸Áî
-	uint8_t   CRC8;			//Ö¡Í·CRCĞ£Ñé,±£Ö¤·¢ËÍµÄÖ¸ÁîÊÇÕıÈ·µÄ
+	/* å¤´ */
+	uint8_t   SOF;			//å¸§å¤´èµ·å§‹ä½,æš‚å®š0xA5
+	uint8_t   CmdID;		//æŒ‡ä»¤
+	uint8_t   CRC8;			//å¸§å¤´CRCæ ¡éªŒ,ä¿è¯å‘é€çš„æŒ‡ä»¤æ˜¯æ­£ç¡®çš„
 	
 }VisionSendHeader_t;
 
 
-//STM32½ÓÊÕ,Ö±½Ó½«´®¿Ú½ÓÊÕµ½µÄÊı¾İ¿½±´½ø½á¹¹Ìå
+//STM32æ¥æ”¶,ç›´æ¥å°†ä¸²å£æ¥æ”¶åˆ°çš„æ•°æ®æ‹·è´è¿›ç»“æ„ä½“
 typedef __packed struct       //17 Byte
 {
-	/* Í· */
-	uint8_t   SOF;			//Ö¡Í·ÆğÊ¼Î»,Ôİ¶¨0xA5
-	uint8_t   CmdID;		//Ö¸Áî
-	uint8_t   CRC8;			//Ö¡Í·CRCĞ£Ñé,±£Ö¤·¢ËÍµÄÖ¸ÁîÊÇÕıÈ·µÄ
+	/* å¤´ */
+	uint8_t   SOF;			//å¸§å¤´èµ·å§‹ä½,æš‚å®š0xA5
+	uint8_t   CmdID;		//æŒ‡ä»¤
+	uint8_t   CRC8;			//å¸§å¤´CRCæ ¡éªŒ,ä¿è¯å‘é€çš„æŒ‡ä»¤æ˜¯æ­£ç¡®çš„
 	
-	/* Êı¾İ */
+	/* æ•°æ® */
 	float     pitch_angle;
 	float     yaw_angle;
-	float     distance;			//¾àÀë
-	uint8_t   centre_lock;		//ÊÇ·ñÃé×¼µ½ÁËÖĞ¼ä  0Ã»ÓĞ  1Ãé×¼µ½ÁË
-	uint8_t	  identify_target;	//ÊÓÒ°ÄÚÊÇ·ñÓĞÄ¿±ê/ÊÇ·ñÊ¶±ğµ½ÁËÄ¿±ê   0·ñ  1ÊÇ	
-	uint8_t   identify_buff;	//´ò·ûÊ±ÊÇ·ñÊ¶±ğµ½ÁËÄ¿±ê£¬1ÊÇ£¬2Ê¶±ğµ½ÇĞ»»ÁË×°¼×£¬0Ã»Ê¶±ğµ½
+	float     distance;			//è·ç¦»
+	uint8_t   centre_lock;		//æ˜¯å¦ç„å‡†åˆ°äº†ä¸­é—´  0æ²¡æœ‰  1ç„å‡†åˆ°äº†
+	uint8_t	  identify_target;	//è§†é‡å†…æ˜¯å¦æœ‰ç›®æ ‡/æ˜¯å¦è¯†åˆ«åˆ°äº†ç›®æ ‡   0å¦  1æ˜¯	
+	uint8_t   identify_buff;	//æ‰“ç¬¦æ—¶æ˜¯å¦è¯†åˆ«åˆ°äº†ç›®æ ‡ï¼Œ1æ˜¯ï¼Œ2è¯†åˆ«åˆ°åˆ‡æ¢äº†è£…ç”²ï¼Œ0æ²¡è¯†åˆ«åˆ°
 	
-	uint8_t	  blank_b;			//Ô¤Áô
-	uint8_t	  auto_too_close;   //Ä¿±ê¾àÀëÌ«½ü,ÊÓ¾õ·¢1£¬·ñÔò·¢0
+	uint8_t	  blank_b;			//é¢„ç•™
+	uint8_t	  auto_too_close;   //ç›®æ ‡è·ç¦»å¤ªè¿‘,è§†è§‰å‘1ï¼Œå¦åˆ™å‘0
 	
 	
-	/* Î² */
-	uint16_t  CRC16;     //Ö¡Î²     
+	/* å°¾ */
+	uint16_t  CRC16;     //å¸§å°¾     
 	
 }VisionRecvData_t;
 
-//STM32·¢ËÍ,Ö±½Ó½«´ò°üºÃµÄÊı¾İÒ»¸ö×Ö½ÚÒ»¸ö×Ö½ÚµØ·¢ËÍ³öÈ¥
+//STM32å‘é€,ç›´æ¥å°†æ‰“åŒ…å¥½çš„æ•°æ®ä¸€ä¸ªå­—èŠ‚ä¸€ä¸ªå­—èŠ‚åœ°å‘é€å‡ºå»
 typedef struct
 {
 
 	
-	/* Êı¾İ */
-	float     pitch_angle;     //µ±Ç°½Ç¶È
-	float     yaw_angle;       //µ±Ç°½Ç¶È                                              (»úĞµ?ÍÓÂİÒÇ?)¿)???????????
-	float     distance;			   //¾àÀë
-	uint8_t   lock_sentry;	 	 //ÊÇ·ñÔÚÌ§Í·Ê¶±ğÉÚ±ø
-	uint8_t   base;				     //µõÉä
+	/* æ•°æ® */
+	float     pitch_angle;     //å½“å‰è§’åº¦
+	float     yaw_angle;       //å½“å‰è§’åº¦                                              (æœºæ¢°?é™€èºä»ª?)ï¿½)???????????
+	float     distance;			   //è·ç¦»
+	uint8_t   lock_sentry;	 	 //æ˜¯å¦åœ¨æŠ¬å¤´è¯†åˆ«å“¨å…µ
+	uint8_t   base;				     //åŠå°„
 	
-	uint8_t   blank_a;		//Ô¤Áô
+	uint8_t   blank_a;		//é¢„ç•™
 	uint8_t	  blank_b;
 	uint8_t	  blank_c;	
 	
-	/* Î² */
+	/* å°¾ */
 	uint16_t  CRC16;
 	
 }VisionSendData_t;
 
 
-//¹ØÓÚÈçºÎĞ´ÈëCRCĞ£ÑéÖµ
-//ÎÒÃÇ¿ÉÒÔÖ±½ÓÀûÓÃ¹Ù·½¸øµÄCRC´úÂë
+//å…³äºå¦‚ä½•å†™å…¥CRCæ ¡éªŒå€¼
+//æˆ‘ä»¬å¯ä»¥ç›´æ¥åˆ©ç”¨å®˜æ–¹ç»™çš„CRCä»£ç 
 
-//×¢Òâ,CRC8ºÍCRC16ËùÕ¼×Ö½Ú²»Ò»Ñù,8ÎªÒ»¸ö×Ö½Ú,16Îª2¸ö×Ö½Ú
+//æ³¨æ„,CRC8å’ŒCRC16æ‰€å å­—èŠ‚ä¸ä¸€æ ·,8ä¸ºä¸€ä¸ªå­—èŠ‚,16ä¸º2ä¸ªå­—èŠ‚
 
-//Ğ´Èë    CRC8 µ÷ÓÃ    Append_CRC8_Check_Sum( param1, param2)
-//ÆäÖĞ param1´ú±íĞ´ºÃÁËÖ¡Í·Êı¾İµÄÊı×é(Ö¡Í·ºóµÄÊı¾İ»¹Ã»Ğ´Ã»ÓĞ¹ØÏµ),
-//     param2´ú±íCRC8Ğ´ÈëºóÊı¾İ³¤¶È,ÎÒÃÇ¶¨ÒåµÄÊÇÍ·µÄ×îºóÒ»Î»,Ò²¾ÍÊÇ3
+//å†™å…¥    CRC8 è°ƒç”¨    Append_CRC8_Check_Sum( param1, param2)
+//å…¶ä¸­ param1ä»£è¡¨å†™å¥½äº†å¸§å¤´æ•°æ®çš„æ•°ç»„(å¸§å¤´åçš„æ•°æ®è¿˜æ²¡å†™æ²¡æœ‰å…³ç³»),
+//     param2ä»£è¡¨CRC8å†™å…¥åæ•°æ®é•¿åº¦,æˆ‘ä»¬å®šä¹‰çš„æ˜¯å¤´çš„æœ€åä¸€ä½,ä¹Ÿå°±æ˜¯3
 
-//Ğ´Èë    CRC16 µ÷ÓÃ   Append_CRC16_Check_Sum( param3, param4)
-//ÆäÖĞ param3´ú±íĞ´ºÃÁË   Ö¡Í· + Êı¾İ  µÄÊı×é(¸úÉÏÃæÊÇÍ¬Ò»¸öÊı×é)
-//     param4´ú±íCRC16Ğ´ÈëºóÊı¾İ³¤¶È,ÎÒÃÇ¶¨ÒåµÄÕû¸öÊı¾İ³¤¶ÈÊÇ22,ËùÒÔÊÇ22
+//å†™å…¥    CRC16 è°ƒç”¨   Append_CRC16_Check_Sum( param3, param4)
+//å…¶ä¸­ param3ä»£è¡¨å†™å¥½äº†   å¸§å¤´ + æ•°æ®  çš„æ•°ç»„(è·Ÿä¸Šé¢æ˜¯åŒä¸€ä¸ªæ•°ç»„)
+//     param4ä»£è¡¨CRC16å†™å…¥åæ•°æ®é•¿åº¦,æˆ‘ä»¬å®šä¹‰çš„æ•´ä¸ªæ•°æ®é•¿åº¦æ˜¯22,æ‰€ä»¥æ˜¯22
 
 /*----------------------------------------------------------*/
 
-//ÃüÁîÂëID,ÓÃÀ´ÅĞ¶Ï½ÓÊÕµÄÊÇÊ²Ã´Êı¾İ
+//å‘½ä»¤ç ID,ç”¨æ¥åˆ¤æ–­æ¥æ”¶çš„æ˜¯ä»€ä¹ˆæ•°æ®
 
 
-void Vision_Read_Data(uint8_t *ReadFormUart7);//ÊÓ¾õ¶ÁÈ¡Êı¾İ
-void Vision_Send_Data( uint8_t CmdID );//ÊÓ¾õ·¢ËÍÊı¾İ
-void Vision_Ctrl(void);//ÊÓ¾õ¿ØÖÆ
-void Vision_Buff_Ctrl(void);//´ò·û¿ØÖÆ
-void Vision_Auto_Attack_Ctrl(void);//×ÔÃé¿ØÖÆ
-void Vision_Auto_Attack_Off(void);//¹Ø±Õ×ÔÃé
+void Vision_Read_Data(uint8_t *ReadFormUart7);//è§†è§‰è¯»å–æ•°æ®
+void Vision_Send_Data( uint8_t CmdID );//è§†è§‰å‘é€æ•°æ®
+void Vision_Ctrl(void);//è§†è§‰æ§åˆ¶
+void Vision_Buff_Ctrl(void);//æ‰“ç¬¦æ§åˆ¶
+void Vision_Auto_Attack_Ctrl(void);//è‡ªç„æ§åˆ¶
+void Vision_Auto_Attack_Off(void);//å…³é—­è‡ªç„
 
 
-bool Get_Vision_distance(void); //ÊÓ¾õÅĞ¶ÏÔ¶½ü£¬ÓÃÓÚµ÷ÉäËÙÉäÆµ
-void Vision_Get_Distance(float *distance); //»ñÈ¡¾àÀë
+bool Get_Vision_distance(void); //è§†è§‰åˆ¤æ–­è¿œè¿‘ï¼Œç”¨äºè°ƒå°„é€Ÿå°„é¢‘
+void Vision_Get_Distance(float *distance); //è·å–è·ç¦»
 
-/********ÊÓ¾õ¸¨Öúº¯Êı*********/
+/********è§†è§‰è¾…åŠ©å‡½æ•°*********/
 uint8_t VISION_isColor(void);
 uint8_t VISION_BuffType(void);
 bool VISION_IfCmdID_Identical(void);
@@ -169,7 +169,7 @@ bool Vision_If_Armor(void);
 void Vision_Clean_Ammor_Flag(void);
 
 
-/*****ÊÓ¾õÆ«²î»ñÈ¡******/
+/*****è§†è§‰åå·®è·å–******/
 void Vision_Error_Yaw(float *error);
 void Vision_Error_Pitch(float *error);
 void Vision_Error_Angle_Yaw(float *error);
