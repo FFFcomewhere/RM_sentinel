@@ -255,7 +255,7 @@ void GIMBAL_task(void *pvParameters)
 			}
 			if(SYSTEM_GetRemoteMode() == AUTO)
 			{
-				
+				Vision_Auto_Attack_Ctrl();
 				if(op==0)
 				{
 					modeGimbal = CLOUD_MECH_MODE;   //��ʼpidĬ�ϻ�еģʽ��ֹ��ͷ
