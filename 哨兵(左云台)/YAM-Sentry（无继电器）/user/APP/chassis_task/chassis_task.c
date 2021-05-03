@@ -575,7 +575,7 @@ void sensor_update(void)
   */
 void Chassis_AUTO_Ctrl(void)
 {
-	sensor_update();
+
 	if (change.stop == TRUE)        //识别到目标,停止运动
 		Chassis_Mode = CHASSIS_STOP_MODE;  //停止
     else if(change.TO_left == TRUE)  //左边的没有识别到，右边的识别到了，且正在往右动，就往左边动

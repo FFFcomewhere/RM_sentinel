@@ -91,6 +91,7 @@ void Vision_Read_Data(uint8_t *ReadFormUart7)
 				else
 				{
 					Vision_Get_New_Data = FALSE;
+
 				}
 
 				//帧计算
@@ -127,44 +128,17 @@ void Vision_Send_Data( uint8_t CmdID )
 {
 	int i;    //循环发送次数
 
-	VisionSendHeader.SOF = VISION_SOF;
-	VisionSendHeader.CmdID = CmdID;//对视觉来说最重要的数据
+
+
+	VisionSendData.SOF = VISION_SOF;
+	VisionSendData.CmdID   = CmdID;
+	VisionSendData.speed   = 30;
+	VisionSendData.END    = VISION_WEI;
+
 	
-	//写入帧头
-	memcpy( vision_send_pack, &VisionSendHeader, VISION_LEN_HEADER );
+
 	
-	//帧头CRC8校验协议
-	Append_CRC8_Check_Sum( vision_send_pack, VISION_LEN_HEADER );
-	
-	//中间数据不用管,视觉用不到,用到了也是后面自瞄自动开火,用到角度补偿数据
-	VisionSendData.pitch_angle = 0.f;
-	VisionSendData.yaw_angle   = 0.f;
-	VisionSendData.distance    = 999.99f;
-	if( GIMBAL_AUTO_PITCH_SB() == TRUE )
-	{
-		VisionSendData.lock_sentry = 1;//识别哨兵，发1
-	}
-	else
-	{
-		VisionSendData.lock_sentry = 0;//不在识别哨兵，发0
-	}
-	
-//	if(GIMBAL_If_Base() == TRUE)
-//	{
-//		VisionSendData.base = 1;//吊射基地，发1
-//	}
-//	else
-//	{
-//		VisionSendData.base = 0;//不在吊射，发0
-//	}
-//	
-	VisionSendData.blank_a = 0;
-	VisionSendData.blank_b = 0;
-	VisionSendData.blank_c = 0;
 	memcpy( vision_send_pack + VISION_LEN_HEADER, &VisionSendData, VISION_LEN_DATA);
-	
-	//帧尾CRC16校验协议
-	Append_CRC16_Check_Sum( vision_send_pack, VISION_LEN_PACKED );
 	
 	//将打包好的数据通过串口移位发送到裁判系统
 	for (i = 0; i < VISION_LEN_PACKED; i++)
