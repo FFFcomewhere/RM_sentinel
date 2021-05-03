@@ -83,8 +83,6 @@ void CAN1_RX0_IRQHandler(void)
 	}
 	
 	//云台电机机械角度读取
-
-	
 	if(RxMessage.StdId == CAN_PIT_MOTOR_IDR)//云台pitch轴电机
 	{
 		rota_measure_L  = ((int16_t)RxMessage.Data[0]<<8|RxMessage.Data[1]);
@@ -108,7 +106,6 @@ void CAN1_RX0_IRQHandler(void)
 		current_measure_L = ((int16_t)RxMessage.Data[4]<<8|RxMessage.Data[5]);
 		GIMBAL_UpdateCurrent(YAW, current_measure_L);
 	}
-	
 	
 	if(RxMessage.StdId  == CAN_2006_M1_ID)//拨盘电机
 	{
@@ -150,20 +147,30 @@ void CAN1_RX0_IRQHandler(void)
 		CHASSIS_UpdateMotorCur(BACK, current_measure_L);
 	}
 	
-
-	
-	
-    if(RxMessage.StdId == CAN_SIGNAL_TRANSFER_ALL_ID)//左 右
+    //摩擦轮电机 M3508
+	if(RxMessage.StdId == CAN_3508_M3_ID)//左摩擦轮
 	{
-		Sensor_data[LEFT] = RxMessage.Data[0];		
-		Sensor_data[RIGHT] = RxMessage.Data[1];
-        Pitch_right = ((int16_t)RxMessage.Data[2]<<8|RxMessage.Data[3]);
-        Yaw_right =((int16_t)RxMessage.Data[4]<<8|RxMessage.Data[5]);
-        Revolver_Final_Output_right = ((int16_t)RxMessage.Data[6]<<8|RxMessage.Data[7]);
-
+		rota_measure_L   = ((int16_t)RxMessage.Data[0]<<8|RxMessage.Data[1]);
+		CHASSIS_UpdateMotorAngle(FRIC_LEFT, rota_measure_L);
+		
+		speed_measure_L  = ((int16_t)RxMessage.Data[2]<<8|RxMessage.Data[3]);
+		CHASSIS_UpdateMotorSpeed(FRIC_LEFT, speed_measure_L);
+		
+		current_measure_L = ((int16_t)RxMessage.Data[4]<<8|RxMessage.Data[5]);
+		CHASSIS_UpdateMotorCur(FRIC_LEFT, current_measure_L);
 	}
-
-   
+	
+	if(RxMessage.StdId == CAN_3508_M4_ID)//右摩擦轮
+	{
+        rota_measure_L   = ((int16_t)RxMessage.Data[0]<<8|RxMessage.Data[1]);
+		CHASSIS_UpdateMotorAngle(FRIC_RIGHT, rota_measure_L);
+		
+		speed_measure_L  = ((int16_t)RxMessage.Data[2]<<8|RxMessage.Data[3]);
+		CHASSIS_UpdateMotorSpeed(FRIC_RIGHT, speed_measure_L);
+		
+		current_measure_L = ((int16_t)RxMessage.Data[4]<<8|RxMessage.Data[5]);
+		CHASSIS_UpdateMotorCur(FRIC_RIGHT, current_measure_L);
+	}
 	
 }
 
@@ -188,15 +195,13 @@ void CAN2_RX0_IRQHandler(void)
     }
 		
 	
-
-	
 	
 }
 
 
-//Chassis   0X2FF   2个3508   编号 7  8     //CAN1
-//Gimbal    0x1FF   2个6020   编号 1  2    //CAN1
-//Revolver  0X200   1个2006   编号 7      //CAN1            2020.11.24修改
+//Chassis   0X2FF   4个3508   编号 1 2 3 4      //CAN1
+//Gimbal    0x1FF   2个6020   编号 5 6    //CAN1
+//Revolver  0X200   1个2006   编号 5      //CAN1            2020.11.24修改
 
 
 
@@ -285,7 +290,7 @@ void CAN_CMD_CHASSIS(int16_t motor1, int16_t motor2, int16_t motor3, int16_t mot
 void CAN_CMD_Revolver(int16_t motor1, int16_t motor2 )
 {
     CanTxMsg TxMessage;
-    TxMessage.StdId = CAN_REVOLVER_ALL_ID;
+    TxMessage.StdId = CAN_SHOOT_ALL_ID;
     TxMessage.IDE = CAN_ID_STD;
     TxMessage.RTR = CAN_RTR_DATA;
     TxMessage.DLC = 0x08;
@@ -299,26 +304,6 @@ void CAN_CMD_Revolver(int16_t motor1, int16_t motor2 )
     TxMessage.Data[7] = 0;
 
     CAN_Transmit(Revolver_CAN, &TxMessage);
-}
-
-
-void CAN_CMD_Send_Mode(int16_t mode_right)
-{
-    CanTxMsg TxMessage;
-    TxMessage.StdId = CAN_SEND_MODE_ID;
-    TxMessage.IDE = CAN_ID_STD;
-    TxMessage.RTR = CAN_RTR_DATA;
-    TxMessage.DLC = 0x08;
-    TxMessage.Data[0] = SYSTEM_GetRemoteMode() >> 8;
-    TxMessage.Data[1] = SYSTEM_GetRemoteMode();
-    TxMessage.Data[2] = 0;
-	TxMessage.Data[3] = 0;
-    TxMessage.Data[4] = 0;
-    TxMessage.Data[5] = 0;
-    TxMessage.Data[6] = 0;
-    TxMessage.Data[7] = 0;
-
-    CAN_Transmit(Send_Mode_CAN, &TxMessage);
 }
 
 

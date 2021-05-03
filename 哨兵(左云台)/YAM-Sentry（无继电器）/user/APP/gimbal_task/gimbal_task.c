@@ -2,13 +2,13 @@
   ****************************(C) COPYRIGHT 2016 DJI****************************
   * @file       gimbal_task.c/h
   * @brief      �����̨��������������̨ʹ�������ǽ�����ĽǶȣ��䷶Χ�ڣ�-pi,pi��
-  *             �ʶ�����Ŀ��ǶȾ�Ϊ��Χ����������ԽǶȼ���ĺ�������̨��Ҫ��Ϊ2��
-  *             ״̬�������ǿ���״̬�����ð��������ǽ������̬�ǽ��п��ƣ�����������
-  *             ״̬��ͨ����������ı���ֵ���Ƶ�У׼�����⻹��У׼״̬��ֹͣ״̬�ȡ�
-  * @note       AV  DV���ҵ�ͷ ���ֿ��� ��̨����ģʽ δ����   �������˲�����Ҫ�˽⣬���飬������ƻ���Ҫ�˽⡣
-  * @history    ���ӳ��ڳ���   ���������볬��   �����Ҹ�    ������ڳ���  R�� �����Ҹ�    ���������Ҹ�       �����װ�Ļ�  ������   ����������
+  *             �ʶ�����Ŀ��ǶȾ�Ϊ��Χ����������ԽǶȼ���ĺ�������̨��Ҫ���?2��
+  *             ״̬�������ǿ���״̬�����ð��������ǽ������̬�ǽ��п��ƣ�����������?
+  *             ״̬��ͨ����������ı���ֵ���Ƶ�У׼�����⻹��У׼״̬��ֹͣ״̬�ȡ�?
+  * @note       AV  DV���ҵ�ͷ ���ֿ��� ��̨����ģʽ δ����   �������˲�����Ҫ�˽⣬���飬������ƻ���Ҫ�˽�?
+  * @history    ���ӳ��ڳ���   ���������볬��   �����Ҹ�    ������ڳ���?  R�� �����Ҹ�    ���������Ҹ�       �����װ�Ļ�?  ������   ����������
   *  Version    Date            Author          Modification
-  *  V1.0.0     Dec-26-2018     RM              1. ���
+  *  V1.0.0     Dec-26-2018     RM              1. ���?
   *
   @verbatim
   ==============================================================================
@@ -68,9 +68,9 @@
 
 		
 /*--------------------------------------myself-------------------------------*/
-extern  RC_ctrl_t rc_ctrl;    //����ң�����ṹ�����
+extern  RC_ctrl_t rc_ctrl;    //����ң�����ṹ�����?
 GimbalCtrlMode  modeGimbal;   //������̨����ģʽ    ��е/������
-eGimbalAction  actGimbal;     //������̨�˶�ģʽ  ��ͷ ���� �����
+eGimbalAction  actGimbal;     //������̨�˶�ģʽ  ��ͷ ���� �����?
 Critical_t Yaw_Gyro_Angle;    
 
 extern VisionRecvData_t VisionRecvData; //�����Ӿ����յ����ݽṹ��
@@ -90,7 +90,7 @@ float angleMpuPitch,	angleMpuYaw,	angleMpuRoll;//�����ǽǶ�ֵ
 short palstanceMpuPitch,	palstanceMpuYaw,	palstanceMpuRoll;//�����ǽ��ٶ�ֵ
 float angleMpu[3][2];
 
-//��е�Ƕ��м����,��CAN�ж�ȡ����
+//��е�Ƕ��м����?,��CAN�ж�ȡ����
 int16_t  angleMotorPit,  angleMotorYaw; 
 int16_t  speedMotorPit,  speedMotorYaw; 
 int16_t  currentMotorPit,  currentMotorYaw; 
@@ -103,17 +103,17 @@ extern float Cloud_Angle_Target_GD[2][2];   //  pitch/yaw    mech/gyro  ���
 //�����Ƕ�
 float Cloud_Angle_Measure[2][2];//  pitch/yaw    mech/gyro
 
-//�������ת��
+//�������ת��?
 float Cloud_Speed_Measure[2][2];//  pitch/yaw    mech/gyro
 
-//�����������ֵ
+//������������?
 float Cloud_Current_Measure[2][2];//  pitch/yaw    mech/gyro
 
 //�������ٶ�
 float Cloud_Palstance_Measure[2][2];//  pitch/yaw    mech/gyro
 
 
-float motor_gyro_set[2][2];  //PID�����⻷��������ٶ��趨ֵ  pitch/yaw    mech/gyro
+float motor_gyro_set[2][2];  //PID�����⻷��������ٶ��趨�?  pitch/yaw    mech/gyro
 float motor_gyro_set[2][2]; 
 
 float current_set[2][2];      //PID�����ڻ���������  pitch/yaw    mech/gyro
@@ -123,7 +123,7 @@ float given_current[2][2];     //PID���ո�ֵ����  pitch/yaw    m
 float given_current[2][2];
 float fMotorOutput[4] = {0};
 
-float Error[2][2]; //���ֵ��ȡ
+float Error[2][2]; //���ֵ���?
 
 //����j-scpoe���ԣ�j-scpoe��֧�ֶ�����
 #define jscpoe_filter  1000
@@ -167,29 +167,29 @@ float Auto_Distance;
 uint32_t Gimbal_Vision_Time[2];
 
 //�²�����Ԥ����
-float Auto_Distance;//Ԥ�����
+float Auto_Distance;//Ԥ�����?
 float vision_time_update_time;
 float Vision_Angle_Speed_Yaw, Vision_Angle_Speed_Pitch;//�������˲��ٶȲ���ֵ
-float *yaw_kf_result, *pitch_kf_result;//���׿������˲����,0�Ƕ� 1�ٶ�
-float yaw_speed_k = 0;//yaw�ٶ�Ԥ�����
-float kf_yaw_angcon = 0;//yawԤ������޷�
-float pitch_speed_k = 0;//pitch�ٶ�Ԥ�����
-float kf_pitch_angcon = 0;//pitchԤ������޷�
+float *yaw_kf_result, *pitch_kf_result;//���׿������˲����?,0�Ƕ� 1�ٶ�
+float yaw_speed_k = 0;//yaw�ٶ�Ԥ�����?
+float kf_yaw_angcon = 0;//yawԤ������޷�?
+float pitch_speed_k = 0;//pitch�ٶ�Ԥ�����?
+float kf_pitch_angcon = 0;//pitchԤ������޷�?
 float debug_kf_y_angle;//yawԤ���ݴ�
 float debug_kf_p_angle;//pitchԤ���ݴ�
-float debug_kf_angle_temp;//Ԥ��Ƕ�б���ݴ���
-float debug_kf_angle_ramp = 20;//Ԥ��Ƕ�б�±仯��
+float debug_kf_angle_temp;//Ԥ��Ƕ�б���ݴ���?
+float debug_kf_angle_ramp = 20;//Ԥ��Ƕ�б�±仯��?
 float kf_speed_yl = 0;//�ٶȹ��͹ر�Ԥ��
 uint16_t Auto_KF_Delay = 0;//����ͻȻ����,�������˲�������ʱ
 float debug_y_sk;// = 38;//35;//30;//�ƶ�Ԥ��ϵ��,Խ��Ԥ��Խ��
 float debug_y_sb_sk;//�ڱ�Ԥ��ϵ��
 float debug_y_sb_brig_sk;//��ͷ�ڱ�
 float debug_p_sk;//�ƶ�Ԥ��ϵ��,Խ��Ԥ��Խ��
-float debug_auto_err_y=120;// = 10;//15;//10;//15;//yaw�Ƕȹ���ر�Ԥ��              ����ֵ�ڳ����л���Ҫ�޸�               
-float debug_auto_err_p;//pitch�Ƕȹ���ر�Ԥ��
+float debug_auto_err_y=120;// = 10;//15;//10;//15;//yaw�Ƕȹ���ر�Ԥ��?              ����ֵ�ڳ����л���Ҫ�޸�               
+float debug_auto_err_p;//pitch�Ƕȹ���ر�Ԥ��?
 float debug_kf_delay=80;// = 150;//100;//200;//120;//150;//Ԥ����ʱ����              ����ֵ�ڳ����л���Ҫ�޸�
 float debug_kf_speed_yl;//yaw�ٶȹ��͹ر�Ԥ��
-float debug_kf_speed_yl_sb;//̧ͷ���ڱ�ʱ��С��Ϳɿ�Ԥ����
+float debug_kf_speed_yl_sb;//̧ͷ���ڱ�ʱ��С��Ϳɿ�Ԥ����?
 float debug_kf_speed_yh;//yaw�ٶȹ��߹ر�Ԥ��
 float debug_kf_speed_pl;//pitch�ٶȹ��͹ر�Ԥ��
 float debug_kf_y_angcon;// = 130;//125;//115;//135;//yawԤ�����޷�
@@ -202,7 +202,7 @@ bool Mobi_Pre_Yaw_Fire = FALSE;//Ĭ��Ԥ��û��λ����ֹ���
 
 uint16_t mobpre_yaw_left_delay = 0;//����Ԥ����ʱ�жϿɿ�������
 uint16_t mobpre_yaw_right_delay = 0;//����Ԥ����ʱ�жϿɿ�������
-uint16_t mobpre_yaw_stop_delay = 0;//Ԥ��ر���ʱ�жϿɿ�������
+uint16_t mobpre_yaw_stop_delay = 0;//Ԥ��ر���ʱ�жϿɿ�������?
 
 
 /*���׿�����*/
@@ -215,14 +215,14 @@ speed_calc_data_t Vision_Pitch_speed_Struct;            //�����Ӿ�pi
 kalman_filter_t yaw_kalman_filter;                      //����yaw�������˲����ṹ��
 kalman_filter_t pitch_kalman_filter;                    //����pitch�������˲����ṹ��
 
-/*----------------------------------------------------------ң������ر���-------------------------------------------------------------------*/
+/*----------------------------------------------------------ң������ر���?-------------------------------------------------------------------*/
 
 //�ϵ�б�±���
 float Slope_Begin_Pitch = 0.005 ;  //���ϵ�ʱ�ƶ�����
 float Slope_Begin_Yaw = 0.005 ;
 
 float rc_add_yaw, rc_add_pit;       //ң��������
-int16_t yaw_channel, pitch_channel; //ң�����м����                                                  
+int16_t yaw_channel, pitch_channel; //ң�����м����?                                                  
 extern uint8_t Vision_Get_New_Data;
 
 bool op=0;
@@ -237,8 +237,8 @@ void GIMBAL_task(void *pvParameters)
 	{	
 		currentTime = xTaskGetTickCount();//��ǰϵͳʱ��
 		
-		/* ����� */
-		if (SYSTEM_GetSystemState() == SYSTEM_STARTING)//��ʼ��ģʽ  ����pitch�ϵ��˦�����Լ����ж�
+		/* �����? */
+		if (SYSTEM_GetSystemState() == SYSTEM_STARTING)//��ʼ��ģʽ  ����pitch�ϵ��˦�����Լ����ж�?
        GIMBAL_InitCtrl();
 		
 		else
@@ -297,8 +297,6 @@ void GIMBAL_task(void *pvParameters)
 		
 		GIMBAL_PositionLoop();
 		GIMBAL_CanSend();			
-		CAN_CMD_Send_Mode(SYSTEM_GetRemoteMode());  //����ģʽ����
-		
 		
 		vTaskDelayUntil(&currentTime, TIME_STAMP_4MS);//������ʱ
 	}
@@ -321,7 +319,7 @@ void GIMBAL_InitCtrl(void)
 	  auto_mode.yaw_cw = TRUE;
 	  auto_mode.yaw_ccw = FALSE;
 	
-	  if (xTaskGetTickCount( ) - ulTimeCurrent > TIME_STAMP_100MS)//��֤���ϵ�������´ο���
+	  if (xTaskGetTickCount( ) - ulTimeCurrent > TIME_STAMP_100MS)//��֤���ϵ�������´ο���?
 		   bAngleRecord = FALSE;
 
 		 
@@ -357,13 +355,13 @@ void GIMBAL_InitCtrl(void)
 		  Cloud_Angle_Target[YAW][MECH] = Cloud_Angle_Measure[YAW][MECH];
 	  }
 		
-			//ƽ��������̨�ƶ����м�,��ֹ���ϵ��˦
+			//ƽ��������̨�ƶ����м�,��ֹ���ϵ���?
 	  Cloud_Angle_Target[PITCH][MECH] = RAMP_float( mid_pitch_angle, Cloud_Angle_Target[PITCH][MECH], Slope_Begin_Pitch);
 	  Cloud_Angle_Target[YAW][MECH]   = RAMP_float( mid_yaw_angle, Cloud_Angle_Target[YAW][MECH], Slope_Begin_Yaw);
 
 
 }
-/*-----------------------------------------------��̨ң��������ģʽѡ���ң����Ŀ��ֵ����--------------------------------------------------*/
+/*-----------------------------------------------��̨ң��������ģʽѡ���ң����Ŀ��ֵ����?--------------------------------------------------*/
 /**
   * @brief  ��̨ң��������ģʽ
   * @param  void
@@ -419,7 +417,7 @@ void GIMBAL_Set_Control(void)
 	
 //		Cloud_Angle_Target[YAW][GYRO] = Cloud_Angle_Measure[YAW][GYRO];		
 //		Cloud_Angle_Target[PITCH][GYRO] = Cloud_Angle_Measure[PITCH][GYRO];
-    //�Ƿ񳬹���� ��Сֵ
+    //�Ƿ񳬹����? ��Сֵ
     if (Cloud_Angle_Target[PITCH][MECH] > max_pitch_relative_angle)
         Cloud_Angle_Target[PITCH][MECH] = max_pitch_relative_angle;
     else if (Cloud_Angle_Target[PITCH][MECH] < min_pitch_relative_angle)
@@ -554,7 +552,7 @@ void GIMBAL_AUTO_Mode_Ctrl(void)
 		Vision_Get_Distance(&Auto_Distance);
 		pitch_angle_ref = (Cloud_Angle_Measure[PITCH][MECH]+Auto_Error_Pitch[NOW]);
 		yaw_angle_ref = (Cloud_Angle_Measure[YAW][MECH]-Auto_Error_Yaw[NOW]);
-		//Vision_Clean_Update_Flag();//����,�����һֱִ��
+		//Vision_Clean_Update_Flag();//����,�����һֱִ��?
 		Auto_Error_Pitch[NOW] = 0;
 		Auto_Error_Yaw[NOW]= 0 ;
 		Gimbal_Vision_Time[NOW]=xTaskGetTickCount();//��ȡ�����ݵ�����ʱ��
@@ -594,8 +592,8 @@ void GIMBAL_AUTO_Mode_Ctrl(void)
 void GIMBAL_AUTO_PREDICT_Mode_Ctrl(void)
 {	
 	static float yaw_angle_raw, pitch_angle_raw;//�������˲��ǶȲ���ֵ
-	static float yaw_angle_ref;//��¼Ŀ��Ƕ�
-	static float pitch_angle_ref;//��¼Ŀ��Ƕ�
+	static float yaw_angle_ref;//��¼Ŀ��Ƕ�?
+	static float pitch_angle_ref;//��¼Ŀ��Ƕ�?
 	
 	Mobility_Prediction_Yaw = FALSE;
 	Mobi_Pre_Yaw_Fire = FALSE;
@@ -612,7 +610,7 @@ void GIMBAL_AUTO_PREDICT_Mode_Ctrl(void)
 	{
 		pitch_angle_ref = (Cloud_Angle_Measure[PITCH][GYRO]+Auto_Error_Pitch[NOW]);//�õ��ĽǶ������������Ҫ�Ŵ���߼��ϲ���
 		yaw_angle_ref = (Cloud_Angle_Measure[YAW][GYRO]+Auto_Error_Yaw[NOW]);//�õ��ĽǶ������������Ҫ�Ŵ���߼��ϲ���
-		//Vision_Clean_Update_Flag();//����,�����һֱִ��
+		//Vision_Clean_Update_Flag();//����,�����һֱִ��?
 		Gimbal_Vision_Time[NOW]=xTaskGetTickCount();//��ȡ�����ݵ�����ʱ��
 	}
 	if(Gimbal_Vision_Time[NOW] != Gimbal_Vision_Time[LAST])                  //���¿������˲�����ֵ
@@ -635,8 +633,8 @@ void GIMBAL_AUTO_PREDICT_Mode_Ctrl(void)
 		
 		//Ŀ��������ʱ��СԤ��                              ����ûд!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		
-		yaw_speed_k = debug_y_sk; //yaw�ٶ�Ԥ�����
-		kf_yaw_angcon = debug_kf_y_angcon; //yawԤ������޷�
+		yaw_speed_k = debug_y_sk; //yaw�ٶ�Ԥ�����?
+		kf_yaw_angcon = debug_kf_y_angcon; //yawԤ������޷�?
 		kf_speed_yl = debug_kf_speed_yl; //�ٶȹ��͹ر�Ԥ��
 		
 		
@@ -670,7 +668,7 @@ void GIMBAL_AUTO_PREDICT_Mode_Ctrl(void)
 				mobpre_yaw_left_delay = 0;//����Ԥ�⿪����ʱ����
 				mobpre_yaw_right_delay++;
 				
-				if(mobpre_yaw_right_delay > 0)//������ʱʱ���������
+				if(mobpre_yaw_right_delay > 0)//������ʱʱ���������?
 					Mobi_Pre_Yaw_Fire = TRUE;//Ԥ�⵽λ,���Կ���
 
 				else 
@@ -749,7 +747,7 @@ void GIMBAL_AUTO_PREDICT_Mode_Ctrl(void)
   * @brief  pid����
   * @param  void
   * @retval void
-  * @attention �˴����ܸı�Ŀ��Ƕ�,ֻ���������޷��͵���PID���㺯��
+  * @attention �˴����ܸı�Ŀ��Ƕ�?,ֻ���������޷��͵���PID���㺯��
   */
 void GIMBAL_PositionLoop(void)
 {
@@ -815,9 +813,7 @@ void GIMBAL_CanSend(void)
 		fMotorOutput[PITCH] = -given_current[PITCH][GYRO];
 	}
 	
-	
-		
-	CAN_CMD_GIMBAL(fMotorOutput[PITCH], fMotorOutput[YAW], Pitch_right , Yaw_right);
+	CAN_CMD_GIMBAL(fMotorOutput[PITCH], fMotorOutput[YAW], 0 , 0);
 	//����
 	//CAN_CMD_GIMBAL(0, 0, 0 , 0);
 
@@ -829,11 +825,11 @@ void GIMBAL_CanSend(void)
 
 
 /*--------------------------��������------------------------------------------------------------*/
-/*        �ٽ�ֵ�ṹ���ʼ��    ��ȡ�����ǽǶȣ����ٶ�    Ŀ���ٶȼ��㺯��   YAW��ƫ�����ĽǶ�    ������̨����̷���Ƕ�  ����          */
+/*        �ٽ�ֵ�ṹ���ʼ��?    ��ȡ�����ǽǶȣ����ٶ�    Ŀ���ٶȼ��㺯��   YAW��ƫ�����ĽǶ�    ������̨����̷���Ƕ�  ����          */
 /**
-  * @brief �ٽ�ֵ�ṹ���ʼ��
+  * @brief �ٽ�ֵ�ṹ���ʼ��?
   * @param  critical:�ٽ�ֵ�ṹ��ָ��
-  *    get:��ǰ��ȡ���ĽǶȣ������ǽǻ��е�Ƕȣ�
+  *    get:��ǰ��ȡ���ĽǶȣ������ǽǻ��е�Ƕȣ�?
   * @retval void 
   */
 void Critical_Handle_Init(Critical_t *critical, float get)
@@ -878,16 +874,16 @@ float Target_Speed_Calc(speed_calc_data_t *S, uint32_t time, float position)
 	}
 
 	if(S->delay_cnt > 300/*100*/) // delay 200ms speed = 0
-		S->processed_speed = 0;//ʱ���������Ϊ�ٶȲ���
+		S->processed_speed = 0;//ʱ���������Ϊ�ٶȲ���?
 
 	debug_speed = S->processed_speed;
-	return S->processed_speed;//��������ٶ�
+	return S->processed_speed;//��������ٶ�?
 }
 
 /**
   * @brief  ����YAWƫ�����ĽǶ�,���̸���ģʽ��
   * @param  void
-  * @retval sAngleError,ƫ��Ƕ�ֵ,CAN�����Ļ�е�Ƕ�
+  * @retval sAngleError,ƫ��Ƕ��?,CAN�����Ļ�е�Ƕ�
   */
 int16_t GIMBAL_GetOffsetAngle(void)
 {
@@ -895,7 +891,7 @@ int16_t GIMBAL_GetOffsetAngle(void)
 }
 
 
-/*----------------------���飬Ԥ��yaw��ĸ�������------------------------------------------------------------------------------*/
+/*----------------------���飬Ԥ��yaw��ĸ�������?------------------------------------------------------------------------------*/
 /**
   * @brief  ����yaw��Ԥ���Ƿ��Ѿ�����
   * @param  void
@@ -908,10 +904,10 @@ bool GIMBAL_IfAuto_MobPre_Yaw(void)
 }
 
 /**
-  * @brief  yaw�Ὺ��Ԥ���ʱ����̨�Ƿ�λ
+  * @brief  yaw�Ὺ��Ԥ���ʱ����̨�Ƿ��?
   * @param  void
   * @retval TRUE��λ�ɴ�   FALSEû��λ��ֹ��
-  * @attention ���Ҹ����ӳ٣�����ʱ�ǵ����㷴��;�ֹʱ���ӳ�
+  * @attention ���Ҹ����ӳ٣�����ʱ�ǵ����㷴��;�ֹʱ���ӳ�?
   */
 bool GIMBAL_MOBPRE_YAW_FIRE(void)
 {
@@ -921,7 +917,7 @@ bool GIMBAL_MOBPRE_YAW_FIRE(void)
 
 
 
-/*------------------------�ڱ��������Ԥ�⸨������-----------------------------------------------------------------*/
+/*------------------------�ڱ��������Ԥ�⸨������?-----------------------------------------------------------------*/
 /**
   * @brief  �Ƿ��������ڱ�
   * @param  void
@@ -952,7 +948,7 @@ bool GIMBAL_AUTO_PITCH_SB_SK(void)
 
 /*----------------���½ǶȵĻ�е�ǶȺ������ǽǶȵĺ���------------------------------------------------------------*/
 
-//���������̨��ֵ�ĽǶ�
+//���������̨��ֵ�ĽǶ�?
 static fp32 motor_ecd_to_angle_change(uint16_t ecd)
 {
     int32_t relative_ecd = ecd - 4096;
@@ -1101,7 +1097,7 @@ void GIMBAL_MPU_Update(void)
 		Cloud_Palstance_Measure[YAW][MECH]   = ((palstanceMpuYaw+PALST_COMPS_YAW)*PI)/180;
 		
 		Cloud_Palstance_Measure[PITCH][GYRO] = (palstanceMpuPitch + PALST_COMPS_PITCH)/10;   //ֱ�Ӷ������ǽ��ٶ�
-		Cloud_Palstance_Measure[YAW][GYRO]   = (palstanceMpuYaw+PALST_COMPS_YAW)/10;  //��������ó��Ľ��ٶ�
+		Cloud_Palstance_Measure[YAW][GYRO]   = (palstanceMpuYaw+PALST_COMPS_YAW)/10;  //��������ó��Ľ��ٶ�?
 }
 
 

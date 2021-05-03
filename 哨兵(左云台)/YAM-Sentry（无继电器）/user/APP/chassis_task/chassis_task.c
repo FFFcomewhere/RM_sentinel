@@ -96,10 +96,7 @@ void chassis_task(void *pvParameters)
             Chassis_Init();					
 				}
 				else
-				{
-					speed_change();
-
-
+				{	
 					if (SYSTEM_GetRemoteMode() == RC) //遥控模式
 					{													
 						Chassis_Set_Mode();    //切换模式  
@@ -200,8 +197,8 @@ int16_t Chassis_Current_Measure[4];
 int16_t Sensor_data[2];
 
 
-fp32 Speed_Measure[2];
-fp32 current_measure[2];
+fp32 Speed_Measure[4];
+fp32 current_measure[4];
 //底盘速度误差和
 float Chassis_Speed_Error_Sum[4];//ID
 float Chassis_Speed_Error_NOW[4], Chassis_Speed_Error_LAST[4];
@@ -381,24 +378,12 @@ uint16_t delay_hp = 0;   //规定时间内扣血量
 void sensor_update(void)
 {	
 	//左云台处理
-	//1为未检测到 0为检测到
-	if(Sensor_data[LEFT] == 1)
-	{
-		CJ_L = 1;
-	}
-	else if(Sensor_data[LEFT] == 0)
-	{
-		CJ_L = 0;
-	}
-
-	if(Sensor_data[RIGHT] == 1)
-	{
-		CJ_R = 1;
-	}
-	else if(Sensor_data[RIGHT] == 0)
-	{
-		CJ_R = 0;
-	}
+	CJ_L=GPIO_ReadInputDataBit(GPIOH,GPIO_Pin_10); //D
+	CJ_R=GPIO_ReadInputDataBit(GPIOH,GPIO_Pin_11); //C
+	
+	
+	Sensor_data[LEFT] = CJ_L;
+	Sensor_data[RIGHT] = CJ_R;
 
 
 	//8秒内扣血超过40,开启加速
@@ -413,7 +398,6 @@ void sensor_update(void)
 	}
 
 
-	
 	++hp_no_change_time;          //未受到攻击,开始计时,当缓存能量较低低,降低速度
 
 	
@@ -681,6 +665,9 @@ void Chassis_Omni_Move_Calculate(void)
 {	
 		Chassis_Speed_Target[FRON] = Chassis_Move_X;
 		Chassis_Speed_Target[BACK] = -Chassis_Move_X;
+
+
+
 }
 
 
@@ -810,7 +797,7 @@ void CHASSIS_CANSend(void)
 // Chassis_Final_Output[1] = 0;
 //	Revolver_Final_Output = 0;
 //	Revolver_Final_Output_right = 0;
-	CAN_CMD_CHASSIS(Chassis_Final_Output[0],Chassis_Final_Output[1], Revolver_Final_Output, Revolver_Final_Output_right);
+	CAN_CMD_CHASSIS(Chassis_Final_Output[0],Chassis_Final_Output[1], Chassis_Final_Output[2], Chassis_Final_Output[3]);
 }
 
 

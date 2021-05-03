@@ -168,6 +168,8 @@ uint16_t if_death_tim = 0;
 uint8_t revol_remot_change = TRUE;
 uint8_t game_begin = FALSE; //用于防止开始前裁判杀死哨兵导致摩擦轮失效
 
+//将摩擦轮电机数据,通过底盘pid计算发送出去
+extern float Chassis_Speed_Target[4];//ID
 
 void Revolver_task(void *pvParameters)
 {
@@ -178,14 +180,12 @@ void Revolver_task(void *pvParameters)
 				if(SYSTEM_GetSystemState() == SYSTEM_STARTING)
 				{
 				    REVOLVER_Rest();
-           	Revolver_Init();	
-					  friction_Init();
+           			Revolver_Init();	
+					friction_Init();
 					 
 				}
 				else
 				{
-					
-
 					if (SYSTEM_GetRemoteMode() == RC) //遥控模式
 					{	
 						if(mode_chanege_op == FALSE)		
@@ -198,10 +198,7 @@ void Revolver_task(void *pvParameters)
 						friction_RC_Ctrl();	
 					}
 					else
-					{
-						
-
-						
+					{		
 						if(mode_chanege_op == TRUE)
 						{
 							friction_Init();

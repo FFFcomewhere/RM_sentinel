@@ -6,6 +6,7 @@
 #include "delay.h"
 #include "judge.h"
 #include "stdbool.h"
+#include "chassis_task.h"
 
 
 #include "FreeRTOSConfig.h"
@@ -13,9 +14,10 @@
 #include "task.h"
 
 extern  RC_ctrl_t rc_ctrl;
+extern float Chassis_Speed_Target[4];//ID
 
 /**************************摩擦轮控制***********************************/
-float Friction_PWM_Output[3]     = {0, 300, 470};//关闭  低速 200 哨兵  500
+float Friction_PWM_Output[3]     = {0, 2000, 3000};//关闭  低速 200 哨兵  500
 
 //摩擦轮不同pwm下对应的热量增加值(射速),最好比实际值高5
 uint16_t Friction_PWM_HeatInc[5] = {0,  20,  26,  34,  36};//测试时随便定的速度,后面测试更改
@@ -60,8 +62,10 @@ void FRICTION_StopMotor(void)
 		Friction_Speed_Real = 0;
 	}
 
-	TIM4_FrictionPwmOutp( Friction_Speed_Real, Friction_Speed_Real );
-//	TIM5_FrictionPwmOutp(Friction_Speed_Real, Friction_Speed_Real);
+
+	Chassis_Speed_Target[FRIC_LEFT] = 0;
+	Chassis_Speed_Target[FRIC_RIGHT] = 0;
+
 
 }
 
@@ -116,10 +120,9 @@ void friction_RC_Ctrl(void)
   }
 			
 	//摩擦轮输出斜坡,注意要先抬头才能进入斜坡
-	Friction_Ramp();
+	Chassis_Speed_Target[FRIC_LEFT] = -Friction_Speed_Target;
+	Chassis_Speed_Target[FRIC_RIGHT] = Friction_Speed_Target;
 
-	TIM4_FrictionPwmOutp(Friction_Speed_Real, Friction_Speed_Real);
-//	TIM5_FrictionPwmOutp(Friction_Speed_Real, Friction_Speed_Real);
 }
 
 
@@ -144,10 +147,9 @@ if (FRIC_RcSwitch() == TRUE)//判断状态切换
 	}
 	
 	 
-	Friction_Ramp();
-
-	TIM4_FrictionPwmOutp(Friction_Speed_Real, Friction_Speed_Real);
-//	TIM5_FrictionPwmOutp(Friction_Speed_Real, Friction_Speed_Real);
+	//摩擦轮输出斜坡,注意要先抬头才能进入斜坡
+	Chassis_Speed_Target[FRIC_LEFT] = -Friction_Speed_Target;
+	Chassis_Speed_Target[FRIC_RIGHT] = Friction_Speed_Target;
 }
 
 extern  uint8_t game_begin ; //用于防止开始前裁判杀死哨兵导致摩擦轮失效
@@ -172,10 +174,10 @@ void friction_AUTO_Ctrl(void)
 		if (Vision_If_Update())
 		Friction_Speed_Target = Friction_PWM_Output[FRI_SENTRY];
 	}
-	//摩擦轮输出
-	Friction_Ramp();
 
-	TIM4_FrictionPwmOutp(Friction_Speed_Real, Friction_Speed_Real);
+	//摩擦轮输出斜坡,注意要先抬头才能进入斜坡
+	Chassis_Speed_Target[FRIC_LEFT] = -Friction_Speed_Target;
+	Chassis_Speed_Target[FRIC_RIGHT] = Friction_Speed_Target;
 }
 
 

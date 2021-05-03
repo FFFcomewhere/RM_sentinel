@@ -128,12 +128,14 @@ typedef enum
 } ChassisCtrlMode;
 
 
-//底盘电机ID
+//底盘电机ID+摩擦轮电机
 typedef enum
 {
-	
 	FRON = 0,  // 前
 	BACK = 1,  // 后
+
+  FRIC_LEFT = 2,  //左
+	FRIC_RIGHT = 3,  //右
 	
 } ChassisWheel;
 

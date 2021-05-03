@@ -21,31 +21,24 @@
 
 #define CHASSIS_CAN CAN1
 #define GIMBAL_CAN CAN1
-#define CAP_CAN CAN1
 #define Revolver_CAN CAN1
-#define SENSOR_CAN CAN1
-#define Send_Mode_CAN CAN1
+
 
 /* CAN send and receive ID */
 typedef enum
 {
     CAN_CHASSIS_ALL_ID = 0x200,
-    CAN_3508_M1_ID = 0x201,
-    CAN_3508_M2_ID = 0x202,
-		      
-    CAN_REVOLVER_ALL_ID = 0x200,
-		CAN_2006_M1_ID = 0x203,
-	
-		CAN_GIMBAL_ALL_ID = 0x1FF,
-		CAN_PIT_MOTOR_IDR= 0x205,   //ID为1
-		CAN_YAW_MOTOR_IDR= 0x206,   //ID为2 
-		
-		 
-    CAN_SIGNAL_TRANSFER_ALL_ID = 0X217,
+    CAN_3508_M1_ID = 0x201,      //前底盘电机
+    CAN_3508_M2_ID = 0x202,      //后底盘电机
+		CAN_3508_M3_ID = 0x203,      //左摩擦轮
+    CAN_3508_M4_ID = 0x204,      //右摩擦轮
 
-    CAN_SEND_MODE_ID = 0X250    //就是左云台发送的模式数据
- 
-
+    CAN_SHOOT_ALL_ID = 0x1FF,
+    CAN_2006_M1_ID = 0x205,  // M3508
+  
+		CAN_GIMBAL_ALL_ID = 0x2FF,
+		CAN_PIT_MOTOR_IDR= 0x209,   //ID为1
+		CAN_YAW_MOTOR_IDR= 0x20A,   //ID为2 
 } can_msg_id_e;
 
 //rm电机统一数据结构体
@@ -68,10 +61,8 @@ extern void CAN_CMD_GIMBAL(int16_t pitchr, int16_t pitchl, int16_t yawr, int16_t
 extern void CAN_CMD_CHASSIS(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4);
 //发送拨盘电机控制命令
 void CAN_CMD_Revolver(int16_t motor1,int16_t motor2);
-//发送传感器信号
-void CAN_CMD_Sensor(int16_t left,int16_t right);
 
-void CAN_CMD_Send_Mode(int16_t mode_right);
+
 
 //返回yaw电机变量地址，通过指针方式获取原始数据
 extern const motor_measure_t *get_Yaw_Gimbal_Motor_Measure_Point(void);
