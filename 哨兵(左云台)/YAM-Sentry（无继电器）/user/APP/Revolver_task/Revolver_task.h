@@ -15,6 +15,9 @@
 #define FRI_MAD  	4		//´ò·ûÉäËÙ
 #define FRI_SENTRY  5		//ÉÚ±øÉäËÙ
 
+
+
+
 extern void Revolver_task(void *pvParameters);
 
 void REVOLVER_Rest(void);

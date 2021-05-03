@@ -243,14 +243,24 @@ void Chassis_Init(void)
     //底盘速度环pid值
     const static fp32 motor_speed_pid[3] = {M3505_MOTOR_SPEED_PID_KP, M3505_MOTOR_SPEED_PID_KI, M3505_MOTOR_SPEED_PID_KD};
     const static fp32 chassis_x_order_filter[1] = {CHASSIS_ACCEL_X_NUM};
+
+	//摩檫轮速度环pid值
+    const static fp32 fric_speed_pid[3] = {FRIC_MOTOR_SPEED_PID_KP, FRIC_MOTOR_SPEED_PID_KI,  FRIC_MOTOR_SPEED_PID_KD};
+   
+
     uint8_t i;
 		
     //初始化PID 运动
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < 2; i++)
     {
-
         PID_Init(&motor_pid[i], PID_POSITION, motor_speed_pid, M3505_MOTOR_SPEED_PID_MAX_OUT, M3505_MOTOR_SPEED_PID_MAX_IOUT);
-			
+	
+    }	
+
+	 for (i = 2; i < 4; i++)
+    {
+        PID_Init(&motor_pid[i], PID_POSITION, fric_speed_pid, FRIC_MOTOR_SPEED_PID_MAX_OUT, FRIC_MOTOR_SPEED_PID_MAX_IOUT);
+	
     }		
 			
 	 //用一阶滤波代替斜波函数生成
@@ -261,14 +271,7 @@ void Chassis_Init(void)
 		
 		
     /**************PID参数*************************/	
-	  Chassis_Speed_kpid[FRON][KP] = 11;
-	  Chassis_Speed_kpid[FRON][KI] = 0.08;//0.08;
-	  Chassis_Speed_kpid[FRON][KD] = 0;
-	
-	  Chassis_Speed_kpid[BACK][KP] = 18;
-	  Chassis_Speed_kpid[BACK][KI] = 0.08;//0.08;
-	  Chassis_Speed_kpid[BACK][KD] = 0;
-		
+
     chassis_feedback_update();
     change.TO_left = FALSE;
     change.TO_right = FALSE;	
@@ -696,7 +699,7 @@ void Chassis_Motor_Speed_PID(void)
     if (max_vector > MAX_WHEEL_SPEED)
     {
         vector_rate = MAX_WHEEL_SPEED / max_vector;
-        for (i = 0; i < 4; i++)
+        for (i = 0; i < 2; i++)
         {
             Chassis_Speed_Target[i] *= vector_rate;
         }	
@@ -708,6 +711,7 @@ void Chassis_Motor_Speed_PID(void)
     {
         PID_Calc(&motor_pid[i],motor_chassis_speed[i], Chassis_Speed_Target[i]);
     }
+		
 
     //赋值电流值
     for (i = 0; i < 4; i++)

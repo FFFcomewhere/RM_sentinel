@@ -17,7 +17,7 @@ extern  RC_ctrl_t rc_ctrl;
 extern float Chassis_Speed_Target[4];//ID
 
 /**************************摩擦轮控制***********************************/
-float Friction_PWM_Output[3]     = {0, 2000, 3000};//关闭  低速 200 哨兵  500
+float Friction_PWM_Output[3]     = {0,  1.5, 1.5};//关闭  低速 200 哨兵  500
 
 //摩擦轮不同pwm下对应的热量增加值(射速),最好比实际值高5
 uint16_t Friction_PWM_HeatInc[5] = {0,  20,  26,  34,  36};//测试时随便定的速度,后面测试更改
@@ -83,6 +83,9 @@ void friction_Init(void)
 	 Fric_Speed_Level = FRI_OFF;
 	 Friction_Speed_Target = 0;
 	 Friction_Speed_Real   = 0;
+
+	const static fp32 fric_motor_speed_pid[3] = {FRIC_MOTOR_SPEED_PID_KP, M3505_MOTOR_SPEED_PID_KI, M3505_MOTOR_SPEED_PID_KD};
+
 }
 
 
@@ -120,8 +123,8 @@ void friction_RC_Ctrl(void)
   }
 			
 	//摩擦轮输出斜坡,注意要先抬头才能进入斜坡
-	Chassis_Speed_Target[FRIC_LEFT] = -Friction_Speed_Target;
-	Chassis_Speed_Target[FRIC_RIGHT] = Friction_Speed_Target;
+	Chassis_Speed_Target[FRIC_LEFT] = Friction_Speed_Target;
+	Chassis_Speed_Target[FRIC_RIGHT] = -Friction_Speed_Target;
 
 }
 
@@ -148,8 +151,9 @@ if (FRIC_RcSwitch() == TRUE)//判断状态切换
 	
 	 
 	//摩擦轮输出斜坡,注意要先抬头才能进入斜坡
-	Chassis_Speed_Target[FRIC_LEFT] = -Friction_Speed_Target;
-	Chassis_Speed_Target[FRIC_RIGHT] = Friction_Speed_Target;
+	Chassis_Speed_Target[FRIC_LEFT] = Friction_Speed_Target;
+	Chassis_Speed_Target[FRIC_RIGHT] = -Friction_Speed_Target;
+
 }
 
 extern  uint8_t game_begin ; //用于防止开始前裁判杀死哨兵导致摩擦轮失效
@@ -176,8 +180,9 @@ void friction_AUTO_Ctrl(void)
 	}
 
 	//摩擦轮输出斜坡,注意要先抬头才能进入斜坡
-	Chassis_Speed_Target[FRIC_LEFT] = -Friction_Speed_Target;
-	Chassis_Speed_Target[FRIC_RIGHT] = Friction_Speed_Target;
+	Chassis_Speed_Target[FRIC_LEFT] = Friction_Speed_Target;
+	Chassis_Speed_Target[FRIC_RIGHT] = -Friction_Speed_Target;
+
 }
 
 
