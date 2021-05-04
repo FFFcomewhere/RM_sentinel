@@ -382,23 +382,12 @@ void sensor_update(void)
 {	
 	//左云台处理
 	//1为未检测到 0为检测到
-	if(Sensor_data[LEFT] == 1)
-	{
-		CJ_L = 1;
-	}
-	else if(Sensor_data[LEFT] == 0)
-	{
-		CJ_L = 0;
-	}
-
-	if(Sensor_data[RIGHT] == 1)
-	{
-		CJ_R = 1;
-	}
-	else if(Sensor_data[RIGHT] == 0)
-	{
-		CJ_R = 0;
-	}
+	CJ_L=GPIO_ReadInputDataBit(GPIOH,GPIO_Pin_10); //D
+	CJ_R=GPIO_ReadInputDataBit(GPIOH,GPIO_Pin_11); //C
+	
+	
+	Sensor_data[LEFT] = CJ_L;
+	Sensor_data[RIGHT] = CJ_R;
 
 
 	//8秒内扣血超过40,开启加速
@@ -591,7 +580,6 @@ void sensor_update(void)
   */
 void Chassis_AUTO_Ctrl(void)
 {
-	sensor_update();
 	if (change.stop == TRUE)        //识别到目标,停止运动
 		Chassis_Mode = CHASSIS_STOP_MODE;  //停止
     else if(change.TO_left == TRUE)  //左边的没有识别到，右边的识别到了，且正在往右动，就往左边动
