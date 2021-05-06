@@ -41,6 +41,7 @@
 #include "vision.h"
 #include "chassis_task.h"
 #include "stdio.h"
+#include "judge.h"
 
 
 #define gimbal_total_pid_clear(void)               \
@@ -225,7 +226,11 @@ float rc_add_yaw, rc_add_pit;       //ң��������
 int16_t yaw_channel, pitch_channel; //ң�����м����?                                                  
 extern uint8_t Vision_Get_New_Data;
 
+uint8_t vision_cmd_ID ;
+
 bool op=0;
+uint8_t  vision_cmd ;
+
 uint32_t 	Auto_Mode_Count_Past;		
 
 //ÿ2msִ��һ��������
@@ -312,6 +317,7 @@ void GIMBAL_task(void *pvParameters)
 
 void GIMBAL_InitCtrl(void)
 {	
+
 		static bool bAngleRecord  = FALSE;
 	  static portTickType  ulTimeCurrent = 0;
 	  auto_mode.pitch_up = TRUE;
@@ -319,6 +325,18 @@ void GIMBAL_InitCtrl(void)
 	  auto_mode.yaw_cw = TRUE;
 	  auto_mode.yaw_ccw = FALSE;
 	
+	if(is_red_or_blue() == RED)
+		vision_cmd_ID = VISION_RED ;
+	else if(is_red_or_blue() == BLUE)
+		vision_cmd_ID = VISION_BLUE ;
+	
+
+
+
+	//���Ӿ�����ʶ���װ�װ���ɫ
+	Vision_Send_Data(vision_cmd_ID);
+
+
 	  if (xTaskGetTickCount( ) - ulTimeCurrent > TIME_STAMP_100MS)//��֤���ϵ�������´ο���?
 		   bAngleRecord = FALSE;
 
@@ -589,157 +607,157 @@ void GIMBAL_AUTO_Mode_Ctrl(void)
 }
 /*----------------------------����Ԥ��----------------------------------*/
 
-void GIMBAL_AUTO_PREDICT_Mode_Ctrl(void)
-{	
-	static float yaw_angle_raw, pitch_angle_raw;//�������˲��ǶȲ���ֵ
-	static float yaw_angle_ref;//��¼Ŀ��Ƕ�?
-	static float pitch_angle_ref;//��¼Ŀ��Ƕ�?
-	
-	Mobility_Prediction_Yaw = FALSE;
-	Mobi_Pre_Yaw_Fire = FALSE;
-	
-	//��ȡ�Ƕ�ƫ����,�Ѿ�ת��Ϊ��������
-	Vision_Error_Angle_Pitch(&Auto_Error_Pitch[NOW]);
-	Vision_Error_Angle_Yaw(&Auto_Error_Yaw[NOW]);
-	Vision_Get_Distance(&Auto_Distance);
-	
-	Auto_Distance = KalmanFilter(&Vision_Distance_Kalman,Auto_Distance);
-	
-	
-	if(Vision_If_Update() == TRUE)                    //���ݸ���
-	{
-		pitch_angle_ref = (Cloud_Angle_Measure[PITCH][GYRO]+Auto_Error_Pitch[NOW]);//�õ��ĽǶ������������Ҫ�Ŵ���߼��ϲ���
-		yaw_angle_ref = (Cloud_Angle_Measure[YAW][GYRO]+Auto_Error_Yaw[NOW]);//�õ��ĽǶ������������Ҫ�Ŵ���߼��ϲ���
-		//Vision_Clean_Update_Flag();//����,�����һֱִ��?
-		Gimbal_Vision_Time[NOW]=xTaskGetTickCount();//��ȡ�����ݵ�����ʱ��
-	}
-	if(Gimbal_Vision_Time[NOW] != Gimbal_Vision_Time[LAST])                  //���¿������˲�����ֵ
-	{
-		vision_time_update_time = Gimbal_Vision_Time[NOW] - Gimbal_Vision_Time[LAST];//�����Ӿ��ӳ�
-		pitch_angle_raw = pitch_angle_ref;//���¶��׿������˲�����ֵ
-		yaw_angle_raw = yaw_angle_ref;
-		Gimbal_Vision_Time[NOW] = Gimbal_Vision_Time[LAST];
-	}
-	
-	if(VisionRecvData.identify_target == TRUE)                     //ʶ����Ŀ��
-	{
-		Vision_Angle_Speed_Yaw = Target_Speed_Calc(&Vision_Yaw_speed_Struct,Gimbal_Vision_Time[NOW],yaw_angle_raw);
-		Vision_Angle_Speed_Pitch = Target_Speed_Calc(&Vision_Pitch_speed_Struct,Gimbal_Vision_Time[NOW],pitch_angle_raw);
-		
-		yaw_kf_result = kalman_filter_calc(&yaw_kalman_filter,yaw_angle_raw,Vision_Angle_Speed_Yaw);//�ԽǶȺ��ٶȽ��ж��׿������˲��ں�
-		pitch_kf_result = kalman_filter_calc(&pitch_kalman_filter,pitch_angle_raw,Vision_Angle_Speed_Pitch);
-		
-		Auto_KF_Delay++;//�˲��ӳٿ���
-		
-		//Ŀ��������ʱ��СԤ��                              ����ûд!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		
-		yaw_speed_k = debug_y_sk; //yaw�ٶ�Ԥ�����?
-		kf_yaw_angcon = debug_kf_y_angcon; //yawԤ������޷�?
-		kf_speed_yl = debug_kf_speed_yl; //�ٶȹ��͹ر�Ԥ��
-		
-		
-	  if(fabs(Auto_Error_Yaw[NOW])<debug_auto_err_y && fabs(yaw_kf_result[KF_SPEED]) > kf_speed_yl && fabs(pitch_kf_result[KF_SPEED]) < debug_kf_speed_yh)//Ԥ�⿪������
-	  {
-			if(yaw_kf_result[KF_SPEED] >= 0)
-	  		debug_kf_angle_temp = yaw_speed_k * (yaw_kf_result[KF_SPEED] - kf_speed_yl) * 1;
-			
-			else if(yaw_kf_result[KF_SPEED] <0)
-				debug_kf_angle_temp = yaw_speed_k * (yaw_kf_result[KF_SPEED] + kf_speed_yl) * 1;
-			
-			debug_kf_angle_temp = constrain_float(debug_kf_angle_temp,-debug_kf_y_angcon,debug_kf_y_angcon);//Ԥ���ݴ����޷�
-			debug_kf_y_angle = RAMP_float(debug_kf_angle_temp,debug_kf_y_angle,debug_kf_angle_ramp);//Ԥ���������仯
-			debug_kf_y_angle = constrain_float(debug_kf_y_angle,-debug_kf_y_angcon,debug_kf_y_angcon);
-		  Cloud_Angle_Target[YAW][GYRO] = yaw_kf_result[KF_ANGLE]+debug_kf_y_angle;
-			
-			if((yaw_kf_result[KF_SPEED] > 0) && (Auto_Error_Yaw[NOW] < 0.3f)) //���������Ƚϻ�����Ҫdebug��
-			{
-				mobpre_yaw_right_delay = 0;//����Ԥ�⿪����ʱ����
-				mobpre_yaw_left_delay++;
-				
-				if(mobpre_yaw_left_delay > 0)//������ʱʱ��
-					Mobi_Pre_Yaw_Fire = TRUE;//Ԥ�⵽λ,���Կ���
-
-				else 
-					Mobi_Pre_Yaw_Fire = FALSE;//Ԥ�ⲻ��λ
-			}
-			
-			else if((yaw_kf_result[KF_SPEED] < 0) && (Auto_Error_Yaw[NOW] > -0.3f))//���������Ƚϻ�����Ҫdebug��
-			{
-				mobpre_yaw_left_delay = 0;//����Ԥ�⿪����ʱ����
-				mobpre_yaw_right_delay++;
-				
-				if(mobpre_yaw_right_delay > 0)//������ʱʱ���������?
-					Mobi_Pre_Yaw_Fire = TRUE;//Ԥ�⵽λ,���Կ���
-
-				else 
-					Mobi_Pre_Yaw_Fire = FALSE;//Ԥ�ⲻ��λ
-			}
-			
-	  	else
-		  {
-				Mobi_Pre_Yaw_Fire = FALSE;//Ԥ�ⲻ��λ
-				
-				mobpre_yaw_left_delay = 0;//����Ԥ�⿪����ʱ����
-				mobpre_yaw_right_delay = 0;//����Ԥ�⿪����ʱ����
-	  	}
-			
-			Mobility_Prediction_Yaw = TRUE;
-			mobpre_yaw_stop_delay = 0;
-			
-
-//				pitch_speed_k = debug_p_sk/2.f;
-//		  	kf_pitch_angcon = debug_kf_p_angcon/1.5f;
-//        debug_kf_p_angle = pitch_speed_k * (pitch_kf_result[1] + debug_kf_speed_pl);
+//void GIMBAL_AUTO_PREDICT_Mode_Ctrl(void)
+//{	
+//	static float yaw_angle_raw, pitch_angle_raw;//�������˲��ǶȲ���ֵ
+//	static float yaw_angle_ref;//��¼Ŀ��Ƕ�?
+//	static float pitch_angle_ref;//��¼Ŀ��Ƕ�?
+//	
+//	Mobility_Prediction_Yaw = FALSE;
+//	Mobi_Pre_Yaw_Fire = FALSE;
+//	
+//	//��ȡ�Ƕ�ƫ����,�Ѿ�ת��Ϊ��������
+//	Vision_Error_Angle_Pitch(&Auto_Error_Pitch[NOW]);
+//	Vision_Error_Angle_Yaw(&Auto_Error_Yaw[NOW]);
+//	Vision_Get_Distance(&Auto_Distance);
+//	
+//	Auto_Distance = KalmanFilter(&Vision_Distance_Kalman,Auto_Distance);
+//	
+//	
+//	if(Vision_If_Update() == TRUE)                    //���ݸ���
+//	{
+//		pitch_angle_ref = (Cloud_Angle_Measure[PITCH][GYRO]+Auto_Error_Pitch[NOW]);//�õ��ĽǶ������������Ҫ�Ŵ���߼��ϲ���
+//		yaw_angle_ref = (Cloud_Angle_Measure[YAW][GYRO]+Auto_Error_Yaw[NOW]);//�õ��ĽǶ������������Ҫ�Ŵ���߼��ϲ���
+//		//Vision_Clean_Update_Flag();//����,�����һֱִ��?
+//		Gimbal_Vision_Time[NOW]=xTaskGetTickCount();//��ȡ�����ݵ�����ʱ��
+//	}
+//	if(Gimbal_Vision_Time[NOW] != Gimbal_Vision_Time[LAST])                  //���¿������˲�����ֵ
+//	{
+//		vision_time_update_time = Gimbal_Vision_Time[NOW] - Gimbal_Vision_Time[LAST];//�����Ӿ��ӳ�
+//		pitch_angle_raw = pitch_angle_ref;//���¶��׿������˲�����ֵ
+//		yaw_angle_raw = yaw_angle_ref;
+//		Gimbal_Vision_Time[NOW] = Gimbal_Vision_Time[LAST];
+//	}
+//	
+//	if(VisionRecvData.identify_target == TRUE)                     //ʶ����Ŀ��
+//	{
+//		Vision_Angle_Speed_Yaw = Target_Speed_Calc(&Vision_Yaw_speed_Struct,Gimbal_Vision_Time[NOW],yaw_angle_raw);
+//		Vision_Angle_Speed_Pitch = Target_Speed_Calc(&Vision_Pitch_speed_Struct,Gimbal_Vision_Time[NOW],pitch_angle_raw);
+//		
+//		yaw_kf_result = kalman_filter_calc(&yaw_kalman_filter,yaw_angle_raw,Vision_Angle_Speed_Yaw);//�ԽǶȺ��ٶȽ��ж��׿������˲��ں�
+//		pitch_kf_result = kalman_filter_calc(&pitch_kalman_filter,pitch_angle_raw,Vision_Angle_Speed_Pitch);
+//		
+//		Auto_KF_Delay++;//�˲��ӳٿ���
+//		
+//		//Ŀ��������ʱ��СԤ��                              ����ûд!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//		
+//		yaw_speed_k = debug_y_sk; //yaw�ٶ�Ԥ�����?
+//		kf_yaw_angcon = debug_kf_y_angcon; //yawԤ������޷�?
+//		kf_speed_yl = debug_kf_speed_yl; //�ٶȹ��͹ر�Ԥ��
+//		
+//		
+//	  if(fabs(Auto_Error_Yaw[NOW])<debug_auto_err_y && fabs(yaw_kf_result[KF_SPEED]) > kf_speed_yl && fabs(pitch_kf_result[KF_SPEED]) < debug_kf_speed_yh)//Ԥ�⿪������
+//	  {
+//			if(yaw_kf_result[KF_SPEED] >= 0)
+//	  		debug_kf_angle_temp = yaw_speed_k * (yaw_kf_result[KF_SPEED] - kf_speed_yl) * 1;
 //			
-//    		Cloud_Angle_Target[PITCH][MECH] = pitch_angle_ref;
-	  }
-		
-		if((Auto_KF_Delay > debug_kf_delay) && (fabs(Auto_Error_Pitch[NOW]) > debug_auto_err_p) && (fabs(pitch_kf_result[KF_SPEED]) > debug_kf_speed_pl) && (VisionRecvData.distance/100 < 4.f))
-		{
-		  if(VisionRecvData.auto_too_close == TRUE)
-		  {
-		  	pitch_speed_k = debug_p_sk/2.f;
-		  	kf_pitch_angcon = debug_kf_p_angcon/1.5f;
-		  }
-			
-			if(pitch_kf_result[KF_SPEED]>=0)
-				debug_kf_p_angle = pitch_speed_k * (pitch_kf_result[KF_SPEED] - debug_kf_speed_pl);
-			
-			else 
-			{
-				pitch_speed_k = debug_p_sk;
-				kf_pitch_angcon = debug_kf_p_angcon;
-				debug_kf_p_angle = pitch_speed_k * (pitch_kf_result[KF_SPEED] + debug_kf_speed_pl);
-			}
-			
-			debug_kf_p_angle = constrain_float(debug_kf_p_angle, -kf_pitch_angcon, kf_pitch_angcon);//Pitch�޷�
-			
-			Cloud_Angle_Target[PITCH][MECH] = pitch_kf_result[KF_ANGLE] + debug_kf_p_angle;
-		}
-		else
-			Cloud_Angle_Target[PITCH][MECH] = pitch_angle_ref;
-	}
-	
-	else  //δʶ��Ŀ��
-	{
-//		//�ԽǶȺ��ٶȽ��ж��׿������˲��ں�,0λ��,1�ٶ�
-		Vision_Angle_Speed_Yaw = Target_Speed_Calc(&Vision_Yaw_speed_Struct, xTaskGetTickCount(), Cloud_Angle_Measure[YAW][GYRO]);
-		Vision_Angle_Speed_Pitch = Target_Speed_Calc(&Vision_Pitch_speed_Struct, xTaskGetTickCount(), Cloud_Angle_Measure[PITCH][MECH]);
-//		//�ԽǶȺ��ٶȽ��ж��׿������˲��ں�,0λ��,1�ٶ�
-		yaw_kf_result = kalman_filter_calc(&yaw_kalman_filter, Cloud_Angle_Measure[YAW][GYRO], 0);
-		pitch_kf_result = kalman_filter_calc(&pitch_kalman_filter, Cloud_Angle_Measure[PITCH][MECH], 0);
-		debug_kf_angle_temp = 0;
-		
-		
-		yaw_kf_result = kalman_filter_calc(&yaw_kalman_filter,Cloud_Angle_Measure[YAW][GYRO],0);
-    pitch_kf_result = kalman_filter_calc(&pitch_kalman_filter,Cloud_Angle_Measure[PITCH][MECH],0);		
+//			else if(yaw_kf_result[KF_SPEED] <0)
+//				debug_kf_angle_temp = yaw_speed_k * (yaw_kf_result[KF_SPEED] + kf_speed_yl) * 1;
+//			
+//			debug_kf_angle_temp = constrain_float(debug_kf_angle_temp,-debug_kf_y_angcon,debug_kf_y_angcon);//Ԥ���ݴ����޷�
+//			debug_kf_y_angle = RAMP_float(debug_kf_angle_temp,debug_kf_y_angle,debug_kf_angle_ramp);//Ԥ���������仯
+//			debug_kf_y_angle = constrain_float(debug_kf_y_angle,-debug_kf_y_angcon,debug_kf_y_angcon);
+//		  Cloud_Angle_Target[YAW][GYRO] = yaw_kf_result[KF_ANGLE]+debug_kf_y_angle;
+//			
+//			if((yaw_kf_result[KF_SPEED] > 0) && (Auto_Error_Yaw[NOW] < 0.3f)) //���������Ƚϻ�����Ҫdebug��
+//			{
+//				mobpre_yaw_right_delay = 0;//����Ԥ�⿪����ʱ����
+//				mobpre_yaw_left_delay++;
+//				
+//				if(mobpre_yaw_left_delay > 0)//������ʱʱ��
+//					Mobi_Pre_Yaw_Fire = TRUE;//Ԥ�⵽λ,���Կ���
 
-		GIMBAL_AUTO_Ctrl();	
-		Auto_KF_Delay = 0;
-		
-		//Ԥ���ӳ�����
-	}
-}
+//				else 
+//					Mobi_Pre_Yaw_Fire = FALSE;//Ԥ�ⲻ��λ
+//			}
+//			
+//			else if((yaw_kf_result[KF_SPEED] < 0) && (Auto_Error_Yaw[NOW] > -0.3f))//���������Ƚϻ�����Ҫdebug��
+//			{
+//				mobpre_yaw_left_delay = 0;//����Ԥ�⿪����ʱ����
+//				mobpre_yaw_right_delay++;
+//				
+//				if(mobpre_yaw_right_delay > 0)//������ʱʱ���������?
+//					Mobi_Pre_Yaw_Fire = TRUE;//Ԥ�⵽λ,���Կ���
+
+//				else 
+//					Mobi_Pre_Yaw_Fire = FALSE;//Ԥ�ⲻ��λ
+//			}
+//			
+//	  	else
+//		  {
+//				Mobi_Pre_Yaw_Fire = FALSE;//Ԥ�ⲻ��λ
+//				
+//				mobpre_yaw_left_delay = 0;//����Ԥ�⿪����ʱ����
+//				mobpre_yaw_right_delay = 0;//����Ԥ�⿪����ʱ����
+//	  	}
+//			
+//			Mobility_Prediction_Yaw = TRUE;
+//			mobpre_yaw_stop_delay = 0;
+//			
+
+////				pitch_speed_k = debug_p_sk/2.f;
+////		  	kf_pitch_angcon = debug_kf_p_angcon/1.5f;
+////        debug_kf_p_angle = pitch_speed_k * (pitch_kf_result[1] + debug_kf_speed_pl);
+////			
+////    		Cloud_Angle_Target[PITCH][MECH] = pitch_angle_ref;
+//	  }
+//		
+//		if((Auto_KF_Delay > debug_kf_delay) && (fabs(Auto_Error_Pitch[NOW]) > debug_auto_err_p) && (fabs(pitch_kf_result[KF_SPEED]) > debug_kf_speed_pl) && (VisionRecvData.distance/100 < 4.f))
+//		{
+//		  if(VisionRecvData.auto_too_close == TRUE)
+//		  {
+//		  	pitch_speed_k = debug_p_sk/2.f;
+//		  	kf_pitch_angcon = debug_kf_p_angcon/1.5f;
+//		  }
+//			
+//			if(pitch_kf_result[KF_SPEED]>=0)
+//				debug_kf_p_angle = pitch_speed_k * (pitch_kf_result[KF_SPEED] - debug_kf_speed_pl);
+//			
+//			else 
+//			{
+//				pitch_speed_k = debug_p_sk;
+//				kf_pitch_angcon = debug_kf_p_angcon;
+//				debug_kf_p_angle = pitch_speed_k * (pitch_kf_result[KF_SPEED] + debug_kf_speed_pl);
+//			}
+//			
+//			debug_kf_p_angle = constrain_float(debug_kf_p_angle, -kf_pitch_angcon, kf_pitch_angcon);//Pitch�޷�
+//			
+//			Cloud_Angle_Target[PITCH][MECH] = pitch_kf_result[KF_ANGLE] + debug_kf_p_angle;
+//		}
+//		else
+//			Cloud_Angle_Target[PITCH][MECH] = pitch_angle_ref;
+//	}
+//	
+//	else  //δʶ��Ŀ��
+//	{
+////		//�ԽǶȺ��ٶȽ��ж��׿������˲��ں�,0λ��,1�ٶ�
+//		Vision_Angle_Speed_Yaw = Target_Speed_Calc(&Vision_Yaw_speed_Struct, xTaskGetTickCount(), Cloud_Angle_Measure[YAW][GYRO]);
+//		Vision_Angle_Speed_Pitch = Target_Speed_Calc(&Vision_Pitch_speed_Struct, xTaskGetTickCount(), Cloud_Angle_Measure[PITCH][MECH]);
+////		//�ԽǶȺ��ٶȽ��ж��׿������˲��ں�,0λ��,1�ٶ�
+//		yaw_kf_result = kalman_filter_calc(&yaw_kalman_filter, Cloud_Angle_Measure[YAW][GYRO], 0);
+//		pitch_kf_result = kalman_filter_calc(&pitch_kalman_filter, Cloud_Angle_Measure[PITCH][MECH], 0);
+//		debug_kf_angle_temp = 0;
+//		
+//		
+//		yaw_kf_result = kalman_filter_calc(&yaw_kalman_filter,Cloud_Angle_Measure[YAW][GYRO],0);
+//    pitch_kf_result = kalman_filter_calc(&pitch_kalman_filter,Cloud_Angle_Measure[PITCH][MECH],0);		
+
+//		GIMBAL_AUTO_Ctrl();	
+//		Auto_KF_Delay = 0;
+//		
+//		//Ԥ���ӳ�����
+//	}
+//}
 
 
 /*-------------------------PID�ܼ���������------------------------------*/

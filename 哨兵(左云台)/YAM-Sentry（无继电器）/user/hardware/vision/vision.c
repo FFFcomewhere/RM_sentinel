@@ -74,38 +74,26 @@ uint8_t Vision_Ping = 0;                 //发送时间间隔
 void Vision_Read_Data(uint8_t *ReadFormUart7)
 {
 	//判断帧头数据是否为0xA5
-	if(ReadFormUart7[0] == VISION_SOF)
+	if(ReadFormUart7[0] == VISION_BEGIN)
 	{
 		//帧头CRC8校验
-		if(Verify_CRC8_Check_Sum( ReadFormUart7, VISION_LEN_HEADER ) == TRUE)
-		{
-			//帧尾CRC16校验
-			if(Verify_CRC16_Check_Sum( ReadFormUart7, VISION_LEN_PACKED ) == TRUE)
+		if(ReadFormUart7[16] == VISION_END)
+		{		
+			//接收数据拷贝
+			memcpy( &VisionRecvData, ReadFormUart7, VISION_LEN_PACKED);	
+			if(VisionRecvData.identify_target == TRUE)
 			{
-				//接收数据拷贝
-				memcpy( &VisionRecvData, ReadFormUart7, VISION_LEN_PACKED);	
-				if(VisionRecvData.identify_target == TRUE)
-				{
-					Vision_Get_New_Data = TRUE;//标记视觉数据更新了
-				}
-				else
-				{
-					Vision_Get_New_Data = FALSE;
-
-				}
-
-				//帧计算
-				Vision_Time_Test[NOW] = xTaskGetTickCount();
-				Vision_Ping = Vision_Time_Test[NOW] - Vision_Time_Test[LAST];//计算时间间隔
-				Vision_Time_Test[LAST] = Vision_Time_Test[NOW];
-//				if(GIMBAL_IfBuffHit() == TRUE && GIMBAL_IfManulHit() == FALSE)//标记打符打中了，换装甲了
-//				{
-//					if(VisionRecvData.identify_buff == 2)//发2说明换装甲板了
-//					{
-//						Vision_Armor = TRUE;//发2换装甲
-//					}
-//				}
+				Vision_Get_New_Data = TRUE;//标记视觉数据更新了
 			}
+			else
+			{
+				Vision_Get_New_Data = FALSE;
+
+			}
+			//帧计算
+			Vision_Time_Test[NOW] = xTaskGetTickCount();
+			Vision_Ping = Vision_Time_Test[NOW] - Vision_Time_Test[LAST];//计算时间间隔
+			Vision_Time_Test[LAST] = Vision_Time_Test[NOW];
 		}
 	}
 }
@@ -120,24 +108,17 @@ void Vision_Read_Data(uint8_t *ReadFormUart7)
   *				CmdID   0x01   识别红色装甲
   *				CmdID   0x02   识别蓝色装甲
 
-  *				CmdID   0x03   小符
-  *				CmdID   0x04   大符
   */
 uint8_t vision_send_pack[50] = {0};//大于22就行
 void Vision_Send_Data( uint8_t CmdID )
 {
 	int i;    //循环发送次数
 
-
-
-	VisionSendData.SOF = VISION_SOF;
+	VisionSendData.SOF = VISION_BEGIN;
 	VisionSendData.CmdID   = CmdID;
 	VisionSendData.speed   = 30;
-	VisionSendData.END    = VISION_WEI;
+	VisionSendData.END    = VISION_END;
 
-	
-
-	
 	memcpy( vision_send_pack + VISION_LEN_HEADER, &VisionSendData, VISION_LEN_DATA);
 	
 	//将打包好的数据通过串口移位发送到裁判系统
@@ -150,52 +131,8 @@ void Vision_Send_Data( uint8_t CmdID )
 }
 
 /**********************************视觉控制*****************************************/
-/**
-  * @brief  视觉总控制,指令更新
-  * @param  void
-  * @retval void
-  * @attention  8位,只有键盘模式有视觉
-  */
-//void Vision_Ctrl(void)
-//{
-//	if(1)//SYSTEM_GetRemoteMode() == KEY)//键盘模式
-//	{
-//		if (GIMBAL_IfBuffHit() == TRUE && GIMBAL_IfManulHit() == FALSE)//自动打符模式
-//		{
-//			VisionActData = VISION_BUFF;
-//		}
-//		else if (GIMBAL_IfManulHit() == TRUE)//手动模式
-//		{
-//			VisionActData = VISION_MANU;
-//		}
-//		else//默认朋友开挂,常威你还敢说你不会武功
-//		{
-//			VisionActData = VISION_AUTO;
-//		}
 
-//		switch(VisionActData)
-//		{
-//			/*- 打符 -*/
-//			case VISION_BUFF:
-//				Vision_Buff_Ctrl();
-//			break;
-//			
-//			/*- 自瞄 -*/
-//			case VISION_AUTO:
-//				Vision_Auto_Attack_Ctrl();
-//			break;
-//			
-//			/*- 手动 -*/
-//			case VISION_MANU:
-//				Vision_Auto_Attack_Off();
-//			break;
-//		}
-//	}
-//	else
-//	{
-//		Vision_Auto_Attack_Off();
-//	}
-//}
+
 
 
 /**

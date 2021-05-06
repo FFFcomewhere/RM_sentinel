@@ -11,6 +11,11 @@
 #define    LEN_CMDID     2        //命令码长度
 #define    LEN_TAIL      2	      //帧尾CRC16
 
+
+
+#define BLUE  0
+#define RED   1
+
 //起始字节,协议固定为0xA5
 #define    JUDGE_FRAME_HEADER         (0xA5)
 
@@ -49,6 +54,7 @@ typedef enum
 	ID: 0x0205  Byte:  3    空中机器人能量状态数据      10Hz
 	ID: 0x0206  Byte:  1    伤害状态数据           		伤害发生后发送
 	ID: 0x0207  Byte:  6    实时射击数据           		子弹发射后发送
+	ID: 0X0208  Byte:  1    子弹剩余发射数              10Hz周期发送，所有机器人发送
 	ID: 0x0301  Byte:  n    机器人间交互数据           	发送方触发发送,10Hz
 	
 */
@@ -70,7 +76,7 @@ typedef enum
 	ID_aerial_robot_energy							= 0x0205,//空中机器人能量状态数据
 	ID_robot_hurt												= 0x0206,//伤害状态数据
 	ID_shoot_data												= 0x0207,//实时射击数据
-
+	ID_bullet_remaining                                  =0x208,//子弹剩余发射数
 } CmdID;
 
 
@@ -90,6 +96,7 @@ typedef enum
 	LEN_aerial_robot_energy   	 		    		=  3,	//0x0205
 	LEN_robot_hurt        									=  1,	//0x0206
 	LEN_shoot_data       										=  6,	//0x0207
+	LEN_bullet_remaining        										=  6,	//0x0208
 	
 } JudgeDataLength;
 
@@ -100,7 +107,6 @@ typedef __packed struct
 	uint16_t DataLength;
 	uint8_t  Seq;
 	uint8_t  CRC8;
-	
 } xFrameHeader;
 
 /* ID: 0x0001  Byte:  3    比赛状态数据 */
@@ -153,29 +159,39 @@ typedef __packed struct
 /* ID: 0X0201  Byte: 15    机器人状态数据 */
 typedef __packed struct 
 { 
-	uint8_t robot_id;   //机器人ID，可用来校验发送
-	uint8_t robot_level;  //1一级，2二级，3三级
-	uint16_t remain_HP;  //机器人剩余血量
-	uint16_t max_HP; //机器人满血量
-	uint16_t shooter_heat0_cooling_rate;  //机器人 17mm 子弹热量冷却速度 单位 /s
-	uint16_t shooter_heat0_cooling_limit;   // 机器人 17mm 子弹热量上限
-	uint16_t shooter_heat1_cooling_rate;   
-	uint16_t shooter_heat1_cooling_limit;   
-	uint8_t mains_power_gimbal_output : 1;  
-	uint8_t mains_power_chassis_output : 1;  
-	uint8_t mains_power_shooter_output : 1; 
+	uint8_t robot_id; 
+	uint8_t robot_level; 
+	uint16_t remain_HP; 
+	uint16_t max_HP; 
+	uint16_t shooter_id1_17mm_cooling_rate; 
+	uint16_t shooter_id1_17mm_cooling_limit;
+	uint16_t shooter_id1_17mm_speed_limit;
+	uint16_t shooter_id2_17mm_cooling_rate; 
+	uint16_t shooter_id2_17mm_cooling_limit;
+	uint16_t shooter_id2_17mm_speed_limit;
+
+	uint16_t shooter_id1_42mm_cooling_rate; 
+	uint16_t shooter_id1_42mm_cooling_limit;
+	uint16_t shooter_id1_42mm_speed_limit;
+	uint16_t chassis_power_limit; 
+	uint8_t mains_power_gimbal_output : 1; 
+	uint8_t mains_power_chassis_output : 1; 
+	uint8_t mains_power_shooter_output : 1;
+
 } ext_game_robot_state_t; 
 
 
 /* ID: 0X0202  Byte: 14    实时功率热量数据 */
 typedef __packed struct 
 { 
-	uint16_t chassis_volt;   
-	uint16_t chassis_current;    
-	float chassis_power;   //瞬时功率 
-	uint16_t chassis_power_buffer;//60焦耳缓冲能量
-	uint16_t shooter_heat0;//17mm
-	uint16_t shooter_heat1;  
+	uint16_t chassis_volt; 
+	uint16_t chassis_current; 
+	float chassis_power; 
+	uint16_t chassis_power_buffer;
+	uint16_t shooter_id1_17mm_cooling_heat;
+	uint16_t shooter_id2_17mm_cooling_heat;
+	uint16_t shooter_id1_42mm_cooling_heat;  
+
 } ext_power_heat_data_t; 
 
 
@@ -215,10 +231,19 @@ typedef __packed struct
 /* ID: 0x0207  Byte:  6    实时射击数据 */
 typedef __packed struct 
 { 
-	uint8_t bullet_type;   
-	uint8_t bullet_freq;   
-	float bullet_speed;  
+	uint8_t bullet_type;
+	uint8_t shooter_id; 
+	uint8_t bullet_freq; 
+	float bullet_speed;
 } ext_shoot_data_t; 
+
+
+/* ID: 0x0208  Byte:  6    子弹剩余发射数 */
+typedef __packed struct { 
+	uint16_t bullet_remaining_num_17mm;
+	uint16_t bullet_remaining_num_42mm;
+	uint16_t coin_remaining_num; 
+} ext_bullet_remaining_t;
 
 
 /* 

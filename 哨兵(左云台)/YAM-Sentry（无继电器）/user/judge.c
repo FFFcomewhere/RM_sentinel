@@ -20,6 +20,7 @@ ext_buff_musk_t					        	BuffMusk;					        //0x0204     机器人增益
 aerial_robot_energy_t			      	AerialRobotEnergy;		  	//0x0205     空中机器人能量状态
 ext_robot_hurt_t					        RobotHurt;					      //0x0206     伤害状态
 ext_shoot_data_t					        ShootData;					      //0x0207     实时射击信息
+ext_bullet_remaining_t						BulletRemaining;					//0x0208     子弹剩余发射数
 
 xFrameHeader                      FrameHeader;		          //发送帧头信息
 ext_SendClientData_t              ShowData;			            //客户端信息
@@ -33,8 +34,7 @@ uint16_t Judge_SelfClient_ID;//发送者机器人对应的客户端ID
 /**************裁判系统数据辅助****************/
 uint16_t ShootNum;//统计发弹量,0x0003触发一次则认为发射了一颗
 bool Hurt_Data_Update = FALSE;//装甲板伤害数据是否更新,每受一次伤害置TRUE,然后立即置FALSE,给底盘闪避用
-#define BLUE  0
-#define RED   1
+
 
 /**
   * @brief  读取裁判数据,中断中读取保证速度
@@ -131,6 +131,9 @@ bool Judge_Read_Data(uint8_t *ReadFromUsart)
 					case ID_shoot_data:      			//0x0207
 						memcpy(&ShootData, (ReadFromUsart + DATA), LEN_shoot_data);
 						JUDGE_ShootNumCount();//发弹量统
+
+					case ID_bullet_remaining:      //0x208
+						memcpy(&BulletRemaining, (ReadFromUsart + DATA), LEN_bullet_remaining);
 					break;
 				}
 			}
@@ -191,6 +194,7 @@ uint16_t JUDGE_fGetRemainEnergy(void)
 	return (PowerHeatData.chassis_power_buffer);
 }
 
+
 /**
   * @brief  读取当前等级
   * @param  void
@@ -210,7 +214,7 @@ uint8_t JUDGE_ucGetRobotLevel(void)
   */
 uint16_t JUDGE_usGetRemoteHeat17(void)
 {
-	return PowerHeatData.shooter_heat0;
+	return PowerHeatData.shooter_id1_17mm_cooling_heat;
 }
 
 /**
@@ -276,7 +280,7 @@ void JUDGE_ShootNum_Clear(void)
   */
 uint16_t JUDGE_usGetHeatLimit(void)
 {
-	return GameRobotStat.shooter_heat0_cooling_limit;
+	return PowerHeatData.shooter_id1_17mm_cooling_heat;
 }
 
 /**
@@ -287,7 +291,7 @@ uint16_t JUDGE_usGetHeatLimit(void)
   */
 uint16_t JUDGE_usGetShootCold(void)
 {
-	return GameRobotStat.shooter_heat0_cooling_rate;
+	return GameRobotStat.shooter_id1_17mm_cooling_rate;
 }
 
 /****************底盘自动闪避判断用*******************/

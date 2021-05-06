@@ -37,8 +37,8 @@ typedef enum
     CAN_2006_M1_ID = 0x205,  // M3508
   
 		CAN_GIMBAL_ALL_ID = 0x2FF,
-		CAN_PIT_MOTOR_IDR= 0x209,   //ID为1
-		CAN_YAW_MOTOR_IDR= 0x20A,   //ID为2 
+		CAN_PIT_MOTOR_IDR= 0x209,   //ID为5
+		CAN_YAW_MOTOR_IDR= 0x20A,   //ID为6
 } can_msg_id_e;
 
 //rm电机统一数据结构体
