@@ -12,9 +12,9 @@
 #define    VISION_DATA_CORRECT    1          //视觉数据错误
 
 #define    VISION_LEN_HEADER      2          //帧头长
-#define    VISION_LEN_DATA        14         //数据段长度,可自定义
+#define    VISION_LEN_DATA        15         //数据段长度,可自定义
 #define    VISIOV_LEN_TAIL        1	         //帧尾CRC16
-#define    VISION_LEN_PACKED      17         //数据包长度
+#define    VISION_LEN_PACKED      18         //数据包长度
 
 #define    VISION_OFF         		  (0x00)   //关闭视觉
 #define    VISION_RED           	  (0x01)   //识别红色
@@ -88,6 +88,8 @@ typedef __packed struct       //18 Byte
 	float     distance;			//距离
 	uint8_t   centre_lock;		//是否瞄准到了中间  0没有  1瞄准到了
 	uint8_t	  identify_target;	//视野内是否有目标/是否识别到了目标   0否  1是	
+	
+	uint8_t	  identify_buff;	//视野内是否有能量机关/是否识别到了目标   0否  1是	
 	
 	uint8_t   END;
 }VisionRecvData_t;

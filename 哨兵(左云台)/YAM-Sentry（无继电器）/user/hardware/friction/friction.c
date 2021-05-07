@@ -123,8 +123,8 @@ void friction_RC_Ctrl(void)
   }
 			
 	//摩擦轮输出斜坡,注意要先抬头才能进入斜坡
-	Chassis_Speed_Target[FRIC_LEFT] = Friction_Speed_Target;
-	Chassis_Speed_Target[FRIC_RIGHT] = -Friction_Speed_Target;
+	Chassis_Speed_Target[FRIC_LEFT] = -Friction_Speed_Target;
+	Chassis_Speed_Target[FRIC_RIGHT] = Friction_Speed_Target;
 
 }
 
@@ -151,8 +151,8 @@ if (FRIC_RcSwitch() == TRUE)//判断状态切换
 	
 	 
 	//摩擦轮输出斜坡,注意要先抬头才能进入斜坡
-	Chassis_Speed_Target[FRIC_LEFT] = Friction_Speed_Target;
-	Chassis_Speed_Target[FRIC_RIGHT] = -Friction_Speed_Target;
+	Chassis_Speed_Target[FRIC_LEFT] = -Friction_Speed_Target;
+	Chassis_Speed_Target[FRIC_RIGHT] = Friction_Speed_Target;
 
 }
 
@@ -180,8 +180,8 @@ void friction_AUTO_Ctrl(void)
 	}
 
 	//摩擦轮输出斜坡,注意要先抬头才能进入斜坡
-	Chassis_Speed_Target[FRIC_LEFT] = Friction_Speed_Target;
-	Chassis_Speed_Target[FRIC_RIGHT] = -Friction_Speed_Target;
+	Chassis_Speed_Target[FRIC_LEFT] = -Friction_Speed_Target;
+	Chassis_Speed_Target[FRIC_RIGHT] = Friction_Speed_Target;
 
 }
 

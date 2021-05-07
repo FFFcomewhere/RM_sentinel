@@ -77,7 +77,7 @@ void Vision_Read_Data(uint8_t *ReadFormUart7)
 	if(ReadFormUart7[0] == VISION_BEGIN)
 	{
 		//帧头CRC8校验
-		if(ReadFormUart7[16] == VISION_END)
+		if(ReadFormUart7[17] == VISION_END)
 		{		
 			//接收数据拷贝
 			memcpy( &VisionRecvData, ReadFormUart7, VISION_LEN_PACKED);	
@@ -115,7 +115,9 @@ void Vision_Send_Data( uint8_t CmdID )
 	int i;    //循环发送次数
 
 	VisionSendData.SOF = VISION_BEGIN;
-	VisionSendData.CmdID   = CmdID;
+	VisionSendData.CmdID   = 1;
+		//VisionSendData.CmdID   = CmdID;
+
 	VisionSendData.speed   = 30;
 	VisionSendData.END    = VISION_END;
 
@@ -126,6 +128,7 @@ void Vision_Send_Data( uint8_t CmdID )
 	{
 		Uart7_SendChar( vision_send_pack[i] );
 	}
+	vTaskDelay(100);
 	
 	memset(vision_send_pack, 0, 50);
 }
