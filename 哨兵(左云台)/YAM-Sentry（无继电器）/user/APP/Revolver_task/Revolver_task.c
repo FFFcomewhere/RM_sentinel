@@ -14,9 +14,11 @@
 #include "Remote_Control.h"
 #include "gimbal_task.h"
 
+
 #include "FreeRTOSConfig.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "chassis_task.h"
 extern  RC_ctrl_t rc_ctrl;
 extern VisionRecvData_t VisionRecvData;
 extern float Cloud_Angle_Measure[2][2];
@@ -149,7 +151,8 @@ float Revolver_Speed_Error;
 //拨盘目标转速
 float  Revolver_Speed_Target;//转速过低容易卡弹,尽量让转速上6000
 
-
+extern float Friction_Speed_Target;
+extern float Friction_PWM_Output[3]    ;//关闭  低速 200 哨兵  500
 
 
 //拨盘速度环射频
@@ -186,6 +189,8 @@ void Revolver_task(void *pvParameters)
 				}
 				else
 				{
+						
+					
 					if (SYSTEM_GetRemoteMode() == RC) //遥控模式
 					{	
 						if(mode_chanege_op == FALSE)		

@@ -42,7 +42,7 @@ extern void speed_change(void);
 
 
 //摩擦轮电机速度环PID
-#define FRIC_MOTOR_SPEED_PID_KP 1000.0f//15000
+#define FRIC_MOTOR_SPEED_PID_KP 3000.0f//15000
 #define FRIC_MOTOR_SPEED_PID_KI 0.0f  //10
 #define FRIC_MOTOR_SPEED_PID_KD 0.0f
 #define FRIC_MOTOR_SPEED_PID_MAX_OUT 3000.0f

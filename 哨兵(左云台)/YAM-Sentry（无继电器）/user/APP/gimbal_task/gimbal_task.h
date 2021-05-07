@@ -118,14 +118,14 @@
 
 #define max_yaw_relative_angle      PI
 #define min_yaw_relative_angle     	-PI
-#define max_pitch_relative_angle      0.3f
+#define max_pitch_relative_angle      0.8f
 #define min_pitch_relative_angle     -2.1f
 
 
 
 #define auto_yaw_ccw               PI
 #define auto_yaw_cw                -PI
-#define auto_pitch_up              0.3f
+#define auto_pitch_up              0.8f
 #define auto_pitch_down            -2.1f
 
 

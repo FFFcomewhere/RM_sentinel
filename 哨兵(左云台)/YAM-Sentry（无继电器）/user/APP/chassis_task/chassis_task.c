@@ -813,6 +813,7 @@ void CHASSIS_CANSend(void)
 //	Revolver_Final_Output = 0;
 //	Revolver_Final_Output_right = 0;
 	CAN_CMD_CHASSIS(Chassis_Final_Output[0],Chassis_Final_Output[1], Chassis_Final_Output[2], Chassis_Final_Output[3]);
+	CAN_CMD_Revolver(Revolver_Final_Output, 0);
 }
 
 

@@ -17,7 +17,7 @@ extern  RC_ctrl_t rc_ctrl;
 extern float Chassis_Speed_Target[4];//ID
 
 /**************************摩擦轮控制***********************************/
-float Friction_PWM_Output[3]     = {0,  1.5, 1.5};//关闭  低速 200 哨兵  500
+float Friction_PWM_Output[3]     = {0,  1.5, 3.0};//关闭  低速 200 哨兵  500
 
 //摩擦轮不同pwm下对应的热量增加值(射速),最好比实际值高5
 uint16_t Friction_PWM_HeatInc[5] = {0,  20,  26,  34,  36};//测试时随便定的速度,后面测试更改
