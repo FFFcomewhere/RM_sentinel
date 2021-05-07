@@ -116,19 +116,19 @@
 
 //注意此处电机反装，max实际对应最小值，例如pitch_max 实际为向下最大限幅
 
-#define max_yaw_relative_angle      4*PI
-#define min_yaw_relative_angle     	-4*PI
-#define max_pitch_relative_angle     -2.1
-#define min_pitch_relative_angle     -2.65
+#define max_yaw_relative_angle      PI
+#define min_yaw_relative_angle     	-PI
+#define max_pitch_relative_angle     PI
+#define min_pitch_relative_angle     -PI
 
-#define auto_yaw_ccw                2.2
-#define auto_yaw_cw                 -0.1
-#define auto_pitch_up               -2.1 
-#define auto_pitch_down              -2.66
+#define auto_yaw_ccw               PI
+#define auto_yaw_cw                 -PI
+#define auto_pitch_up               PI
+#define auto_pitch_down             -PI
 
 
-#define mid_yaw_angle               1.05                   
-#define mid_pitch_angle             -2.1
+#define mid_yaw_angle              0                  
+#define mid_pitch_angle             0
 
 #define glancing_angle              -PI
 

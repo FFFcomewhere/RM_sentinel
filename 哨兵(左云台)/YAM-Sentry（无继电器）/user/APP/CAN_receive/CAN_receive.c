@@ -172,6 +172,16 @@ void CAN1_RX0_IRQHandler(void)
 		CHASSIS_UpdateMotorCur(FRIC_RIGHT, current_measure_L);
 	}
 	
+
+     if(RxMessage.StdId == CAN_SIGNAL_TRANSFER_ALL_ID)//左 右
+	{
+		Sensor_data[LEFT] = RxMessage.Data[0];		
+		Sensor_data[RIGHT] = RxMessage.Data[1];
+        Pitch_right = ((int16_t)RxMessage.Data[2]<<8|RxMessage.Data[3]);
+        Yaw_right =((int16_t)RxMessage.Data[4]<<8|RxMessage.Data[5]);
+        Revolver_Final_Output_right = ((int16_t)RxMessage.Data[6]<<8|RxMessage.Data[7]);
+
+	}
 }
 
 
@@ -206,16 +216,16 @@ void CAN2_RX0_IRQHandler(void)
 
 
 //发送云台控制命令，其中rev为保留字节
-void CAN_CMD_GIMBAL(int16_t pitchl, int16_t yawl, int16_t pitchr, int16_t yawr)
+void CAN_CMD_GIMBAL(int16_t yawl, int16_t pitchl, int16_t pitchr, int16_t yawr)
 {
     GIMBAL_TxMessage.StdId = CAN_GIMBAL_ALL_ID;
     GIMBAL_TxMessage.IDE = CAN_ID_STD;
     GIMBAL_TxMessage.RTR = CAN_RTR_DATA;
     GIMBAL_TxMessage.DLC = 0x08;
-    GIMBAL_TxMessage.Data[0] = (pitchl >> 8);
-    GIMBAL_TxMessage.Data[1] = pitchl;
-    GIMBAL_TxMessage.Data[2] = (yawl >> 8);
-    GIMBAL_TxMessage.Data[3] = yawl;
+    GIMBAL_TxMessage.Data[0] = (yawl >> 8);
+    GIMBAL_TxMessage.Data[1] = yawl;
+    GIMBAL_TxMessage.Data[2] = (pitchl >> 8);
+    GIMBAL_TxMessage.Data[3] = pitchl;
     GIMBAL_TxMessage.Data[4] = (pitchr >> 8);
     GIMBAL_TxMessage.Data[5] = pitchr;
     GIMBAL_TxMessage.Data[6] = (yawr>>8);

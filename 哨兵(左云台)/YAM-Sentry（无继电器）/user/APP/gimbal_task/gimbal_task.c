@@ -281,7 +281,6 @@ void GIMBAL_task(void *pvParameters)
 						
 						if (Auto_Mode_Count_Past > 0){
 							Auto_Mode_Count_Past--;
-						//	delay_ms(300);
 							GIMBAL_AUTO_Mode_Ctrl();
 						}
 						else
@@ -831,7 +830,7 @@ void GIMBAL_CanSend(void)
 		fMotorOutput[PITCH] = -given_current[PITCH][GYRO];
 	}
 	
-	CAN_CMD_GIMBAL(fMotorOutput[PITCH], fMotorOutput[YAW], 0 , 0);
+	CAN_CMD_GIMBAL(fMotorOutput[YAW], fMotorOutput[PITCH], 0 , 0);
 	//≤‚ ‘
 	//CAN_CMD_GIMBAL(0, 0, 0 , 0);
 

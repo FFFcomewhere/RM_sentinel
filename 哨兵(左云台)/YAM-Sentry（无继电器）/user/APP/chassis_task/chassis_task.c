@@ -381,13 +381,24 @@ uint16_t delay_hp = 0;   //规定时间内扣血量
 void sensor_update(void)
 {	
 	//左云台处理
-	CJ_L=GPIO_ReadInputDataBit(GPIOH,GPIO_Pin_10); //D
-	CJ_R=GPIO_ReadInputDataBit(GPIOH,GPIO_Pin_11); //C
-	
-	
-	Sensor_data[LEFT] = CJ_L;
-	Sensor_data[RIGHT] = CJ_R;
+	//1为未检测到 0为检测到
+	if(Sensor_data[LEFT] == 1)
+	{
+		CJ_L = 1;
+	}
+	else if(Sensor_data[LEFT] == 0)
+	{
+		CJ_L = 0;
+	}
 
+	if(Sensor_data[RIGHT] == 1)
+	{
+		CJ_R = 1;
+	}
+	else if(Sensor_data[RIGHT] == 0)
+	{
+		CJ_R = 0;
+	}
 
 	//8秒内扣血超过40,开启加速
 	if(hit_cal_time > 6000)

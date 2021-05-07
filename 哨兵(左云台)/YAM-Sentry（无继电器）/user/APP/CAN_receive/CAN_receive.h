@@ -37,8 +37,11 @@ typedef enum
     CAN_2006_M1_ID = 0x205,  // M3508
   
 		CAN_GIMBAL_ALL_ID = 0x2FF,
-		CAN_PIT_MOTOR_IDR= 0x209,   //ID为5
-		CAN_YAW_MOTOR_IDR= 0x20A,   //ID为6
+		CAN_YAW_MOTOR_IDR= 0x209,   //ID为5
+		CAN_PIT_MOTOR_IDR= 0x20A,   //ID为6
+
+    CAN_SIGNAL_TRANSFER_ALL_ID = 0X217,
+
 } can_msg_id_e;
 
 //rm电机统一数据结构体
@@ -56,7 +59,7 @@ typedef struct
 extern void CAN_CMD_CHASSIS_RESET_ID(void);
 
 //发送云台控制命令，其中rev为保留字节
-extern void CAN_CMD_GIMBAL(int16_t pitchr, int16_t pitchl, int16_t yawr, int16_t yawl);
+extern void CAN_CMD_GIMBAL(int16_t yawl, int16_t pitchl, int16_t yawr, int16_t pitchr);
 //发送底盘电机控制命令
 extern void CAN_CMD_CHASSIS(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4);
 //发送拨盘电机控制命令
