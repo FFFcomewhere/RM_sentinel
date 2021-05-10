@@ -16,6 +16,7 @@
 #define FRI_SENTRY  5		//ÉÚ±øÉäËÙ
 
 
+extern float Revolver_Final_Output;
 
 
 extern void Revolver_task(void *pvParameters);

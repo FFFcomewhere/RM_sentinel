@@ -232,7 +232,7 @@ bool op=0;
 uint8_t  vision_cmd ;
 
 uint32_t 	Auto_Mode_Count_Past;		
-
+uint16_t find_target_delay = 0;
 //Ã¿2msÖ´ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void GIMBAL_task(void *pvParameters)
 {
@@ -268,30 +268,14 @@ void GIMBAL_task(void *pvParameters)
 				}
 				if(Vision_If_Update()==TRUE )    //ï¿½ï¿½ï¿½Ý¸ï¿½ï¿½ï¿½
 				{		
-						modeGimbal = CLOUD_CRUISE_MODE;
-						GIMBAL_AUTO_Mode_Ctrl();
+					modeGimbal = CLOUD_CRUISE_MODE;
+					GIMBAL_AUTO_Mode_Ctrl();
 				}
 				else                            //ï¿½Ó¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¸ï¿½ï¿½ï¿½
 				{
-					if(Vision_If_Update()==TRUE){
-						Auto_Mode_Count++;
-						Auto_Mode_Count_Past = 1000;
-					}
-					else{
-						
-						if (Auto_Mode_Count_Past > 0){
-							Auto_Mode_Count_Past--;
-							GIMBAL_AUTO_Mode_Ctrl();
-						}
-						else
-						{
-							Auto_Mode_Count=0;
-							Auto_Mode_Count_Past = 0;
-							modeGimbal = CLOUD_MECH_MODE;
-							GIMBAL_AUTO_Ctrl();
-						}
-					}
-					
+					modeGimbal = CLOUD_MECH_MODE;
+					GIMBAL_AUTO_Ctrl();
+							
 				}
 			}
 
@@ -457,7 +441,7 @@ float glancing_Angle_Target;
 
 void GIMBAL_AUTO_Ctrl(void)
 {
-	
+	find_target_delay = 0;
 
 	Cloud_Angle_Target[YAW][MECH] = Cloud_Angle_Measure[YAW][MECH];
 	Cloud_Angle_Target[PITCH][MECH] = Cloud_Angle_Measure[PITCH][MECH];
@@ -471,53 +455,35 @@ void GIMBAL_AUTO_Ctrl(void)
 
 	if(auto_mode.yaw_cw == TRUE)
 	{			
-		if (glancing > 6){
-			Cloud_Angle_Target[YAW][MECH] = RAMP_float( glancing_angle, Cloud_Angle_Target[YAW][MECH], 0.2 );
-			erro_yaw = glancing_angle - Cloud_Angle_Measure[YAW][MECH];
-		}else{
-			Cloud_Angle_Target[YAW][MECH] = RAMP_float( auto_yaw_cw, Cloud_Angle_Target[YAW][MECH], 0.03 );
-			erro_yaw = auto_yaw_cw - Cloud_Angle_Measure[YAW][MECH];
-		}
-		if(erro_yaw < 0.15f && erro_yaw > -0.15f)
+		Cloud_Angle_Target[YAW][MECH] = RAMP_float( auto_yaw_cw, Cloud_Angle_Target[YAW][MECH], 0.025 );
+		erro_yaw = Cloud_Angle_Measure[YAW][MECH]-auto_yaw_cw ;
+		if(erro_yaw < 0.05f && erro_yaw > -0.05f)
 		{
 			auto_mode.yaw_cw = FALSE;
 			auto_mode.yaw_ccw = TRUE;
-			glancing++;//¼ÆÊý¼Ó1
-			if (glancing > 7){
-				glancing = 0;
-			}
 		}
 	}
+
 	else if(auto_mode.yaw_ccw == TRUE)
 	{			
-		if (glancing > 6){
-			Cloud_Angle_Target[YAW][MECH] = RAMP_float( glancing_angle, Cloud_Angle_Target[YAW][MECH], 0.2 );
-			erro_yaw = glancing_angle - Cloud_Angle_Measure[YAW][MECH];
-		}else{
-			erro_yaw = auto_yaw_ccw - Cloud_Angle_Measure[YAW][MECH];
-			Cloud_Angle_Target[YAW][MECH] = RAMP_float( auto_yaw_ccw, Cloud_Angle_Target[YAW][MECH], 0.03 );
-		}
-		if(erro_yaw < 0.15f && erro_yaw > -0.15f)
+		Cloud_Angle_Target[YAW][MECH] = RAMP_float( auto_yaw_ccw, Cloud_Angle_Target[YAW][MECH], 0.025 );
+		erro_yaw = auto_yaw_ccw-Cloud_Angle_Measure[YAW][MECH];
+		if(erro_yaw < 0.05f && erro_yaw > -0.05f)
 		{
 			auto_mode.yaw_cw = TRUE;
-			auto_mode.yaw_ccw = FALSE;
-			glancing++;//¼ÆÊý¼Ó1
-			if (glancing > 7){
-				glancing = 0;
-			}			
+			auto_mode.yaw_ccw = FALSE; 
 		}
-	}
-		
+	}	
 	
 	
-/*---------------------pitchï¿½ï¿½--------------------*/	
+/*---------------------pitch???--------------------*/	
 	if(auto_mode.pitch_up == TRUE)
 	{			
-		Cloud_Angle_Target[PITCH][MECH] = RAMP_float( auto_pitch_up, Cloud_Angle_Target[PITCH][MECH], 0.015);
+		Cloud_Angle_Target[PITCH][MECH] = RAMP_float( auto_pitch_up, Cloud_Angle_Target[PITCH][MECH], 0.025);
 		
 		//Cloud_Angle_Target[PITCH][MECH]  = auto_pitch_up;
 		
-		erro_pitch =  Cloud_Angle_Measure[PITCH][MECH] - auto_pitch_up;
+		erro_pitch =  auto_pitch_up - Cloud_Angle_Measure[PITCH][MECH];
 		if(erro_pitch  < 0.05f && erro_pitch > -0.05f)
 		{
 			auto_mode.pitch_up = FALSE;
@@ -527,17 +493,18 @@ void GIMBAL_AUTO_Ctrl(void)
 	
 	else if(auto_mode.pitch_down == TRUE)
 	{		
-    Cloud_Angle_Target[PITCH][MECH] = RAMP_float( auto_pitch_down, Cloud_Angle_Target[PITCH][MECH], 0.015);		
+    Cloud_Angle_Target[PITCH][MECH] = RAMP_float( auto_pitch_down, Cloud_Angle_Target[PITCH][MECH], 0.02);		
 		
 			//Cloud_Angle_Target[PITCH][MECH]  = auto_pitch_down;
 
 		erro_pitch =   Cloud_Angle_Measure[PITCH][MECH] - auto_pitch_down;
-		if(erro_pitch  < 0.05f && erro_pitch > -0.05f )
+		if(erro_pitch  < 0.15f && erro_pitch > -0.15f )
 		{
 			auto_mode.pitch_up = TRUE;
 			auto_mode.pitch_down = FALSE;
 		}
 	}
+	
 	
 	
 }
@@ -553,8 +520,22 @@ void GIMBAL_AUTO_Ctrl(void)
   */
 void GIMBAL_AUTO_Mode_Ctrl(void)
 {
-	
-	
+		
+	//ÊÓÒ°Í»È»³öÏÖµÐÈË£¬»áÕðµ´£¬ÐÞ¸ÄÒ»ÏÂPIDÏµÊý
+		if(find_target_delay>=20)
+		{
+			Gimbal_Yaw_Gyro_PID.kp = YAW_GYRO_ABSOLUTE_PID_KP ;
+		 Gimbal_Pitch_Gyro_PID.kp = PITCH_GYRO_ABSOLUTE_PID_KP ;
+
+
+		}
+		else
+		{
+		  Gimbal_Yaw_Gyro_PID.kp = YAW_GYRO_ABSOLUTE_PID_KP_FIRST ;
+		  Gimbal_Pitch_Gyro_PID.kp = PITCH_GYRO_ABSOLUTE_PID_KP_FIRST ;
+			find_target_delay++;
+		}
+		
 
 		Cloud_Angle_Target[YAW][GYRO] = Cloud_Angle_Target[YAW][MECH];
 		Cloud_Angle_Target[PITCH][GYRO] = Cloud_Angle_Target[PITCH][MECH];

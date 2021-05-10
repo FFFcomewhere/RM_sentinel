@@ -117,6 +117,7 @@ void chassis_task(void *pvParameters)
 				
 				//发送底盘电机和拨盘电机速度	
 				CHASSIS_CANSend();
+				CAN_CMD_Revolver(Revolver_Final_Output, 0);
 				
 				vTaskDelay(TIME_STAMP_2MS);
 			}
@@ -131,7 +132,7 @@ fp32 motor_chassis_speed[4];     //定义四个轮子的速度，用于更新   m/s
 
 /*----------------------------------------------***灵敏度***-------------------------------------------------------------*/
 
-//机械模式下底盘比例系数,控制摇杆响应速度,如果过小也会限制最高转速,max = 此系数 *660
+//机械模式下底盘比例系数,控制摇杆响应速度,如果过小也会限制最高转速,max = 此系数 *660 
 float kRc_Mech_Chassis_Standard; //定义机械模式平移遥控器响应
 
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -813,7 +814,7 @@ void CHASSIS_CANSend(void)
 //	Revolver_Final_Output = 0;
 //	Revolver_Final_Output_right = 0;
 	CAN_CMD_CHASSIS(Chassis_Final_Output[0],Chassis_Final_Output[1], Chassis_Final_Output[2], Chassis_Final_Output[3]);
-	CAN_CMD_Revolver(Revolver_Final_Output, 0);
+	
 }
 
 

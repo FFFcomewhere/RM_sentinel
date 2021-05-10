@@ -46,67 +46,69 @@
 #define MODE   TEST
 
 #if MODE ==	TEST
-/*----------------------------------------速度环--------------------------------------------*/
-//pitch 速度环 PID参数以及 PID最大输出，积分输出
+/*----------------------------------------???--------------------------------------------*/
+//pitch ??? PID???? PID????,????
 #define PITCH_SPEED_PID_KP 8000.0f
 #define PITCH_SPEED_PID_KI 0.0f
 #define PITCH_SPEED_PID_KD 8.5f
 #define PITCH_SPEED_PID_MAX_OUT 30000.0f
 #define PITCH_SPEED_PID_MAX_IOUT 5000.0f
 
-//yaw 速度环 PID参数以及 PID最大输出，积分输出
-#define YAW_SPEED_PID_KP 40.0f  //32
-#define YAW_SPEED_PID_KI 0.0f
-#define YAW_SPEED_PID_KD 3.0f
+//yaw ??? PID???? PID????,????
+#define YAW_SPEED_PID_KP 32.0f  //32  
+#define YAW_SPEED_PID_KI 0.0f 
+#define YAW_SPEED_PID_KD 2.0f
 #define YAW_SPEED_PID_MAX_OUT 10000.0f
 #define YAW_SPEED_PID_MAX_IOUT 1000.0f
 
-//pitch 速度环 PID参数以及 PID最大输出，积分输出
-//#define PITCH_GYRO_SPEED_PID_KP_ 2000.0f   //5500 由于pid切换过程中导致计算数值变化，所以更改初始PID
-#define PITCH_GYRO_SPEED_PID_KP 3000.0f   //5500
-#define PITCH_GYRO_SPEED_PID_KI 0.0f       //1.8
-#define PITCH_GYRO_SPEED_PID_KD 0.0f      //0.9
+//pitch ??? PID???? PID????,????
+//#define PITCH_GYRO_SPEED_PID_KP_ 2000.0f   //5500 ??pid?????????????,??????PID
+#define PITCH_GYRO_SPEED_PID_KP 8000.0f   //5500
+#define PITCH_GYRO_SPEED_PID_KI 0.2f       //1.8
+#define PITCH_GYRO_SPEED_PID_KD 2.6f      //0.9
 
 #define PITCH_GYRO_SPEED_PID_MAX_OUT 30000.0f
 #define PITCH_GYRO_SPEED_PID_MAX_IOUT 5000.0f
 
-//yaw 速度环 PID参数以及 PID最大输出，积分输出
-#define YAW_GYRO_SPEED_PID_KP 80.0f  //32
-#define YAW_GYRO_SPEED_PID_KI 0.5f
-#define YAW_GYRO_SPEED_PID_KD 4.0f
+//yaw ??? PID???? PID????,????
+#define YAW_GYRO_SPEED_PID_KP 42.0f  //32
+#define YAW_GYRO_SPEED_PID_KI 0.1f
+#define YAW_GYRO_SPEED_PID_KD 1.5f
 
 #define YAW_GYRO_SPEED_PID_MAX_OUT 10000.0f
 #define YAW_GYRO_SPEED_PID_MAX_IOUT 1000.0f
 
-/*----------------------------------------角度环---------------------------	-----------------*/
-////**陀螺仪模式**//
-//pitch 角度环 角度由陀螺仪解算 PID参数以及 PID最大输出，积分输出
-#define PITCH_GYRO_ABSOLUTE_PID_KP_ 1.0f
-#define PITCH_GYRO_ABSOLUTE_PID_KP 10.0f //15
-#define PITCH_GYRO_ABSOLUTE_PID_KI 0.01f
-#define PITCH_GYRO_ABSOLUTE_PID_KD 1.5f
+/*----------------------------------------???---------------------------	-----------------*/
+////**?????**//
+//pitch ??? ???????? PID???? PID????,????
 
+#define PITCH_GYRO_ABSOLUTE_PID_KP_FIRST 3.0f
+#define PITCH_GYRO_ABSOLUTE_PID_KP 4.0f //15
+#define PITCH_GYRO_ABSOLUTE_PID_KI 0.01f
+#define PITCH_GYRO_ABSOLUTE_PID_KD 1.0f
+   
 #define PITCH_GYRO_ABSOLUTE_PID_MAX_OUT 30.0f
 #define PITCH_GYRO_ABSOLUTE_PID_MAX_IOUT 1.0f
 
-//yaw 角度环 角度由陀螺仪解算 PID参数以及 PID最大输出，积分输出
-#define YAW_GYRO_ABSOLUTE_PID_KP 600.0f
-#define YAW_GYRO_ABSOLUTE_PID_KI 0.1f
-#define YAW_GYRO_ABSOLUTE_PID_KD 1.2f
+//yaw ??? ???????? PID???? PID????,????
+#define YAW_GYRO_ABSOLUTE_PID_KP_FIRST 350.0f
+#define YAW_GYRO_ABSOLUTE_PID_KP 510.0f
+#define YAW_GYRO_ABSOLUTE_PID_KI 0.05f
+#define YAW_GYRO_ABSOLUTE_PID_KD 0.1f
 
 #define YAW_GYRO_ABSOLUTE_PID_MAX_OUT 800.0f
 #define YAW_GYRO_ABSOLUTE_PID_MAX_IOUT 0.0f
 
-//**机械模式**//
-//pitch 角度环 角度由编码器 PID参数以及 PID最大输出，积分输出
-#define PITCH_ENCODE_RELATIVE_PID_KP 15.0f    //15
+//**????**//
+//pitch ??? ?????? PID???? PID????,????
+#define PITCH_ENCODE_RELATIVE_PID_KP 20.0f    //15
 #define PITCH_ENCODE_RELATIVE_PID_KI 0.2f
-#define PITCH_ENCODE_RELATIVE_PID_KD 5.5f
+#define PITCH_ENCODE_RELATIVE_PID_KD 3.5f
 
 #define PITCH_ENCODE_RELATIVE_PID_MAX_OUT 50.0f
 #define PITCH_ENCODE_RELATIVE_PID_MAX_IOUT 10.0f
 
-//yaw 角度环 角度由编码器 PID参数以及 PID最大输出，积分输出
+//yaw ??? ?????? PID???? PID????,????
 #define YAW_ENCODE_RELATIVE_PID_KP 5000.0f
 #define YAW_ENCODE_RELATIVE_PID_KI 0.0f
 #define YAW_ENCODE_RELATIVE_PID_KD 0.0f
@@ -114,23 +116,24 @@
 #define YAW_ENCODE_RELATIVE_PID_MAX_OUT 6000.0f
 #define YAW_ENCODE_RELATIVE_PID_MAX_IOUT 0.0f
 
+
 //注意此处电机反装，max实际对应最小值，例如pitch_max 实际为向下最大限幅
 
-#define max_yaw_relative_angle      PI
-#define min_yaw_relative_angle     	-PI
-#define max_pitch_relative_angle      0.8f
-#define min_pitch_relative_angle     -2.1f
+#define max_yaw_relative_angle      2*PI
+#define min_yaw_relative_angle     	-2*PI
+#define max_pitch_relative_angle     1.4f
+#define min_pitch_relative_angle     -0.4f
 
 
 
-#define auto_yaw_ccw               PI
-#define auto_yaw_cw                -PI
-#define auto_pitch_up              0.8f
-#define auto_pitch_down            -2.1f
+#define auto_yaw_ccw               0.5 //2*PI
+#define auto_yaw_cw                -1.5  // -2*PI
+#define auto_pitch_up              1.4f
+#define auto_pitch_down            -0.4f
 
 
-#define mid_yaw_angle              0                  
-#define mid_pitch_angle             0.3f
+#define mid_yaw_angle              0.0f                  
+#define mid_pitch_angle             1.4f
 
 #define glancing_angle              -PI
 
