@@ -65,7 +65,7 @@ bool pass_flag=1;
 
 int main(void)
 {
-    BSP_init();
+			BSP_init();
     delay_ms(100);
     startTast();
     vTaskStartScheduler();

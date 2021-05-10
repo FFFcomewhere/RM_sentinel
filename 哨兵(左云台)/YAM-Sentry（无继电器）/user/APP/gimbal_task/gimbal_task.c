@@ -274,8 +274,7 @@ void GIMBAL_task(void *pvParameters)
 				else                            //�Ӿ������ݸ���
 				{
 					modeGimbal = CLOUD_MECH_MODE;
-					GIMBAL_AUTO_Ctrl();
-							
+					GIMBAL_AUTO_Ctrl();							
 				}
 			}
 
@@ -947,16 +946,30 @@ bool GIMBAL_AUTO_PITCH_SB_SK(void)
 /*----------------���½ǶȵĻ�е�ǶȺ������ǽǶȵĺ���------------------------------------------------------------*/
 
 //���������̨��ֵ�ĽǶ�?
-static fp32 motor_ecd_to_angle_change(uint16_t ecd)
+static fp32 motor_ecd_to_angle_change(uint8_t ID, uint16_t ecd)
 {
-    int32_t relative_ecd = ecd - 4096;
+    if(ID == PITCH)
+	{
+		int32_t relative_ecd = ecd - 4096;
     if (relative_ecd > Half_ecd_range)
         relative_ecd -= ecd_range;
 		
     else if (relative_ecd < -Half_ecd_range)
         relative_ecd += ecd_range;
+		 return relative_ecd * Motor_Ecd_to_Rad;
+	}
+	else if(ID == YAW)
+	{
+		int32_t relative_ecd = ecd - 1500;
+    if (relative_ecd > Half_ecd_range)
+        relative_ecd -= ecd_range;
+		
+    else if (relative_ecd < -Half_ecd_range)
+        relative_ecd += ecd_range;
+		 return relative_ecd * Motor_Ecd_to_Rad;
+	}
 
-    return relative_ecd * Motor_Ecd_to_Rad;
+   
 }
 
 /**
@@ -970,13 +983,13 @@ void GIMBAL_UpdateAngle( char ID, int16_t angle )
 	if (ID == PITCH)
 	{
 		angleMotorPit = angle;
-		Cloud_Angle_Measure[PITCH][MECH]  = -motor_ecd_to_angle_change(angleMotorPit);
+		Cloud_Angle_Measure[PITCH][MECH]  = -motor_ecd_to_angle_change(PITCH, angleMotorPit);
 		PitchAngle = angleMotorPit;
 	}
 	else if (ID == YAW)
 	{
 		angleMotorYaw = angle;
-		Cloud_Angle_Measure[YAW][MECH]  = -motor_ecd_to_angle_change(angleMotorYaw);
+		Cloud_Angle_Measure[YAW][MECH]  = -motor_ecd_to_angle_change(YAW, angleMotorYaw);
 		YawAngle = angleMotorYaw;
 	}
 }

@@ -48,7 +48,7 @@
 #if MODE ==	TEST
 /*----------------------------------------???--------------------------------------------*/
 //pitch ??? PID???? PID????,????
-#define PITCH_SPEED_PID_KP 8000.0f
+#define PITCH_SPEED_PID_KP 6000.0f
 #define PITCH_SPEED_PID_KI 0.0f
 #define PITCH_SPEED_PID_KD 8.5f
 #define PITCH_SPEED_PID_MAX_OUT 30000.0f
@@ -119,15 +119,15 @@
 
 //注意此处电机反装，max实际对应最小值，例如pitch_max 实际为向下最大限幅
 
-#define max_yaw_relative_angle      2*PI
-#define min_yaw_relative_angle     	-2*PI
+#define max_yaw_relative_angle      PI
+#define min_yaw_relative_angle     	-PI
 #define max_pitch_relative_angle     1.4f
 #define min_pitch_relative_angle     -0.4f
 
 
 
-#define auto_yaw_ccw               0.5 //2*PI
-#define auto_yaw_cw                -1.5  // -2*PI
+#define auto_yaw_ccw               1.5 //2*PI
+#define auto_yaw_cw                -2.7   // -2*PI
 #define auto_pitch_up              1.4f
 #define auto_pitch_down            -0.4f
 
@@ -165,7 +165,8 @@
 
 
 //电机码盘值最大以及中值
-#define Half_ecd_range 4096
+#define Half_ecd_range 4096      
+#define Half_ecd_range_yaw 4096 //由于YAW轴电机安装的问题,所以修改中值
 #define ecd_range 8191
 
 

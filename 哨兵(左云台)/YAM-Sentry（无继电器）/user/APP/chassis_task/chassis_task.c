@@ -116,7 +116,7 @@ void chassis_task(void *pvParameters)
 				Chassis_Motor_Speed_PID(); //PID计算			
 				
 				//发送底盘电机和拨盘电机速度	
-				CHASSIS_CANSend();
+				//CHASSIS_CANSend();
 				CAN_CMD_Revolver(Revolver_Final_Output, 0);
 				
 				vTaskDelay(TIME_STAMP_2MS);
