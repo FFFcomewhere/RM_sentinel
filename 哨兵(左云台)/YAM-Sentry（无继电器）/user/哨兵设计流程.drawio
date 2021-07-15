@@ -1,1 +1,51 @@
-<mxfile host="app.diagrams.net" modified="2021-07-15T05:12:38.408Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36" version="14.8.5" etag="LNh6tqlVjgMeY2BeTYmR" type="github"><diagram id="VkR-sye8TS2HfhoO15io">UzV2zq1wL0osyPDNT0nNUTV2VTV2LsrPL4GwciucU3NyVI0MMlNUjV1UjYwMgFjVyA2HrCFY1qAgsSg1rwSLBiADYTaQg2Y1AA==</diagram></mxfile>
+<mxfile host="app.diagrams.net" modified="2021-07-15T05:37:44.985Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36" etag="N5TT9-HTiQhGkDyaYiIu" version="14.8.5" type="github">
+  <diagram id="VkR-sye8TS2HfhoO15io" name="Page-1">
+    <mxGraphModel dx="1420" dy="879" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="xzUxQJz4ubmzHn4bTiOs-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="xzUxQJz4ubmzHn4bTiOs-1" target="xzUxQJz4ubmzHn4bTiOs-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xzUxQJz4ubmzHn4bTiOs-1" value="审视规则,分析功能,组内讨论" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="326" y="80" width="176" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="xzUxQJz4ubmzHn4bTiOs-5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="xzUxQJz4ubmzHn4bTiOs-2" target="xzUxQJz4ubmzHn4bTiOs-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xzUxQJz4ubmzHn4bTiOs-2" value="机械出整体框架,在会上讲解图纸,电控和视觉布线和固定需求" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="331" y="220" width="166" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="xzUxQJz4ubmzHn4bTiOs-9" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="xzUxQJz4ubmzHn4bTiOs-4" target="xzUxQJz4ubmzHn4bTiOs-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xzUxQJz4ubmzHn4bTiOs-4" value="再次分析图纸,同时电控和视觉开始第一版代码的构建" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="321" y="370" width="186" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="xzUxQJz4ubmzHn4bTiOs-14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="xzUxQJz4ubmzHn4bTiOs-6">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="620" y="250" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="620" y="690" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xzUxQJz4ubmzHn4bTiOs-6" value="机械分模块购买并搭建,同时电控按模块进行调试" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="331" y="660" width="166" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="xzUxQJz4ubmzHn4bTiOs-11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="xzUxQJz4ubmzHn4bTiOs-8" target="xzUxQJz4ubmzHn4bTiOs-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xzUxQJz4ubmzHn4bTiOs-8" value="终版机械图纸在采购前,尽量交由机械组组长和老师审核,一起讨论" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="316" y="520" width="196" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="xzUxQJz4ubmzHn4bTiOs-15" value="" style="endArrow=none;html=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="497" y="250" as="sourcePoint" />
+            <mxPoint x="620" y="250" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
