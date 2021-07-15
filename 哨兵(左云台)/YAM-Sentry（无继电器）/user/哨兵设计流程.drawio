@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-07-15T05:37:44.985Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36" etag="N5TT9-HTiQhGkDyaYiIu" version="14.8.5" type="github">
+<mxfile host="app.diagrams.net" modified="2021-07-15T05:52:02.649Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36" etag="Ly_2ZRDeoHsa9X-0BsJE" version="14.8.5" type="github">
   <diagram id="VkR-sye8TS2HfhoO15io" name="Page-1">
     <mxGraphModel dx="1420" dy="879" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -22,13 +22,8 @@
         <mxCell id="xzUxQJz4ubmzHn4bTiOs-4" value="再次分析图纸,同时电控和视觉开始第一版代码的构建" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
           <mxGeometry x="321" y="370" width="186" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="xzUxQJz4ubmzHn4bTiOs-14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="xzUxQJz4ubmzHn4bTiOs-6">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="620" y="250" as="targetPoint" />
-            <Array as="points">
-              <mxPoint x="620" y="690" />
-            </Array>
-          </mxGeometry>
+        <mxCell id="xzUxQJz4ubmzHn4bTiOs-32" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="xzUxQJz4ubmzHn4bTiOs-6" target="xzUxQJz4ubmzHn4bTiOs-31">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="xzUxQJz4ubmzHn4bTiOs-6" value="机械分模块购买并搭建,同时电控按模块进行调试" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
           <mxGeometry x="331" y="660" width="166" height="60" as="geometry" />
@@ -39,10 +34,43 @@
         <mxCell id="xzUxQJz4ubmzHn4bTiOs-8" value="终版机械图纸在采购前,尽量交由机械组组长和老师审核,一起讨论" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
           <mxGeometry x="316" y="520" width="196" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="xzUxQJz4ubmzHn4bTiOs-15" value="" style="endArrow=none;html=1;" edge="1" parent="1">
+        <mxCell id="xzUxQJz4ubmzHn4bTiOs-25" value="c" style="edgeStyle=segmentEdgeStyle;endArrow=classic;html=1;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="497" y="250" as="sourcePoint" />
-            <mxPoint x="620" y="250" as="targetPoint" />
+            <mxPoint x="497" y="700" as="sourcePoint" />
+            <mxPoint x="610" y="401" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xzUxQJz4ubmzHn4bTiOs-28" value="" style="endArrow=none;html=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="507" y="400" as="sourcePoint" />
+            <mxPoint x="610" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xzUxQJz4ubmzHn4bTiOs-34" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="xzUxQJz4ubmzHn4bTiOs-31" target="xzUxQJz4ubmzHn4bTiOs-33">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xzUxQJz4ubmzHn4bTiOs-31" value="整车进行单功能调试,整车对抗测试,再次进行改进,同时更新技术文档" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="314.5" y="810" width="199" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="xzUxQJz4ubmzHn4bTiOs-36" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="xzUxQJz4ubmzHn4bTiOs-33" target="xzUxQJz4ubmzHn4bTiOs-35">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xzUxQJz4ubmzHn4bTiOs-33" value="参与比赛,赛后进行总结和优化,同时更新技术文档" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="321" y="950" width="186" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="xzUxQJz4ubmzHn4bTiOs-35" value="赛季结束,总结整个设计和调试流程,并完成赛季总结,视情况开源" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="316" y="1090" width="196" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="xzUxQJz4ubmzHn4bTiOs-40" value="" style="edgeStyle=segmentEdgeStyle;endArrow=classic;html=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="513.5" y="1120" as="sourcePoint" />
+            <mxPoint x="700" y="100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xzUxQJz4ubmzHn4bTiOs-42" value="" style="endArrow=none;html=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="502" y="100" as="sourcePoint" />
+            <mxPoint x="700" y="100.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
       </root>
